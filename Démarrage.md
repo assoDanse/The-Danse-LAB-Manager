@@ -62,9 +62,9 @@ riquier.y@sfeir.com
 
 ## Github
 
-- [ ] Créer l'organisation
-- [ ] Créer un premier repository
-- [ ] Créer le Projet pour la gestion des tâches
+- [x] Créer l'organisation
+- [x] Créer un premier repository
+- [x] Créer le Projet pour la gestion des tâches
 - [ ] 
 - [ ] Initialiser avec les fichiers de configuration des différentes techno
 
