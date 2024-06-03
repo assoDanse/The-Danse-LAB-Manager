@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import NavbarVisiteur from "@/components/NavbarVisiteur";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -18,6 +19,7 @@ export default function RootLayout({
     <html lang="fr" data-theme="light">
       <body className={inter.className}>
         <div className="flex-wrap">
+          <NavbarVisiteur></NavbarVisiteur>
           <div className="flex">{children}</div>
         </div>
       </body>
