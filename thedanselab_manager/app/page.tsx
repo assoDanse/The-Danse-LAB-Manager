@@ -1,20 +1,15 @@
-import Image from "next/image";
-import { supabase } from "@/app/lib/supabase";
+"use client";
+import React, { useState } from "react";
+// import { supabase } from "../supabaseClient";
 
-export default function Home() {
-  const setNewView = async () => {
-    const { data,error } = await supabase
-      .from('utilisateur')
-      .insert({
-        nom : 'rich'
-      })
+import { useRouter } from "next/navigation";
 
-      if (data) console.log(data)
-      if (error) console.log(error)
-
-  };
-  setNewView();
+const Home: React.FC = () => {
   return (
-    <div>hellllooo</div>
-  ); 
-}
+    <div className="flex justify-center items-center h-screen w-full">
+      <h1>Home</h1>
+    </div>
+  );
+};
+
+export default Home;
