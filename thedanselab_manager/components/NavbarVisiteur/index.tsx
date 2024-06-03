@@ -1,32 +1,31 @@
 "use client";
 
 import { Button, Navbar } from "flowbite-react";
+import Image from "next/image";
+import Logo from "@/public/Logo-150x150.jpg";
 
 function NavbarVisiteur() {
   return (
-    <Navbar fluid rounded>
-      <Navbar.Brand href="https://flowbite-react.com">
-        <img
-          src="/favicon.svg"
-          className="mr-3 h-6 sm:h-9"
-          alt="Flowbite React Logo"
-        />
-        <span className="self-center whitespace-nowrap text-xl font-semibold dark:text-white">
-          Flowbite React
+    <Navbar className="md:sticky md:top-0" fluid rounded>
+      <Navbar.Brand href="https://thedancelab.fr/">
+        <Image src={Logo} width={75} height={75} alt="Logo" />
+        <span className="self-center whitespace-nowrap text-xl font-semibold dark:text-white ml-4">
+          The Dance Lab
         </span>
       </Navbar.Brand>
       <div className="flex md:order-2">
-        <Button>Get started</Button>
+        <Button className="mr-4" href="/login">
+          Login
+        </Button>
+        <Button>Sign in</Button>
         <Navbar.Toggle />
       </div>
       <Navbar.Collapse>
-        <Navbar.Link href="#" active>
+        <Navbar.Link href="/" active>
           Home
         </Navbar.Link>
-        <Navbar.Link href="#">About</Navbar.Link>
-        <Navbar.Link href="#">Services</Navbar.Link>
-        <Navbar.Link href="#">Pricing</Navbar.Link>
-        <Navbar.Link href="#">Contact</Navbar.Link>
+        <Navbar.Link href="/cours">Cours</Navbar.Link>
+        <Navbar.Link href="/tarifs">Tarifs</Navbar.Link>
       </Navbar.Collapse>
     </Navbar>
   );
