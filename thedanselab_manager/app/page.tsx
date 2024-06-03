@@ -16,5 +16,5 @@ export default function Home() {
   setNewView();
   return (
     <div>hellllooo</div>
-  );
+  ); 
 }
