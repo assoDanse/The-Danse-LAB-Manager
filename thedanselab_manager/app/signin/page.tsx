@@ -7,6 +7,7 @@ import EmailInput from "@/components/EmailInput";
 import PasswordInput from "@/components/PasswordInput";
 import ValidationButton from "@/components/ValidationButton";
 import FirstNameInput from "@/components/FirstNameInput";
+import { createUser } from "@/app/lib/userService"; // Importation du service utilisateur
 
 const CreateUserForm: React.FC = () => {
   const [name, setName] = useState("");
@@ -14,17 +15,36 @@ const CreateUserForm: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [message, setMessage] = useState(""); // Pour afficher les messages de succès
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (!email || !password) {
+    if (!name || !firstName || !email || !password) {
       setError("Veuillez remplir tous les champs.");
       return;
     }
 
     setError("");
+    setMessage("");
+
+    try {
+      // Appel du service pour créer un utilisateur
+      const response = await createUser({ name, firstName, email, password });
+      
+      if (response.error) {
+        setError(`Erreur: ${response.error.message}`);
+      } else {
+        setMessage("Utilisateur ajouté avec succès !");
+        setName("");
+        setFirstName("");
+        setEmail("");
+        setPassword("");
+      }
+    } catch (error) {
+      setError(`Erreur lors de la création de l'utilisateur: ${error.message}`);
+    }
   };
 
   return (
@@ -38,7 +58,8 @@ const CreateUserForm: React.FC = () => {
           <EmailInput email={email} setEmail={setEmail} />
           <PasswordInput password={password} setPassword={setPassword} />
           {error && <p className="text-red-500">{error}</p>}
-          <ValidationButton text="se connecter" />
+          {message && <p className="text-green-500">{message}</p>}
+          <ValidationButton text="Créer un compte" />
         </form>
       </div>
     </div>
