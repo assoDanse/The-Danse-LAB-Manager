@@ -17,7 +17,7 @@ function NavbarVisiteur() {
         <Button className="mr-4" href="/login">
           Login
         </Button>
-        <Button>Sign in</Button>
+        <Button href="/signin">Sign in</Button>
         <Navbar.Toggle />
       </div>
       <Navbar.Collapse>
@@ -26,6 +26,7 @@ function NavbarVisiteur() {
         </Navbar.Link>
         <Navbar.Link href="/cours">Cours</Navbar.Link>
         <Navbar.Link href="/tarifs">Tarifs</Navbar.Link>
+        <Navbar.Link href="/contact">Contact</Navbar.Link>
       </Navbar.Collapse>
     </Navbar>
   );

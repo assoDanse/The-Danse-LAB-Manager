@@ -6,7 +6,7 @@ import PasswordInput from "@/components/PasswordInput";
 import ValidationButton from "@/components/ValidationButton";
 import { useRouter } from "next/navigation";
 
-const CreateUserForm: React.FC = () => {
+const LogUserForm: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -91,7 +91,7 @@ const CreateUserForm: React.FC = () => {
   return (
     <div className="flex justify-center items-center h-screen w-full">
       <div className="max-w-sm w-full p-8 bg-white rounded-lg shadow-md">
-        <h1 className="text-center text-2xl mb-6">TEST</h1>
+        <h1 className="text-center text-2xl mb-6">Connexion</h1>
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-5">
           <EmailInput email={email} setEmail={setEmail} />
@@ -104,4 +104,4 @@ const CreateUserForm: React.FC = () => {
   );
 };
 
-export default CreateUserForm;
+export default LogUserForm;
