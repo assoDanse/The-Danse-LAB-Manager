@@ -14,7 +14,7 @@ function CardCoursVisiteur({
   prix,
 }: CardCoursVisiteurProps) {
   return (
-    <Card className="max-w-sm" imgAlt={image} imgSrc={image}>
+    <Card className="max-w-sm m-8" imgAlt={image} imgSrc={image}>
       <h5 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
         {titre}
       </h5>
