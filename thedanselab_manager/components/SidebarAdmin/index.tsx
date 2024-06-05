@@ -27,7 +27,7 @@ export function SidebarAdmin() {
           <Sidebar.Item href="/createEleve" icon={HiUserGroup}>
             Créer un élève
           </Sidebar.Item>
-          <Sidebar.Item href="#" icon={HiCreditCard}>
+          <Sidebar.Item href="/CreateTarifPage" icon={HiCreditCard}>
             Créer un tarif
           </Sidebar.Item>
           <Sidebar.Item href="#" icon={HiCurrencyDollar}>
