@@ -5,7 +5,7 @@ import CardcoursVisiteur from "@/components/CardcoursVisiteur";
 
 const TestComponent: React.FC = () => {
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen space-y-4">
+    <div className="flex flex-wrap justify-center items-center min-h-screen p-4">
       <CardcoursVisiteur
         image='bvbcv' 
         titre="Titre du cours" 

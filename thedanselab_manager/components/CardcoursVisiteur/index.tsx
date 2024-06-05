@@ -13,7 +13,7 @@ type CardImageProps = {
 
 const CardcoursVisiteur: React.FC<CardImageProps> = ({ titre, description, image, prix, date, heure, duree }) => {
   return (
-    <Card className="max-w-sm">
+    <Card className="max-w-sm m-4">
       {image && (
         <img
           className="w-full h-48 object-cover"
@@ -40,4 +40,3 @@ const CardcoursVisiteur: React.FC<CardImageProps> = ({ titre, description, image
 };
 
 export default CardcoursVisiteur;
-
