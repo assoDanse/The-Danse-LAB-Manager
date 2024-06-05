@@ -1,14 +1,14 @@
 "use client";
 import React, { useState } from "react";
-import SidebarProfesseur from "@/components/SidebarProfesseur"; // Modifier le chemin d'importation si nécessaire
+import SidebarAdmin from "@/components/SidebarAdmin";
+// import { supabase } from "../supabaseClient";
+
+import { useRouter } from "next/navigation";
 
 const Home: React.FC = () => {
   return (
-    <div className="flex">
-      <SidebarProfesseur /> {/* La sidebar va être placée à gauche */}
-      <div className="flex justify-center items-center flex-1">
-        <h1>Contenu principal</h1>
-      </div>
+    <div className="flex justify-center items-center h-screen w-full">
+      <h1>Home</h1>
     </div>
   );
 };
