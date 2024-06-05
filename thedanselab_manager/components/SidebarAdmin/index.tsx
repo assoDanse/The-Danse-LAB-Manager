@@ -1,7 +1,14 @@
 "use client";
 
 import { Sidebar } from "flowbite-react";
-import { HiHome, HiBookOpen, HiUserAdd, HiUserGroup, HiCreditCard, HiCurrencyDollar } from "react-icons/hi";
+import {
+  HiHome,
+  HiBookOpen,
+  HiUserAdd,
+  HiUserGroup,
+  HiCreditCard,
+  HiCurrencyDollar,
+} from "react-icons/hi";
 
 export function SidebarAdmin() {
   return (
