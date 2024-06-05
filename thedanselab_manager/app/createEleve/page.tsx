@@ -8,7 +8,7 @@ import PasswordInput from "@/components/PasswordInput";
 import ValidationButton from "@/components/ValidationButton";
 import FirstNameInput from "@/components/FirstNameInput";
 
-const creationeleve: React.FC = () => {
+const CreateEleve: React.FC = () => {
   const [name, setName] = useState("");
   const [firstName, setFirstName] = useState("");
   const [email, setEmail] = useState("");
@@ -44,4 +44,4 @@ const creationeleve: React.FC = () => {
   );
 };
 
-export default creationeleve;
+export default CreateEleve;
