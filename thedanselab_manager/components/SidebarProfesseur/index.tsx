@@ -16,13 +16,13 @@ export function SidebarProfesseur() {
     <Sidebar aria-label="Default sidebar example">
       <Sidebar.Items>
         <Sidebar.ItemGroup>
-          <Sidebar.Item href="#" icon={FaHome}>
+          <Sidebar.Item href="/panelprof" icon={FaHome}>
             Home
           </Sidebar.Item>
           <Sidebar.Item href="#" icon={FaUser}>
             Mes cours
           </Sidebar.Item>
-          <Sidebar.Item href="#" icon={FaCog}>
+          <Sidebar.Item href="/createEleve" icon={FaCog}>
             Creation élève
           </Sidebar.Item>
         </Sidebar.ItemGroup>
