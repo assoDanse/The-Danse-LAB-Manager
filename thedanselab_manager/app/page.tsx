@@ -8,9 +8,8 @@ import SidebarEleve from "@/components/SidebarEleve";
 
 const Home: React.FC = () => {
   return (
-    <div className="flex justify-center items-center h-screen w-full">
+    <div className="flex justify-center items-center w-full">
       <h1>Accueil</h1>
-      <SidebarEleve />
       <div></div>
     </div>
   );
