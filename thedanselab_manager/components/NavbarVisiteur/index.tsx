@@ -15,18 +15,18 @@ function NavbarVisiteur() {
       </Navbar.Brand>
       <div className="flex md:order-2">
         <Button className="mr-4" href="/login">
-          Login
+          Se connecter
         </Button>
-        <Button href="/signin">Sign in</Button>
+        <Button href="/signin">Créer un compte</Button>
         <Navbar.Toggle />
       </div>
       <Navbar.Collapse>
         <Navbar.Link href="/" active>
-          Home
+          Accueil
         </Navbar.Link>
-        <Navbar.Link href="/CoursVisiteur">Cours</Navbar.Link>
-        <Navbar.Link href="/tarifs">Tarifs</Navbar.Link>
-        <Navbar.Link href="/contact">Contact</Navbar.Link>
+        <Navbar.Link href="/visiteur/cours">Cours</Navbar.Link>
+        <Navbar.Link href="/visiteur/tarifs">Tarifs</Navbar.Link>
+        <Navbar.Link href="/visiteur/contact">Contact</Navbar.Link>
       </Navbar.Collapse>
     </Navbar>
   );
