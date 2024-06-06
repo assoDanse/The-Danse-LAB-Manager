@@ -98,6 +98,20 @@ const LogUserForm: React.FC = () => {
           <PasswordInput password={password} setPassword={setPassword} />
           {error && <p className="text-red-500">{error}</p>}
           <ValidationButton text="Se connecter" />
+          <div className="flex justify-around">
+            <a
+              className="text-sm text-blue-500 underline text-center"
+              href="/auth/signin"
+            >
+              Créer un compte
+            </a>
+            <a
+              className="text-sm text-blue-500 underline text-center"
+              href="/auth/recup"
+            >
+              Mot de passe oublié
+            </a>
+          </div>
         </form>
       </div>
     </div>

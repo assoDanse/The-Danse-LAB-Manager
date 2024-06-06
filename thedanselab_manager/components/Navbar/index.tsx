@@ -6,7 +6,7 @@ import Logo from "@/public/Logo-150x150.jpg";
 
 function NavbarVisiteur() {
   return (
-    <Navbar className="md:sticky top-0 p-4 " fluid rounded>
+    <Navbar className="md:sticky top-0 p-4 w-full bg-slate-400" fluid rounded>
       <Navbar.Brand href="https://thedancelab.fr/">
         <Image src={Logo} width={75} height={75} alt="Logo" />
         <span className="self-center whitespace-nowrap text-xl font-semibold dark:text-white ml-4">
@@ -14,7 +14,7 @@ function NavbarVisiteur() {
         </span>
       </Navbar.Brand>
       <div className="flex md:order-3">
-        <Button className="mr-4 max-md:hidden" href="/login">
+        <Button className="mr-4 max-md:hidden" href="/auth/login">
           Se connecter
         </Button>
         <Navbar.Toggle />
@@ -23,10 +23,10 @@ function NavbarVisiteur() {
         <Navbar.Link href="/" active>
           Accueil
         </Navbar.Link>
-        <Navbar.Link href="/visiteur/cours">Cours</Navbar.Link>
-        <Navbar.Link href="/visiteur/tarifs">Tarifs</Navbar.Link>
-        <Navbar.Link href="/visiteur/contact">Contact</Navbar.Link>
-        <Button className="m-4 md:hidden" href="/login">
+        <Navbar.Link href="/user/visiteur/cours">Cours</Navbar.Link>
+        <Navbar.Link href="/user/visiteur/tarifs">Tarifs</Navbar.Link>
+        <Navbar.Link href="/user/visiteur/contact">Contact</Navbar.Link>
+        <Button className="m-4 md:hidden" href="/auth/login">
           Se connecter
         </Button>
       </Navbar.Collapse>
