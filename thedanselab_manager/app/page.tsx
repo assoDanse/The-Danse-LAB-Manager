@@ -11,6 +11,7 @@ const Home: React.FC = () => {
     <div className="flex justify-center items-center h-screen w-full">
       <h1>Home</h1>
       <SidebarEleve />
+      <div></div>
     </div>
   );
 };
