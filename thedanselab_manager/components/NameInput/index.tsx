@@ -8,10 +8,10 @@ function NameInput({
 }) {
   return (
     <input
-      type="name"
+      type="Nom"
       value={name}
       onChange={(e) => setName(e.target.value)}
-      placeholder="Name"
+      placeholder="Nom"
       style={{ padding: "10px", borderRadius: "5px", border: "1px solid #ddd" }}
     />
   );

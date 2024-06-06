@@ -1,21 +1,28 @@
 "use client";
 
 import { Sidebar } from "flowbite-react";
-import { HiHome, HiBookOpen, HiUserAdd, HiUserGroup, HiCreditCard, HiCurrencyDollar } from "react-icons/hi";
+import {
+  HiHome,
+  HiBookOpen,
+  HiUserAdd,
+  HiUserGroup,
+  HiCreditCard,
+  HiCurrencyDollar,
+} from "react-icons/hi";
 
 export function SidebarEleve() {
   return (
     <Sidebar aria-label="Default sidebar example">
       <Sidebar.Items>
         <Sidebar.ItemGroup>
-          <Sidebar.Item href="#" icon={HiHome}>
-            Home
+          <Sidebar.Item href="/eleve" icon={HiHome}>
+            Accueil
           </Sidebar.Item>
-          <Sidebar.Item href="#" icon={HiBookOpen}>
-            Voir mes cours
+          <Sidebar.Item href="/eleve/cours" icon={HiBookOpen}>
+            Mes cours
           </Sidebar.Item>
-          <Sidebar.Item href="#" icon={HiCreditCard}>
-            Voir les tarifs
+          <Sidebar.Item href="/eleve/tarifs" icon={HiCreditCard}>
+            Les tarifs
           </Sidebar.Item>
         </Sidebar.ItemGroup>
       </Sidebar.Items>

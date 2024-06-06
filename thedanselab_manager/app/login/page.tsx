@@ -2,12 +2,11 @@
 
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-import { supabase } from "@/app/lib/supabase"; 
+import { supabase } from "@/app/lib/supabase";
 import EmailInput from "@/components/EmailInput";
 import PasswordInput from "@/components/PasswordInput";
 import ValidationButton from "@/components/ValidationButton";
-import bcrypt from 'bcryptjs';
-
+import bcrypt from "bcryptjs";
 
 const LoginForm: React.FC = () => {
   const [email, setEmail] = useState("");
@@ -27,9 +26,9 @@ const LoginForm: React.FC = () => {
     try {
       // Vérification des informations de connexion
       const { data: user, error: supabaseError } = await supabase
-        .from('utilisateur')
-        .select('id_utilisateur, email, mot_de_passe, role')
-        .eq('email', email)
+        .from("utilisateur")
+        .select("id_utilisateur, email, mot_de_passe, role")
+        .eq("email", email)
         .single();
 
       if (supabaseError || !user) {
@@ -47,17 +46,17 @@ const LoginForm: React.FC = () => {
 
       // Connexion réussie
       setMessage("Connexion réussie !");
-      
+
       // Rediriger vers la page appropriée en fonction du rôle
       switch (user.role) {
-        case 'admin':
-          router.push('/admin/home');
+        case "admin":
+          router.push("/admin/home");
           break;
-        case 'professeur':
-          router.push('/professeur/home');
+        case "professeur":
+          router.push("/professeur/home");
           break;
-        case 'eleve':
-          router.push('/Home');
+        case "eleve":
+          router.push("/Home");
           break;
         default:
           setError("Rôle inconnu.");
