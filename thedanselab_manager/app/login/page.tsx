@@ -97,7 +97,7 @@ const LogUserForm: React.FC = () => {
           <EmailInput email={email} setEmail={setEmail} />
           <PasswordInput password={password} setPassword={setPassword} />
           {error && <p className="text-red-500">{error}</p>}
-          <ValidationButton text="se connecter" />
+          <ValidationButton text="Se connecter" />
         </form>
       </div>
     </div>
