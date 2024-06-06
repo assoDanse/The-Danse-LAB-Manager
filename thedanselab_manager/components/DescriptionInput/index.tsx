@@ -11,7 +11,7 @@ const DescriptionInput: React.FC<DescriptionInputProps> = ({ description, setDes
       value={description}
       onChange={(e) => setDescription(e.target.value)}
       placeholder="Description"
-      className="w-full p-2 border border-gray-300 rounded"
+      className=" border-gray-300 rounded"
       rows={4}
     />
   );

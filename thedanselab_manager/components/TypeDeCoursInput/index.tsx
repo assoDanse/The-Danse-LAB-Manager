@@ -19,7 +19,7 @@ const TypeDeCoursInput: React.FC<TypeDeCoursInputProps> = ({ typeDeCours, setTyp
     <select
       value={typeDeCours}
       onChange={(e) => setTypeDeCours(e.target.value)}
-      className="w-full p-2 border border-gray-300 rounded"
+      className="border-gray-300 rounded"
       style={{ fontSize: '14px' }} // Ajout de la taille de la police
     >
       <option value="" disabled>

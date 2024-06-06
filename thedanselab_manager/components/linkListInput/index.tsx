@@ -32,7 +32,6 @@ const LinkListInput: React.FC<LinkListInputProps> = ({ value, onChange }) => {
         onChange={handleInputChange}
         placeholder="Ajouter un lien"
       />
-      <button onClick={handleAddLink}>Ajouter</button>
       <ul>
         {value && value.map((link, index) => (
           <li key={index}>
@@ -41,9 +40,9 @@ const LinkListInput: React.FC<LinkListInputProps> = ({ value, onChange }) => {
           </li>
         ))}
       </ul>
+      <button onClick={handleAddLink}>Ajouter</button> {/* Déplacé en bas de la zone de saisie */}
     </div>
   );
 };
 
 export default LinkListInput;
-
