@@ -4,7 +4,7 @@ import { Button, Navbar } from "flowbite-react";
 import Image from "next/image";
 import Logo from "@/public/Logo-150x150.jpg";
 
-function NavbarVisiteur() {
+function Navbar_() {
   return (
     <Navbar className="md:sticky top-0 p-4 " fluid rounded>
       <Navbar.Brand href="https://thedancelab.fr/">
@@ -34,4 +34,4 @@ function NavbarVisiteur() {
   );
 }
 
-export default NavbarVisiteur;
+export default Navbar_;
