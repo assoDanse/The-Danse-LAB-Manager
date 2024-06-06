@@ -7,7 +7,7 @@ import EmailInput from "@/components/EmailInput";
 import PasswordInput from "@/components/PasswordInput";
 import ValidationButton from "@/components/ValidationButton";
 import FirstNameInput from "@/components/FirstNameInput";
-import { auth } from "@/app/config/firebase-config"; // Importation de la config Firebase
+import { auth } from "@/config/firebase-config"; // Importation de la config Firebase
 import { createUserWithEmailAndPassword } from "firebase/auth";
 
 const CreateUserForm: React.FC = () => {

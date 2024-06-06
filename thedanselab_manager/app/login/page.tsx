@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import EmailInput from "@/components/EmailInput";
 import PasswordInput from "@/components/PasswordInput";
 import ValidationButton from "@/components/ValidationButton";
-import { auth } from "@/app/config/firebase-config"; // Assurez-vous que cette importation est correcte
+import { auth } from "@/config/firebase-config"; // Assurez-vous que cette importation est correcte
 import { signInWithEmailAndPassword } from "firebase/auth";
 
 const Login: React.FC = () => {
