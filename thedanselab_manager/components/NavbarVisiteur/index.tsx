@@ -24,9 +24,9 @@ function NavbarVisiteur() {
         <Navbar.Link href="/" active>
           Accueil
         </Navbar.Link>
-        <Navbar.Link href="/visiteur/cours">Cours</Navbar.Link>
-        <Navbar.Link href="/visiteur/tarifs">Tarifs</Navbar.Link>
-        <Navbar.Link href="/visiteur/contact">Contact</Navbar.Link>
+        <Navbar.Link href="/Visiteur/cours">Cours</Navbar.Link>
+        <Navbar.Link href="/Visiteur/tarifs">Tarifs</Navbar.Link>
+        <Navbar.Link href="/Visiteur/contact">Contact</Navbar.Link>
       </Navbar.Collapse>
     </Navbar>
   );

@@ -21,17 +21,23 @@ const CoursVisiteur: React.FC = () => {
 
   return (
     <div className="flex flex-wrap justify-center items-center">
-      {coursData.map((cours, index) => (
-        <CardCoursVisiteur
-          key={index}
-          titre={cours.titre}
-          description={cours.description}
-          image={cours.image}
-          prix={cours.prix}
-          dateDebut={cours.dateDebut}
-          duree={cours.duree}
-        />
-      ))}
+      {coursData.length > 0 ? (
+        coursData.map((cours, index) => (
+          <CardCoursVisiteur
+            key={index}
+            titre={cours.titre}
+            description={cours.description}
+            image={cours.image}
+            prix={cours.prix}
+            dateDebut={cours.dateDebut}
+            duree={cours.duree}
+          />
+        ))
+      ) : (
+        <p style={{ textAlign: "center", fontWeight: "bold" }}>
+          Aucun cours disponible pour le moment.
+        </p>
+      )}
     </div>
   );
 };
