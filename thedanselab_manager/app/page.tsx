@@ -16,7 +16,6 @@ const TestComponent: React.FC = () => {
         duree="2 heures"
       />
       <CardcoursVisiteur 
-        image='bvbcv' 
         titre="Titre du cours 2" 
         description="Ceci est une description" 
         prix="20€"
@@ -25,7 +24,6 @@ const TestComponent: React.FC = () => {
         duree="2 heures"
       />
       <CardcoursVisiteur 
-        image='bvbcv' 
         titre="Titre du cours 3" 
         description="Ceci est une description" 
         prix="20€"
@@ -34,7 +32,6 @@ const TestComponent: React.FC = () => {
         duree="2 heures"
       />
       <CardcoursVisiteur 
-        image='bvbcv' 
         titre="Titre du cours 4" 
         description="Ceci est une description" 
         prix="20€"
@@ -43,7 +40,6 @@ const TestComponent: React.FC = () => {
         duree="2 heures"
       />
       <CardcoursVisiteur 
-        image='bvbcv' 
         titre="Titre du cours 5" 
         description="Ceci est une description" 
         prix="20€"
