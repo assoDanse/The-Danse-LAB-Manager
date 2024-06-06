@@ -2,13 +2,13 @@
 
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-import { supabase } from "@/app/lib/supabase";
 import EmailInput from "@/components/EmailInput";
 import PasswordInput from "@/components/PasswordInput";
 import ValidationButton from "@/components/ValidationButton";
-import bcrypt from "bcryptjs";
+import { auth } from "@/app/config/firebase-config"; // Assurez-vous que cette importation est correcte
+import { signInWithEmailAndPassword } from "firebase/auth";
 
-const LoginForm: React.FC = () => {
+const Login: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -23,47 +23,18 @@ const LoginForm: React.FC = () => {
       return;
     }
 
+    setError("");
+    setMessage("");
+
     try {
-      // Vérification des informations de connexion
-      const { data: user, error: supabaseError } = await supabase
-        .from("utilisateur")
-        .select("id_utilisateur, email, mot_de_passe, role")
-        .eq("email", email)
-        .single();
-
-      if (supabaseError || !user) {
-        setError("Email ou mot de passe incorrect.");
-        return;
-      }
-
-      // Vérification du mot de passe
-      const isPasswordValid = await bcrypt.compare(password, user.mot_de_passe);
-
-      if (!isPasswordValid) {
-        setError("Email ou mot de passe incorrect.");
-        return;
-      }
-
-      // Connexion réussie
-      setMessage("Connexion réussie !");
-
-      // Rediriger vers la page appropriée en fonction du rôle
-      switch (user.role) {
-        case "admin":
-          router.push("/admin/home");
-          break;
-        case "professeur":
-          router.push("/professeur/home");
-          break;
-        case "eleve":
-          router.push("/Home");
-          break;
-        default:
-          setError("Rôle inconnu.");
-          return;
-      }
-    } catch (error) {
-      setError(`Erreur lors de la connexion: ${error.message}`);
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+      setMessage(`Connecté en tant que : ${user.email}`);
+      // Redirigez vers la page d'accueil après la connexion
+      router.push("/eleve");
+    } catch (error: any) {
+      setError(`Erreur de connexion: ${error.message}`);
+      console.error(error.code, error.message);
     }
   };
 
@@ -84,4 +55,4 @@ const LoginForm: React.FC = () => {
   );
 };
 
-export default LoginForm;
+export default Login;

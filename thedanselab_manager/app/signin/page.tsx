@@ -7,6 +7,8 @@ import EmailInput from "@/components/EmailInput";
 import PasswordInput from "@/components/PasswordInput";
 import ValidationButton from "@/components/ValidationButton";
 import FirstNameInput from "@/components/FirstNameInput";
+import { auth } from "@/app/config/firebase-config"; // Importation de la config Firebase
+import { createUserWithEmailAndPassword } from "firebase/auth";
 
 const CreateUserForm: React.FC = () => {
   const [name, setName] = useState("");
@@ -14,17 +16,55 @@ const CreateUserForm: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [message, setMessage] = useState(""); // Pour afficher les messages de succès
   const router = useRouter();
+
+  const validateEmail = (email: string) => {
+    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return re.test(String(email).toLowerCase());
+  };
+
+  const validatePassword = (password: string) => {
+    const re = /^(?=.*[A-Z])(?=.*\d).{6,}$/;
+    return re.test(password);
+  };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (!email || !password) {
+    if (!name || !firstName || !email || !password) {
       setError("Veuillez remplir tous les champs.");
       return;
     }
 
+    if (!validateEmail(email)) {
+      setError("Email invalide");
+      return;
+    }
+
+    if (!validatePassword(password)) {
+      setError("Le mot de passe doit contenir au moins 6 caractères, une majuscule et un chiffre");
+      return;
+    }
+
     setError("");
+    setMessage("");
+
+    try {
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+      setMessage(`Utilisateur créé : ${user.email}`);
+      setName("");
+      setFirstName("");
+      setEmail("");
+      setPassword("");
+    } catch (error: any) {
+      if (error.code === 'auth/email-already-in-use') {
+        setError('Cet utilisateur existe déjà');
+      } else {
+        setError(`Erreur lors de la création de l'utilisateur: ${error.message}`);
+      }
+    }
   };
 
   return (
@@ -38,7 +78,8 @@ const CreateUserForm: React.FC = () => {
           <EmailInput email={email} setEmail={setEmail} />
           <PasswordInput password={password} setPassword={setPassword} />
           {error && <p className="text-red-500">{error}</p>}
-          <ValidationButton text="Se connecter" />
+          {message && <p className="text-green-500">{message}</p>}
+          <ValidationButton text="Créer un compte" />
         </form>
       </div>
     </div>
