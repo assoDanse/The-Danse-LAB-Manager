@@ -15,4 +15,4 @@ const Home: React.FC = () => {
   );
 };
 
-export default CreateUserForm;
+export default Home;
