@@ -15,7 +15,7 @@ export function SidebarAdmin() {
     <Sidebar aria-label="Default sidebar example">
       <Sidebar.Items>
         <Sidebar.ItemGroup>
-          <Sidebar.Item href="#" icon={HiHome}>
+          <Sidebar.Item href="/paneladmin" icon={HiHome}>
             Home
           </Sidebar.Item>
           <Sidebar.Item href="#" icon={HiBookOpen}>
@@ -24,10 +24,10 @@ export function SidebarAdmin() {
           <Sidebar.Item href="#" icon={HiUserAdd}>
             Créer un professeur
           </Sidebar.Item>
-          <Sidebar.Item href="#" icon={HiUserGroup}>
+          <Sidebar.Item href="/createEleve" icon={HiUserGroup}>
             Créer un élève
           </Sidebar.Item>
-          <Sidebar.Item href="#" icon={HiCreditCard}>
+          <Sidebar.Item href="/CreateTarifPage" icon={HiCreditCard}>
             Créer un tarif
           </Sidebar.Item>
           <Sidebar.Item href="#" icon={HiCurrencyDollar}>
