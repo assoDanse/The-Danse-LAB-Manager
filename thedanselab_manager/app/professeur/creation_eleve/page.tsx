@@ -37,7 +37,7 @@ const CreateEleve: React.FC = () => {
           <EmailInput email={email} setEmail={setEmail} />
           <PasswordInput password={password} setPassword={setPassword} />
           {error && <p className="text-red-500">{error}</p>}
-          <ValidationButton text="Inscription élève" />
+          <ValidationButton text="Inscrire élève" />
         </form>
       </div>
     </div>
