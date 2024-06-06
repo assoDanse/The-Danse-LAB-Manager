@@ -158,8 +158,23 @@ On peut réaliser plusieurs commits avant de push.
 Pour push nos commits vers le repot distant, on clique sur push.
 ![[Pasted image 20240110120456.png]]
 
+
+
 **Attention** au choix de la branche de travail si nécessaire. 
 Il faut la sélectionner avant d'ouvrir l'éditeur de texte pour limiter les problèmes.
 
 Dans le cas contraire, si on souhaite changer de branche après avoir effectué des modifications, la popup suivantes s'ouvre et on doit faire le choix qui nous convient.
 ![[Pasted image 20240110120912.png]]
+
+
+Installer Firebase
+```bash
+npm install firebase
+```
+
+Autres commandes à installer
+```bash
+npm install js-cookie
+npm install cookie next-cookies jsonwebtoken
+npm install bcryptjs
+```
