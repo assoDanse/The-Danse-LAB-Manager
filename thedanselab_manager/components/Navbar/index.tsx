@@ -12,20 +12,31 @@ import { doc, getDoc } from "firebase/firestore";
 function Navbar_() {
   const [userName, setUserName] = useState<string | null>(null);
   const [userFirstName, setUserFirstName] = useState<string | null>(null);
+  const [userStatus, setUserStatus] = useState<string | null>(null);
   const router = useRouter();
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
-        const userDoc = await getDoc(doc(db, "users", user.uid));
-        if (userDoc.exists()) {
-          const userData = userDoc.data();
-          setUserName(userData.name);
-          setUserFirstName(userData.firstName);
+        try {
+          const userDoc = await getDoc(doc(db, "users", user.uid));
+          if (userDoc.exists()) {
+            const userData = userDoc.data();
+            console.log("User data retrieved:", userData);
+            setUserName(userData.name);
+            setUserFirstName(userData.firstName);
+            setUserStatus(userData.status);
+          } else {
+            console.log("No such document!");
+          }
+        } catch (error) {
+          console.error("Error getting user document:", error);
         }
       } else {
+        console.log("User not logged in or no user found");
         setUserName(null);
         setUserFirstName(null);
+        setUserStatus(null);
       }
     });
 
@@ -38,6 +49,30 @@ function Navbar_() {
       router.push("/auth/login"); // Redirige vers la page de connexion après la déconnexion
     } catch (error: any) {
       console.error("Erreur lors de la déconnexion:", error.message);
+    }
+  };
+
+  const getHomeLink = () => {
+    if (userStatus === "admin") {
+      return "/user/admin";
+    } else if (userStatus === "professeur") {
+      return "/user/professeur";
+    } else if (userStatus === "eleve") {
+      return "/user/eleve";
+    } else {
+      return "/";
+    }
+  };
+
+  const getCoursesLink = () => {
+    if (userStatus === "admin") {
+      return "/user/admin/cours";
+    } else if (userStatus === "professeur") {
+      return "/user/professeur/cours";
+    } else if (userStatus === "eleve") {
+      return "/user/eleve/cours";
+    } else {
+      return "/user/visiteur/cours";
     }
   };
 
@@ -70,10 +105,10 @@ function Navbar_() {
         <Navbar.Toggle />
       </div>
       <Navbar.Collapse className="text-center">
-        <Navbar.Link href="/" active>
+        <Navbar.Link href={getHomeLink()} active>
           Accueil
         </Navbar.Link>
-        <Navbar.Link href="/user/visiteur/cours">Cours</Navbar.Link>
+        <Navbar.Link href={getCoursesLink()}>Cours</Navbar.Link>
         <Navbar.Link href="/user/visiteur/tarifs">Tarifs</Navbar.Link>
         <Navbar.Link href="/user/visiteur/contact">Contact</Navbar.Link>
         {!userName && !userFirstName && (

@@ -21,7 +21,7 @@ const CreateUserForm: React.FC = () => {
   const router = useRouter();
 
   const validateEmail = (email: string) => {
-    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const re = /^[^\s@]+\@[^\s@]+\.[^\s@]+$/;
     return re.test(String(email).toLowerCase());
   };
 
@@ -60,7 +60,7 @@ const CreateUserForm: React.FC = () => {
         name: name,
         firstName: firstName,
         email: email,
-        status: "eleve", // Définir le statut par défaut à "eleve"
+        status: "eleve",
       });
 
       setMessage(`Utilisateur créé : ${user.email}`);
@@ -68,6 +68,9 @@ const CreateUserForm: React.FC = () => {
       setFirstName("");
       setEmail("");
       setPassword("");
+
+      // Rediriger vers la page de l'élève
+      router.push("/user/eleve");
     } catch (error: any) {
       if (error.code === 'auth/email-already-in-use') {
         setError('Cet utilisateur existe déjà');
