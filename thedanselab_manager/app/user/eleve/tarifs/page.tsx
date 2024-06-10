@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import CardTarifVisiteur from "@/components/CardTarifVisiteur";
 
-const tarifs: React.FC = () => {
+const Tarifs: React.FC = () => {
   const [tarifData, setTarifData] = useState([]);
 
   useEffect(() => {
@@ -19,20 +19,30 @@ const tarifs: React.FC = () => {
     fetchTarifData();
   }, []);
 
+  const handleTarifClick = (tarif: any) => {
+    const userConfirmed = window.confirm(`Voulez-vous vraiment sélectionner ce tarif : ${tarif.titre} ?`);
+    if (userConfirmed) {
+      // Vous pouvez ajouter l'action à effectuer après la confirmation ici
+      alert(`Vous avez confirmé le tarif : ${tarif.titre}`);
+    }
+  };
+
   return (
     <div className="flex flex-wrap justify-center items-center">
       {tarifData.length > 0 ? (
         tarifData.map((tarif, index) => (
-          <CardTarifVisiteur
-            key={index}
-            titre={tarif.titre}
-            description={tarif.description}
-            image={tarif.image}
-            prix={tarif.prix}
-          />
+          <div key={index} onClick={() => handleTarifClick(tarif)}>
+            <CardTarifVisiteur
+              titre={tarif.titre}
+              description={tarif.description}
+              image={tarif.image}
+              prix={tarif.prix}
+              credits={tarif.credits} // Passer le nombre de crédits
+            />
+          </div>
         ))
       ) : (
-        <p style={{ textAlign: "center", fontWeight: "bold" }}>
+        <p className="text-center font-bold">
           Aucun tarif disponible pour le moment.
         </p>
       )}
@@ -40,4 +50,4 @@ const tarifs: React.FC = () => {
   );
 };
 
-export default tarifs;
+export default Tarifs;

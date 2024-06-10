@@ -6,9 +6,10 @@ type CardTarifVisiteurProps = {
   description: string;
   image?: string; // Image est maintenant optionnel
   prix: string;
+  credits: number; // Ajout de la propriété crédits
 };
 
-const CardTarifVisiteur: React.FC<CardTarifVisiteurProps> = ({ titre, description, image, prix }) => {
+const CardTarifVisiteur: React.FC<CardTarifVisiteurProps> = ({ titre, description, image, prix, credits }) => {
   return (
     <Card className="max-w-sm m-4 sm:max-w-md md:max-w-lg lg:max-w-xl xl:max-w-2xl"> {/* Ajout de classes adaptatives */}
       {image && (
@@ -27,6 +28,9 @@ const CardTarifVisiteur: React.FC<CardTarifVisiteurProps> = ({ titre, descriptio
         </p>
         <p className="font-normal text-gray-700 dark:text-gray-400">
           {prix}
+        </p>
+        <p className="font-normal text-gray-700 dark:text-gray-400">
+          Crédits : {credits}
         </p>
       </div>
     </Card>
