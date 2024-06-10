@@ -24,6 +24,9 @@ const Tarifs: React.FC = () => {
     if (userConfirmed) {
       // Vous pouvez ajouter l'action à effectuer après la confirmation ici
       alert(`Vous avez confirmé le tarif : ${tarif.titre}`);
+    } else {
+      // Action à effectuer si l'utilisateur annule
+      alert("La sélection du tarif a été annulée.");
     }
   };
 
