@@ -14,16 +14,14 @@ const Home: React.FC = () => {
   return (
     <div className="flex flex-col justify-center items-center h-screen w-full space-y-4">
       <h1>Creation Cours</h1>
-      <form className="flex flex-col gap-5">
-        <TitleInput />
-        <DescriptionInput />
-        <ProfesseurInput />
-        <TypeDeCoursInput />
-        <PriceInput />
-        <DateInput /> {/* Ici */}
-        <DurationInput />
-        <LinkListInput />
-      </form>
+      <TitleInput />
+      <DescriptionInput />
+      <ProfesseurInput />
+      <TypeDeCoursInput />
+      <PriceInput />
+      <DateInput /> {/* Ici */}
+      <DurationInput />
+      <LinkListInput />
     </div>
   );
 };
