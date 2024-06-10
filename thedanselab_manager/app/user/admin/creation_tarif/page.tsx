@@ -13,7 +13,6 @@ const CreateTarifPage: React.FC = () => {
 
   return (
     <div className="flex min-h-screen">
-      <SidebarAdmin />
       <div className="flex-grow p-4">
         <CreationTarif
           titre={titre}
