@@ -12,14 +12,8 @@ const PanelEleve: React.FC = () => {
   };
 
   return (
-    <div className="flex">
-      <div className="flex-none">
-        <SidebarEleve />
-        <div className="flex justify-center items-center mt-4">
-          <p className="text-gray-600">Crédits disponibles : {credits}</p>
-        </div>
-      </div>
-      <div className="flex-grow"></div>
+    <div className="flex ">
+      <p className="text-gray-600">Crédits disponibles : {credits}</p>
     </div>
   );
 };

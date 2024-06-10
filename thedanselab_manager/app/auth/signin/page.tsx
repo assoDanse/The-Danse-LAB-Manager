@@ -7,8 +7,9 @@ import EmailInput from "@/components/EmailInput";
 import PasswordInput from "@/components/PasswordInput";
 import ValidationButton from "@/components/ValidationButton";
 import FirstNameInput from "@/components/FirstNameInput";
-import { auth } from "@/config/firebase-config"; // Importation de la config Firebase
+import { auth, db } from "@/config/firebase-config"; // Importation de la config Firebase
 import { createUserWithEmailAndPassword } from "firebase/auth";
+import { doc, setDoc } from "firebase/firestore";
 
 const CreateUserForm: React.FC = () => {
   const [name, setName] = useState("");
@@ -53,6 +54,15 @@ const CreateUserForm: React.FC = () => {
     try {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
+
+      // Ajouter les informations utilisateur à Firestore
+      await setDoc(doc(db, "users", user.uid), {
+        name: name,
+        firstName: firstName,
+        email: email,
+        status: "eleve", // Définir le statut par défaut à "eleve"
+      });
+
       setMessage(`Utilisateur créé : ${user.email}`);
       setName("");
       setFirstName("");
@@ -80,6 +90,12 @@ const CreateUserForm: React.FC = () => {
           {error && <p className="text-red-500">{error}</p>}
           {message && <p className="text-green-500">{message}</p>}
           <ValidationButton text="Créer un compte" />
+          <a
+            className="text-sm text-blue-500 underline text-center"
+            href="/auth/login"
+          >
+            Se connecter
+          </a>
         </form>
       </div>
     </div>

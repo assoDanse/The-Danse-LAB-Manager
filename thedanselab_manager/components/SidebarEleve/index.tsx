@@ -15,13 +15,13 @@ export function SidebarEleve() {
     <Sidebar aria-label="Default sidebar example">
       <Sidebar.Items>
         <Sidebar.ItemGroup>
-          <Sidebar.Item href="/eleve" icon={HiHome}>
+          <Sidebar.Item href="/user/eleve" icon={HiHome}>
             Accueil
           </Sidebar.Item>
-          <Sidebar.Item href="/eleve/cours" icon={HiBookOpen}>
+          <Sidebar.Item href="/user/eleve/cours" icon={HiBookOpen}>
             Mes cours
           </Sidebar.Item>
-          <Sidebar.Item href="/eleve/tarifs" icon={HiCreditCard}>
+          <Sidebar.Item href="/user/eleve/tarifs" icon={HiCreditCard}>
             Les tarifs
           </Sidebar.Item>
         </Sidebar.ItemGroup>

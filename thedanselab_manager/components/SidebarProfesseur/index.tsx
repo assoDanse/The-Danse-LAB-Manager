@@ -1,28 +1,20 @@
 "use client";
-import { FaHome, FaUser, FaCog } from "react-icons/fa";
+import { FaCog } from "react-icons/fa";
 import { Sidebar } from "flowbite-react";
-import {
-  HiArrowSmRight,
-  HiChartPie,
-  HiInbox,
-  HiShoppingBag,
-  HiTable,
-  HiUser,
-  HiViewBoards,
-} from "react-icons/hi";
+import { HiHome, HiBookOpen } from "react-icons/hi";
 
 export function SidebarProfesseur() {
   return (
     <Sidebar aria-label="Default sidebar example">
       <Sidebar.Items>
         <Sidebar.ItemGroup>
-          <Sidebar.Item href="/professeur" icon={FaHome}>
+          <Sidebar.Item href="/user/professeur" icon={HiHome}>
             Accueil
           </Sidebar.Item>
-          <Sidebar.Item href="/professeur/cours" icon={FaUser}>
+          <Sidebar.Item href="/user/professeur/cours" icon={HiBookOpen}>
             Mes cours
           </Sidebar.Item>
-          <Sidebar.Item href="/professeur/creation_eleve" icon={FaCog}>
+          <Sidebar.Item href="/user/professeur/creation_eleve" icon={FaCog}>
             Création élève
           </Sidebar.Item>
         </Sidebar.ItemGroup>

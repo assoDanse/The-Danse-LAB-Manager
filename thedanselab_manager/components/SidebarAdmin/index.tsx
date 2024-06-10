@@ -15,22 +15,22 @@ export function SidebarAdmin() {
     <Sidebar aria-label="Default sidebar example">
       <Sidebar.Items>
         <Sidebar.ItemGroup>
-          <Sidebar.Item href="/admin" icon={HiHome}>
+          <Sidebar.Item href="/user/admin" icon={HiHome}>
             Accueil
           </Sidebar.Item>
-          <Sidebar.Item href="/admin/creation_cours" icon={HiBookOpen}>
+          <Sidebar.Item href="/user/admin/creation_cours" icon={HiBookOpen}>
             Créer un cours
           </Sidebar.Item>
-          <Sidebar.Item href="/admin/creation_professeur" icon={HiUserAdd}>
+          <Sidebar.Item href="/user/admin/creation_professeur" icon={HiUserAdd}>
             Créer un professeur
           </Sidebar.Item>
-          <Sidebar.Item href="/admin/creation_eleve" icon={HiUserGroup}>
+          <Sidebar.Item href="/user/admin/creation_eleve" icon={HiUserGroup}>
             Créer un élève
           </Sidebar.Item>
-          <Sidebar.Item href="/admin/creation_tarif" icon={HiCreditCard}>
+          <Sidebar.Item href="/user/admin/creation_tarif" icon={HiCreditCard}>
             Créer un tarif
           </Sidebar.Item>
-          <Sidebar.Item href="/admin/comptabilite" icon={HiCurrencyDollar}>
+          <Sidebar.Item href="/user/admin/comptabilite" icon={HiCurrencyDollar}>
             Comptabilité
           </Sidebar.Item>
         </Sidebar.ItemGroup>
