@@ -13,6 +13,7 @@ function Navbar_() {
   const [userName, setUserName] = useState<string | null>(null);
   const [userFirstName, setUserFirstName] = useState<string | null>(null);
   const [userStatus, setUserStatus] = useState<string | null>(null);
+  const [photoURL, setPhotoURL] = useState<string | null>(null);
   const router = useRouter();
 
   useEffect(() => {
@@ -26,6 +27,9 @@ function Navbar_() {
             setUserName(userData.name);
             setUserFirstName(userData.firstName);
             setUserStatus(userData.status);
+            if (userData.status === "professeur" && userData.photoURL) {
+              setPhotoURL(userData.photoURL);
+            }
           } else {
             console.log("No such document!");
           }
@@ -37,6 +41,7 @@ function Navbar_() {
         setUserName(null);
         setUserFirstName(null);
         setUserStatus(null);
+        setPhotoURL(null);
       }
     });
 
@@ -84,36 +89,69 @@ function Navbar_() {
           The Dance Lab
         </span>
       </Navbar.Brand>
-      <div className="flex md:order-3">
-        {userName && userFirstName ? (
+      <div className="flex md:hidden items-center">
+        <Navbar.Toggle />
+      </div>
+      <div className="hidden md:flex md:order-3 items-center ml-auto">
+        {userName && userFirstName && (
           <>
+            {userStatus === "professeur" && photoURL && (
+              <Image
+                src={photoURL}
+                alt="Profile"
+                width={40}
+                height={40}
+                className="rounded-full mr-4"
+              />
+            )}
             <span className="self-center whitespace-nowrap text-xl font-semibold dark:text-white ml-4">
               {userFirstName} {userName}
             </span>
-            <Button
-              className="ml-4 bg-red-500 hover:bg-red-700 text-white"
-              onClick={handleLogout}
-            >
-              Se déconnecter
-            </Button>
           </>
-        ) : (
-          <Button className="mr-4 max-md:hidden" href="/auth/login">
+        )}
+        {userName && userFirstName && (
+          <Button
+            className="ml-4 bg-red-500 hover:bg-red-700 text-white"
+            onClick={handleLogout}
+          >
+            Se déconnecter
+          </Button>
+        )}
+        {!userName && !userFirstName && (
+          <Button className="ml-4" href="/auth/login">
             Se connecter
           </Button>
         )}
-        <Navbar.Toggle />
       </div>
-      <Navbar.Collapse className="text-center">
+      <Navbar.Collapse className="md:flex md:justify-center md:order-2 w-full text-center">
+        {userName && userFirstName && (
+          <div className="flex flex-col items-center justify-center md:hidden mb-4">
+            {userStatus === "professeur" && photoURL && (
+              <Image
+                src={photoURL}
+                alt="Profile"
+                width={40}
+                height={40}
+                className="rounded-full mb-2"
+              />
+            )}
+            <span className="self-center whitespace-nowrap text-xl font-semibold dark:text-white">
+              {userFirstName} {userName}
+            </span>
+          </div>
+        )}
         <Navbar.Link href={getHomeLink()} active>
           Accueil
         </Navbar.Link>
         <Navbar.Link href={getCoursesLink()}>Cours</Navbar.Link>
         <Navbar.Link href="/user/visiteur/tarifs">Tarifs</Navbar.Link>
         <Navbar.Link href="/user/visiteur/contact">Contact</Navbar.Link>
-        {!userName && !userFirstName && (
-          <Button className="m-4 md:hidden" href="/auth/login">
-            Se connecter
+        {userName && userFirstName && (
+          <Button
+            className="mt-4 bg-red-500 hover:bg-red-700 text-white md:hidden"
+            onClick={handleLogout}
+          >
+            Se déconnecter
           </Button>
         )}
       </Navbar.Collapse>
