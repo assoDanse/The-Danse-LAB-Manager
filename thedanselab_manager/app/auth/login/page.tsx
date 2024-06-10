@@ -107,7 +107,7 @@ const LogUserForm: React.FC = () => {
             </a>
             <a
               className="text-sm text-blue-500 underline text-center"
-              href="/auth/recup"
+              href="/auth/reset_password"
             >
               Mot de passe oublié
             </a>
