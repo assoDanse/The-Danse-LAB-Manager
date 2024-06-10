@@ -12,7 +12,7 @@ const CreateTarifPage: React.FC = () => {
   const [credit, setCredit] = useState<number>(0);
 
   return (
-    <div className="flex min-h-screen">
+    <div className="flex justify-center items-center w-full">
       <div className="flex-grow p-4">
         <CreationTarif
           titre={titre}

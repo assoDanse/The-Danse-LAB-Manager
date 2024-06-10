@@ -44,7 +44,9 @@ const CreateEleve: React.FC = () => {
     }
 
     if (!validatePassword(password)) {
-      setError("Le mot de passe doit contenir au moins 6 caractères, une majuscule et un chiffre");
+      setError(
+        "Le mot de passe doit contenir au moins 6 caractères, une majuscule et un chiffre"
+      );
       return;
     }
 
@@ -52,7 +54,11 @@ const CreateEleve: React.FC = () => {
     setMessage("");
 
     try {
-      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
       const user = userCredential.user;
 
       // Ajouter les informations utilisateur à Firestore avec le statut "élève"
@@ -69,16 +75,18 @@ const CreateEleve: React.FC = () => {
       setEmail("");
       setPassword("");
     } catch (error: any) {
-      if (error.code === 'auth/email-already-in-use') {
-        setError('Cet utilisateur existe déjà');
+      if (error.code === "auth/email-already-in-use") {
+        setError("Cet utilisateur existe déjà");
       } else {
-        setError(`Erreur lors de la création de l'utilisateur: ${error.message}`);
+        setError(
+          `Erreur lors de la création de l'utilisateur: ${error.message}`
+        );
       }
     }
   };
 
   return (
-    <div className="flex justify-center items-center h-screen w-full">
+    <div className="flex justify-center items-center w-full">
       <div className="max-w-sm w-full p-8 bg-white rounded-lg shadow-md">
         <h1 className="text-center text-2xl mb-6">Créer un compte élève</h1>
         <form onSubmit={handleSubmit} className="flex flex-col gap-5">
