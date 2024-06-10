@@ -1,19 +1,45 @@
 "use client";
-import React, { useState } from "react";
+
+import React, { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { auth, db } from "@/config/firebase-config"; // Assurez-vous que cette importation est correcte
+import { onAuthStateChanged } from "firebase/auth";
+import { query, where, collection, getDocs } from "firebase/firestore";
 import SidebarEleve from "@/components/SidebarEleve";
 
 const PanelEleve: React.FC = () => {
-  // État local pour stocker le nombre de crédits
-  const [credits, setCredits] = useState<number>(0);
+  // État local pour stocker le nombre de places restantes
+  const [placeRestante, setPlaceRestante] = useState<number | null>(null);
+  const router = useRouter();
 
-  // Fonction pour mettre à jour le nombre de crédits
-  const updateCredits = (newCredits: number) => {
-    setCredits(newCredits);
-  };
+  useEffect(() => {
+    const fetchPlaceRestante = async (userId: string) => {
+      const carteQuery = query(collection(db, "carte"), where("id_users", "==", userId));
+      const querySnapshot = await getDocs(carteQuery);
+      if (!querySnapshot.empty) {
+        const carteData = querySnapshot.docs[0].data();
+        setPlaceRestante(carteData.place_restante);
+      } else {
+        console.error("Aucune carte trouvée pour cet utilisateur");
+      }
+    };
+
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        await fetchPlaceRestante(user.uid);
+      } else {
+        router.push("/auth/login");
+      }
+    });
+
+    return () => unsubscribe();
+  }, [router]);
 
   return (
-    <div className="flex ">
-      <p className="text-gray-600">Crédits disponibles : {credits}</p>
+    <div className="flex h-screen">
+      <div className="flex flex-col items-center justify-center w-full p-4">
+        <p className="text-gray-600">Crédits disponibles : {placeRestante !== null ? placeRestante : "Chargement..."}</p>
+      </div>
     </div>
   );
 };

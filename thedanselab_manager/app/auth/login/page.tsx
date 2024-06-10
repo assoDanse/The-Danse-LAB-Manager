@@ -1,12 +1,13 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import EmailInput from "@/components/EmailInput";
 import PasswordInput from "@/components/PasswordInput";
 import ValidationButton from "@/components/ValidationButton";
-import { auth } from "@/config/firebase-config"; // Assurez-vous que cette importation est correcte
-import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth, db } from "@/config/firebase-config"; // Assurez-vous que cette importation est correcte
+import { signInWithEmailAndPassword, onAuthStateChanged } from "firebase/auth";
+import { doc, getDoc } from "firebase/firestore";
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState("");
@@ -14,6 +15,30 @@ const Login: React.FC = () => {
   const [error, setError] = useState("");
   const [message, setMessage] = useState(""); // Pour afficher les messages de succès
   const router = useRouter();
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        // Récupérer le statut de l'utilisateur à partir de Firestore
+        const userDoc = await getDoc(doc(db, "users", user.uid));
+        if (userDoc.exists()) {
+          const userData = userDoc.data();
+          const userStatus = userData.status;
+          
+          // Rediriger vers la page appropriée en fonction du statut
+          if (userStatus === "eleve") {
+            router.push("/eleve");
+          } else if (userStatus === "professeur") {
+            router.push("/professeur");
+          } else if (userStatus === "admin") {
+            router.push("/admin");
+          }
+        }
+      }
+    });
+
+    return () => unsubscribe();
+  }, [router]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -30,8 +55,26 @@ const Login: React.FC = () => {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
       setMessage(`Connecté en tant que : ${user.email}`);
-      // Redirigez vers la page d'accueil après la connexion
-      router.push("/eleve");
+      
+      // Récupérer le statut de l'utilisateur à partir de Firestore
+      const userDoc = await getDoc(doc(db, "users", user.uid));
+      if (userDoc.exists()) {
+        const userData = userDoc.data();
+        const userStatus = userData.status;
+        
+        // Rediriger vers la page appropriée en fonction du statut
+        if (userStatus === "eleve") {
+          router.push("/user/eleve");
+        } else if (userStatus === "professeur") {
+          router.push("/user/professeur");
+        } else if (userStatus === "admin") {
+          router.push("/user/admin");
+        } else {
+          setError("Statut utilisateur inconnu.");
+        }
+      } else {
+        setError("Erreur de récupération des informations utilisateur.");
+      }
     } catch (error: any) {
       setError(`Erreur de connexion: ${error.message}`);
       console.error(error.code, error.message);
