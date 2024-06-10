@@ -27,11 +27,11 @@ const Login: React.FC = () => {
           
           // Rediriger vers la page appropriée en fonction du statut
           if (userStatus === "eleve") {
-            router.push("/eleve");
+            router.push("/user/eleve");
           } else if (userStatus === "professeur") {
-            router.push("/professeur");
+            router.push("/user/professeur");
           } else if (userStatus === "admin") {
-            router.push("/admin");
+            router.push("/user/admin");
           }
         }
       }
