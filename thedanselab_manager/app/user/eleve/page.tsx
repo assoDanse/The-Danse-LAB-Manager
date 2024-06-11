@@ -4,11 +4,25 @@ import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { auth, db } from "@/config/firebase-config"; // Assurez-vous que cette importation est correcte
 import { onAuthStateChanged } from "firebase/auth";
-import { query, where, collection, getDocs } from "firebase/firestore";
+import { query, where, collection, getDocs, doc, getDoc, Timestamp } from "firebase/firestore";
+
+interface Cours {
+  id: string;
+  titre: string;
+  type: string;
+  date_heure_debut: string;
+  duree: {
+    heures: number;
+    minutes: number;
+  };
+  nom_professeur: string;
+}
 
 const PanelEleve: React.FC = () => {
-  // État local pour stocker le nombre de places restantes
   const [placeRestante, setPlaceRestante] = useState<number | null>(null);
+  const [myCours, setMyCours] = useState<Cours[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
   const router = useRouter();
 
   useEffect(() => {
@@ -23,9 +37,52 @@ const PanelEleve: React.FC = () => {
       }
     };
 
+    const fetchCours = async (userId: string) => {
+      const participationQuery = query(
+        collection(db, "participation"),
+        where("id_users", "==", userId)
+      );
+      const participationSnapshot = await getDocs(participationQuery);
+      const myCoursIds = participationSnapshot.docs.map(doc => doc.data().id_cours);
+
+      const coursPromises = myCoursIds.map(async (coursId: string) => {
+        const coursDoc = await getDoc(doc(db, "cours", coursId));
+        if (coursDoc.exists()) {
+          const coursData = coursDoc.data();
+
+          return {
+            id: coursDoc.id,
+            titre: coursData.titre,
+            type: coursData.type,
+            date_heure_debut: (coursData.date_heure_debut as Timestamp).toDate().toLocaleString(),
+            duree: {
+              heures: coursData.duree.heures,
+              minutes: coursData.duree.minutes
+            },
+            nom_professeur: coursData.nom_professeur,
+          } as Cours;
+        } else {
+          console.error("No such document!");
+          return null;
+        }
+      });
+
+      const cours = await Promise.all(coursPromises);
+      setMyCours(cours.filter(c => c !== null) as Cours[]);
+    };
+
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
-        await fetchPlaceRestante(user.uid);
+        setLoading(true);
+        try {
+          await fetchPlaceRestante(user.uid);
+          await fetchCours(user.uid);
+        } catch (err) {
+          setError("Erreur lors de la récupération des données");
+          console.error(err);
+        } finally {
+          setLoading(false);
+        }
       } else {
         router.push("/auth/login");
       }
@@ -34,11 +91,33 @@ const PanelEleve: React.FC = () => {
     return () => unsubscribe();
   }, [router]);
 
+  if (loading) {
+    return <div className="flex justify-center items-center w-full h-screen">Chargement...</div>;
+  }
+
+  if (error) {
+    return <div className="flex justify-center items-center w-full h-screen">{error}</div>;
+  }
+
   return (
-    <div className="flex h-screen">
-      <div className="flex flex-col items-center justify-center w-full p-4">
-        <p className="text-gray-600">Crédits disponibles : {placeRestante !== null ? placeRestante : "Chargement..."}</p>
-      </div>
+    <div className="flex flex-col items-center h-screen w-full p-4">
+      <p className="text-gray-600 mb-4">Crédits disponibles : {placeRestante !== null ? placeRestante : "Chargement..."}</p>
+      <h1 className="text-2xl mb-4">Mes Cours</h1>
+      {myCours.length > 0 ? (
+        <ul className="w-full max-w-3xl mx-auto">
+          {myCours.map((cours) => (
+            <li key={cours.id} className="border p-4 mb-2 rounded-lg">
+              <h2 className="text-xl font-bold">{cours.titre}</h2>
+              <p>Type: {cours.type}</p>
+              <p>Date: {cours.date_heure_debut}</p>
+              <p>Durée: {cours.duree.heures}h {cours.duree.minutes}m</p>
+              <p>Professeur: {cours.nom_professeur}</p>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p className="text-center">Aucun cours trouvé</p>
+      )}
     </div>
   );
 };

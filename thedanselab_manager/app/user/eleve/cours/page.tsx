@@ -9,6 +9,7 @@ interface Cours {
   id: string;
   titre: string;
   type: string;
+  nom_professeur: string;
   date_heure_debut: string;
   duree: {
     heures: number;
@@ -22,6 +23,7 @@ const CoursEleve: React.FC = () => {
   const [selectedCours, setSelectedCours] = useState<Cours | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [message, setMessage] = useState<string | null>(null);
   const router = useRouter();
 
   useEffect(() => {
@@ -104,6 +106,7 @@ const CoursEleve: React.FC = () => {
         setAvailableCours(availableCours.filter(cours => cours.id !== selectedCours.id));
         setMyCours([...myCours, selectedCours]);
         setSelectedCours(null);
+        setMessage("Inscription réussie");
       } else {
         setError("User not logged in");
       }
@@ -123,6 +126,7 @@ const CoursEleve: React.FC = () => {
 
   return (
     <div className="flex flex-col items-center w-full mt-4">
+      {message && <div className="bg-green-100 text-green-800 p-4 rounded-lg mb-4">{message}</div>}
       <h1 className="text-2xl mb-4">Mes Cours</h1>
       {myCours.length > 0 ? (
         <ul className="w-full max-w-3xl mx-auto mb-8">
@@ -132,6 +136,7 @@ const CoursEleve: React.FC = () => {
               <p>Type: {cours.type}</p>
               <p>Date: {cours.date_heure_debut}</p>
               <p>Durée: {cours.duree.heures}h {cours.duree.minutes}m</p>
+              <p>Professeur: {cours.nom_professeur}</p>
             </li>
           ))}
         </ul>
@@ -148,6 +153,7 @@ const CoursEleve: React.FC = () => {
               <p>Type: {cours.type}</p>
               <p>Date: {cours.date_heure_debut}</p>
               <p>Durée: {cours.duree.heures}h {cours.duree.minutes}m</p>
+              <p>Professeur: {cours.nom_professeur}</p>
               <button
                 onClick={() => handleInscriptionClick(cours)}
                 className="bg-green-500 text-white p-2 rounded mt-2"

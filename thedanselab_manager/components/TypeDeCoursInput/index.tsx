@@ -18,9 +18,10 @@ const TypeDeCoursInput: React.FC<TypeDeCoursInputProps> = ({ typeDeCours, setTyp
         className="border-gray-300 rounded mt-1 block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
       >
         <option value="">Sélectionnez un type</option>
-        <option value="salsa">Salsa</option>
-        <option value="hiphop">Hip-Hop</option>
-        <option value="contemporaine">Danse Contemporaine</option>
+        <option value="Salsa">Salsa</option>
+        <option value="Hip-Hop">Hip-Hop</option>
+        <option value="Danse contemporaine">Danse Contemporaine</option>
+        <option value="Danse moderne">Danse moderne</option>
         {/* Ajoutez d'autres options ici */}
       </select>
     </div>
