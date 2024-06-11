@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 import { auth, db } from "@/config/firebase-config"; // Assurez-vous que cette importation est correcte
 import { onAuthStateChanged } from "firebase/auth";
 import { query, where, collection, getDocs } from "firebase/firestore";
-import SidebarEleve from "@/components/SidebarEleve";
 
 const PanelEleve: React.FC = () => {
   // État local pour stocker le nombre de places restantes
@@ -14,11 +13,11 @@ const PanelEleve: React.FC = () => {
 
   useEffect(() => {
     const fetchPlaceRestante = async (userId: string) => {
-      const carteQuery = query(collection(db, "carte"), where("id_users", "==", userId));
+      const carteQuery = query(collection(db, "cartes"), where("id_users", "==", userId));
       const querySnapshot = await getDocs(carteQuery);
       if (!querySnapshot.empty) {
         const carteData = querySnapshot.docs[0].data();
-        setPlaceRestante(carteData.place_restante);
+        setPlaceRestante(carteData.places_restantes);
       } else {
         console.error("Aucune carte trouvée pour cet utilisateur");
       }

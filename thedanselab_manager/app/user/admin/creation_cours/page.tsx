@@ -14,7 +14,8 @@ import { collection, addDoc, Timestamp } from "firebase/firestore";
 const CreateCours: React.FC = () => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [professor, setProfessor] = useState("");
+  const [professorId, setProfessorId] = useState("");
+  const [professorName, setProfessorName] = useState("");
   const [courseType, setCourseType] = useState("");
   const [date, setDate] = useState("");
   const [duration, setDuration] = useState({ hours: 0, minutes: 0 });
@@ -29,7 +30,7 @@ const CreateCours: React.FC = () => {
 
     if (!title) formErrors.title = "Le titre est requis.";
     if (!description) formErrors.description = "La description est requise.";
-    if (!professor) formErrors.professor = "Le professeur est requis.";
+    if (!professorId) formErrors.professor = "Le professeur est requis.";
     if (!courseType) formErrors.courseType = "Le type de cours est requis.";
     if (!date) formErrors.date = "La date et l'heure sont requises.";
     if (duration.hours === 0 && duration.minutes === 0) formErrors.duration = "La durée est requise.";
@@ -45,8 +46,6 @@ const CreateCours: React.FC = () => {
     try {
       const dateTimestamp = Timestamp.fromDate(new Date(date));
 
-      const [professorFirstName, professorLastName] = professor.split(" ");
-      
       await addDoc(collection(db, "cours"), {
         titre: title,
         description: description,
@@ -56,13 +55,15 @@ const CreateCours: React.FC = () => {
           heures: duration.hours,
           minutes: duration.minutes,
         },
-        nom_professeur: `${professorFirstName} ${professorLastName}`,
+        nom_professeur: professorName,
+        id_professeur: professorId,
       });
 
       setMessage("Cours créé avec succès");
       setTitle("");
       setDescription("");
-      setProfessor("");
+      setProfessorId("");
+      setProfessorName("");
       setCourseType("");
       setDate("");
       setDuration({ hours: 0, minutes: 0 });
@@ -79,7 +80,7 @@ const CreateCours: React.FC = () => {
         {errors.title && <p className="text-red-500">{errors.title}</p>}
         <DescriptionInput description={description} setDescription={setDescription} />
         {errors.description && <p className="text-red-500">{errors.description}</p>}
-        <ProfesseurInput professor={professor} setProfessor={setProfessor} />
+        <ProfesseurInput professorId={professorId} setProfessorId={setProfessorId} setProfessorName={setProfessorName} />
         {errors.professor && <p className="text-red-500">{errors.professor}</p>}
         <TypeDeCoursInput typeDeCours={courseType} setTypeDeCours={setCourseType} />
         {errors.courseType && <p className="text-red-500">{errors.courseType}</p>}

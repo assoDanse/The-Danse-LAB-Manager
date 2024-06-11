@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { auth, db } from "@/config/firebase-config";
 import { onAuthStateChanged } from "firebase/auth";
-import { collection, query, where, getDocs, doc, getDoc, Timestamp } from "firebase/firestore";
+import { collection, query, where, getDocs, doc, getDoc, Timestamp, addDoc, updateDoc } from "firebase/firestore";
 
 interface Cours {
   id: string;
@@ -17,7 +17,9 @@ interface Cours {
 }
 
 const CoursEleve: React.FC = () => {
-  const [cours, setCours] = useState<Cours[]>([]);
+  const [myCours, setMyCours] = useState<Cours[]>([]);
+  const [availableCours, setAvailableCours] = useState<Cours[]>([]);
+  const [selectedCours, setSelectedCours] = useState<Cours | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
@@ -35,29 +37,20 @@ const CoursEleve: React.FC = () => {
             where("id_users", "==", user.uid)
           );
           const participationSnapshot = await getDocs(participationQuery);
-          const coursPromises = participationSnapshot.docs.map(async (docSnapshot) => {
-            const participationData = docSnapshot.data();
-            const coursRef = doc(db, "cours", participationData.id_cours);
-            const coursDoc = await getDoc(coursRef);
-            if (coursDoc.exists()) {
-              const coursData = coursDoc.data();
-              return {
-                id: coursDoc.id,
-                titre: coursData.titre,
-                type: coursData.type,
-                date_heure_debut: (coursData.date_heure_debut as Timestamp).toDate().toLocaleString(), // Convertir Timestamp en date lisible
-                duree: {
-                  heures: coursData.duree.heures,
-                  minutes: coursData.duree.minutes
-                },
-              };
-            } else {
-              return null;
-            }
-          });
+          const myCoursIds = participationSnapshot.docs.map(doc => doc.data().id_cours);
 
-          const coursData = (await Promise.all(coursPromises)).filter(cours => cours !== null);
-          setCours(coursData as Cours[]);
+          const coursSnapshot = await getDocs(collection(db, "cours"));
+          const allCours = coursSnapshot.docs.map(doc => ({
+            id: doc.id,
+            ...doc.data(),
+            date_heure_debut: (doc.data().date_heure_debut as Timestamp).toDate().toLocaleString(),
+          })) as Cours[];
+
+          const myCoursList = allCours.filter(cours => myCoursIds.includes(cours.id));
+          const availableCoursList = allCours.filter(cours => !myCoursIds.includes(cours.id));
+
+          setMyCours(myCoursList);
+          setAvailableCours(availableCoursList);
         } else {
           setError("User not logged in");
           router.push("/auth/login");
@@ -82,8 +75,46 @@ const CoursEleve: React.FC = () => {
     return () => unsubscribe();
   }, [router]);
 
+  const handleInscriptionClick = (cours: Cours) => {
+    setSelectedCours(cours);
+  };
+
+  const handleConfirmInscription = async () => {
+    if (!selectedCours) return;
+
+    try {
+      const user = auth.currentUser;
+      if (user) {
+        // Créer une nouvelle participation
+        await addDoc(collection(db, "participation"), {
+          id_users: user.uid,
+          id_cours: selectedCours.id
+        });
+
+        // Rechercher et mettre à jour la carte de l'élève pour diminuer le nombre de places restantes
+        const cartesQuery = query(collection(db, "cartes"), where("id_users", "==", user.uid));
+        const cartesSnapshot = await getDocs(cartesQuery);
+        if (!cartesSnapshot.empty) {
+          const carteDoc = cartesSnapshot.docs[0]; // On suppose qu'il n'y a qu'un seul document par utilisateur
+          const newPlacesRestantes = carteDoc.data().places_restantes - 1;
+          await updateDoc(carteDoc.ref, { places_restantes: newPlacesRestantes });
+        }
+
+        // Mettre à jour la liste des cours disponibles et des cours de l'élève
+        setAvailableCours(availableCours.filter(cours => cours.id !== selectedCours.id));
+        setMyCours([...myCours, selectedCours]);
+        setSelectedCours(null);
+      } else {
+        setError("User not logged in");
+      }
+    } catch (error) {
+      setError("Erreur lors de l'inscription");
+      console.error(error);
+    }
+  };
+
   if (loading) {
-    return <div className="flex justify-center items-center w-full">Loading...</div>;
+    return <div className="flex justify-center items-center w-full">Chargement...</div>;
   }
 
   if (error) {
@@ -93,10 +124,10 @@ const CoursEleve: React.FC = () => {
   return (
     <div className="flex flex-col items-center w-full mt-4">
       <h1 className="text-2xl mb-4">Mes Cours</h1>
-      {cours.length > 0 ? (
-        <ul className="w-full max-w-3xl mx-auto">
-          {cours.map((cours, index) => (
-            <li key={index} className="border p-4 mb-2 rounded-lg">
+      {myCours.length > 0 ? (
+        <ul className="w-full max-w-3xl mx-auto mb-8">
+          {myCours.map((cours) => (
+            <li key={cours.id} className="border p-4 mb-2 rounded-lg">
               <h2 className="text-xl font-bold">{cours.titre}</h2>
               <p>Type: {cours.type}</p>
               <p>Date: {cours.date_heure_debut}</p>
@@ -105,7 +136,52 @@ const CoursEleve: React.FC = () => {
           ))}
         </ul>
       ) : (
-        <p className="text-center">Aucun cours trouvé</p>
+        <p className="text-center mb-8">Aucun cours trouvé</p>
+      )}
+
+      <h1 className="text-2xl mb-4">Cours Disponibles</h1>
+      {availableCours.length > 0 ? (
+        <ul className="w-full max-w-3xl mx-auto">
+          {availableCours.map((cours) => (
+            <li key={cours.id} className="border p-4 mb-2 rounded-lg">
+              <h2 className="text-xl font-bold">{cours.titre}</h2>
+              <p>Type: {cours.type}</p>
+              <p>Date: {cours.date_heure_debut}</p>
+              <p>Durée: {cours.duree.heures}h {cours.duree.minutes}m</p>
+              <button
+                onClick={() => handleInscriptionClick(cours)}
+                className="bg-green-500 text-white p-2 rounded mt-2"
+              >
+                S'inscrire
+              </button>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p className="text-center">Aucun cours disponible</p>
+      )}
+
+      {selectedCours && (
+        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center">
+          <div className="bg-white p-6 rounded-lg shadow-lg">
+            <h2 className="text-xl mb-4">Confirmer l'inscription</h2>
+            <p>Voulez-vous vous inscrire à ce cours : {selectedCours.titre} ?</p>
+            <div className="flex justify-end mt-4">
+              <button
+                onClick={() => setSelectedCours(null)}
+                className="bg-red-500 text-white p-2 rounded mr-2"
+              >
+                Annuler
+              </button>
+              <button
+                onClick={handleConfirmInscription}
+                className="bg-green-500 text-white p-2 rounded"
+              >
+                Confirmer
+              </button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );
