@@ -91,10 +91,10 @@ const CoursEleve: React.FC = () => {
   }
 
   return (
-    <div className="flex flex-col items-center w-full">
+    <div className="flex flex-col items-center w-full mt-4">
       <h1 className="text-2xl mb-4">Mes Cours</h1>
       {cours.length > 0 ? (
-        <ul className="w-full max-w-md">
+        <ul className="w-full max-w-3xl mx-auto">
           {cours.map((cours, index) => (
             <li key={index} className="border p-4 mb-2 rounded-lg">
               <h2 className="text-xl font-bold">{cours.titre}</h2>
