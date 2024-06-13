@@ -1,3 +1,4 @@
+"use client";
 import React, { useState } from "react";
 import CardCoursProf from "@/components/CardCoursProf";
 
@@ -58,7 +59,9 @@ const CoursProfesseur: React.FC = () => {
                 liens={cours.liens || []} // Passer une liste vide si les liens n'existent pas
               />
             </div>
-            <button onClick={() => handleDeleteCours(index)}>Supprimer le cours</button>
+            <button onClick={() => handleDeleteCours(index)}>
+              Supprimer le cours
+            </button>
           </div>
         ))
       ) : (
