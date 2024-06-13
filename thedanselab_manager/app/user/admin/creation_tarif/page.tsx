@@ -13,20 +13,18 @@ const CreateTarifPage: React.FC = () => {
 
   return (
     <div className="flex justify-center items-center w-full">
-      <div className="flex-grow p-4">
-        <CreationTarif
-          titre={titre}
-          setTitre={setTitre}
-          description={description}
-          setDescription={setDescription}
-          image={image}
-          setImage={setImage}
-          prix={prix}
-          setPrix={setPrix}
-          credit={credit}
-          setCredit={setCredit}
-        />
-      </div>
+      <CreationTarif
+        titre={titre}
+        setTitre={setTitre}
+        description={description}
+        setDescription={setDescription}
+        image={image}
+        setImage={setImage}
+        prix={prix}
+        setPrix={setPrix}
+        credit={credit}
+        setCredit={setCredit}
+      />
     </div>
   );
 };
