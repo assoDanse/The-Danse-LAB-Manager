@@ -1,6 +1,8 @@
 "use client";
 
 import React from "react";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 import ProfesseurInput from "@/components/professeurInput";
 import TypeDeCoursInput from "@/components/TypeDeCoursInput";
 import TitleInput from "@/components/TiltleInput";
