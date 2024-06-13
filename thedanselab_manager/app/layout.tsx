@@ -18,7 +18,7 @@ export default function RootLayout({
   return (
     <html lang="fr" data-theme="light">
       <body className={inter.className}>
-        <div className="flex flex-col min-h-screen items-center max-sm:text-sm">
+        <div className="flex flex-col min-h-screen items-center max-sm:text-sm bg-[#FEFAE0]">
           <NavbarVisiteur />
           <main className="flex flex-grow w-full">{children}</main>
         </div>

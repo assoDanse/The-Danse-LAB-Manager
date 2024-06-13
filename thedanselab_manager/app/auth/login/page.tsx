@@ -24,7 +24,7 @@ const Login: React.FC = () => {
         if (userDoc.exists()) {
           const userData = userDoc.data();
           const userStatus = userData.status;
-          
+
           // Rediriger vers la page appropriée en fonction du statut
           if (userStatus === "eleve") {
             router.push("/user/eleve");
@@ -52,16 +52,20 @@ const Login: React.FC = () => {
     setMessage("");
 
     try {
-      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
       const user = userCredential.user;
       setMessage(`Connecté en tant que : ${user.email}`);
-      
+
       // Récupérer le statut de l'utilisateur à partir de Firestore
       const userDoc = await getDoc(doc(db, "users", user.uid));
       if (userDoc.exists()) {
         const userData = userDoc.data();
         const userStatus = userData.status;
-        
+
         // Rediriger vers la page appropriée en fonction du statut
         if (userStatus === "eleve") {
           router.push("/user/eleve");
@@ -94,13 +98,13 @@ const Login: React.FC = () => {
           <ValidationButton text="Se connecter" />
           <div className="flex justify-around">
             <a
-              className="text-sm text-blue-500 underline text-center"
+              className="text-sm text-light-orange underline text-center"
               href="/auth/signin"
             >
               Créer un compte
             </a>
             <a
-              className="text-sm text-blue-500 underline text-center"
+              className="text-sm text-light-orange underline text-center"
               href="/auth/reset_password"
             >
               Mot de passe oublié

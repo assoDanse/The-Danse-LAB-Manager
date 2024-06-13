@@ -77,42 +77,69 @@ function Navbar_() {
   };
 
   return (
-    <Navbar className="md:sticky top-0 p-4 w-full bg-slate-400" fluid rounded>
+    <Navbar className="md:sticky top-0 p-4 w-full bg-light-green" fluid rounded>
       <Navbar.Brand href="https://thedancelab.fr/">
         <Image src={Logo} width={75} height={75} alt="Logo" />
-        <span className="self-center whitespace-nowrap text-xl font-semibold dark:text-white ml-4">
+        <span className="self-center whitespace-nowrap text-xl font-semibold dark:text-white-egg ml-4">
           The Dance Lab
         </span>
       </Navbar.Brand>
       <div className="flex md:order-3">
         {userName && userFirstName ? (
           <>
-            <span className="self-center whitespace-nowrap text-xl font-semibold dark:text-white ml-4">
+            <span className="self-center whitespace-nowrap text-xl font-semibold dark:text-white ml-4 max-md:hidden">
               {userFirstName} {userName}
             </span>
             <Button
-              className="ml-4 bg-red-500 hover:bg-red-700 text-white"
+              className="ml-4 bg-red-500 hover:bg-red-700 text-white max-md:hidden"
               onClick={handleLogout}
             >
               Se déconnecter
             </Button>
           </>
         ) : (
-          <Button className="mr-4 max-md:hidden" href="/auth/login">
+          <Button
+            className="mr-4 max-md:hidden bg-dark-brown"
+            href="/auth/login"
+          >
             Se connecter
           </Button>
         )}
         <Navbar.Toggle />
       </div>
-      <Navbar.Collapse className="text-center">
-        <Navbar.Link href={getHomeLink()} active>
+      <Navbar.Collapse className="text-center text-light-orange">
+        <Navbar.Link className=" text-light-orange" href={getHomeLink()} active>
           Accueil
         </Navbar.Link>
-        <Navbar.Link href={getCoursesLink()}>Cours</Navbar.Link>
-        <Navbar.Link href="/user/visiteur/tarifs">Tarifs</Navbar.Link>
-        <Navbar.Link href="/user/visiteur/contact">Contact</Navbar.Link>
-        {!userName && !userFirstName && (
-          <Button className="m-4 md:hidden" href="/auth/login">
+        <Navbar.Link className=" text-light-orange" href={getCoursesLink()}>
+          Cours
+        </Navbar.Link>
+        <Navbar.Link
+          className=" text-light-orange"
+          href="/user/visiteur/tarifs"
+        >
+          Tarifs
+        </Navbar.Link>
+        <Navbar.Link
+          className=" text-light-orange"
+          href="/user/visiteur/contact"
+        >
+          Contact
+        </Navbar.Link>
+        {userName && userFirstName ? (
+          <>
+            <span className="self-center whitespace-nowrap text-xl font-semibold dark:text-white  md:hidden">
+              {userFirstName} {userName}
+            </span>
+            <Button
+              className="ml-4 bg-red-500 hover:bg-red-700 text-white md:hidden"
+              onClick={handleLogout}
+            >
+              Se déconnecter
+            </Button>
+          </>
+        ) : (
+          <Button className="m-4 md:hidden  bg-dark-brown" href="/auth/login">
             Se connecter
           </Button>
         )}
