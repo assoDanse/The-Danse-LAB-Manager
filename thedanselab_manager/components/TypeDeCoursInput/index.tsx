@@ -1,36 +1,30 @@
-import React from 'react';
+import React from "react";
 
-type TypeDeCoursInputProps = {
+interface TypeDeCoursInputProps {
   typeDeCours: string;
   setTypeDeCours: (typeDeCours: string) => void;
-};
+}
 
 const TypeDeCoursInput: React.FC<TypeDeCoursInputProps> = ({ typeDeCours, setTypeDeCours }) => {
-  const typesDeCours = [
-    "Ballet",
-    "Hip Hop",
-    "Salsa",
-    "Tango",
-    "Jazz",
-    "Contemporary",
-  ];
-
   return (
-    <select
-      value={typeDeCours}
-      onChange={(e) => setTypeDeCours(e.target.value)}
-      className="border-gray-300 rounded"
-      style={{ fontSize: '14px' }} // Ajout de la taille de la police
-    >
-      <option value="" disabled>
-        Sélectionnez un type de cours
-      </option>
-      {typesDeCours.map((type, index) => (
-        <option key={index} value={type}>
-          {type}
-        </option>
-      ))}
-    </select>
+    <div>
+      <label htmlFor="typeDeCours" className="block text-sm font-medium text-gray-700">
+        Type de Cours
+      </label>
+      <select
+        id="typeDeCours"
+        value={typeDeCours}
+        onChange={(e) => setTypeDeCours(e.target.value)}
+        className="border-gray-300 rounded mt-1 block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+      >
+        <option value="">Sélectionnez un type</option>
+        <option value="Salsa">Salsa</option>
+        <option value="Hip-Hop">Hip-Hop</option>
+        <option value="Danse contemporaine">Danse Contemporaine</option>
+        <option value="Danse moderne">Danse moderne</option>
+        {/* Ajoutez d'autres options ici */}
+      </select>
+    </div>
   );
 };
 
