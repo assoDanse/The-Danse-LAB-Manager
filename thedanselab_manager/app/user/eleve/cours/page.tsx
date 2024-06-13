@@ -8,6 +8,7 @@ import { collection, query, where, getDocs, doc, getDoc, Timestamp, addDoc, upda
 interface Cours {
   id: string;
   titre: string;
+  description: string;
   type: string;
   nom_professeur: string;
   date_heure_debut: string;
@@ -15,12 +16,14 @@ interface Cours {
     heures: number;
     minutes: number;
   };
+  photo: string;
 }
 
 const CoursEleve: React.FC = () => {
   const [myCours, setMyCours] = useState<Cours[]>([]);
   const [availableCours, setAvailableCours] = useState<Cours[]>([]);
   const [selectedCours, setSelectedCours] = useState<Cours | null>(null);
+  const [viewingCours, setViewingCours] = useState<Cours | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
@@ -81,6 +84,10 @@ const CoursEleve: React.FC = () => {
     setSelectedCours(cours);
   };
 
+  const handleViewClick = (cours: Cours) => {
+    setViewingCours(cours);
+  };
+
   const handleConfirmInscription = async () => {
     if (!selectedCours) return;
 
@@ -137,6 +144,12 @@ const CoursEleve: React.FC = () => {
               <p>Date: {cours.date_heure_debut}</p>
               <p>Durée: {cours.duree.heures}h {cours.duree.minutes}m</p>
               <p>Professeur: {cours.nom_professeur}</p>
+              <button
+                onClick={() => handleViewClick(cours)}
+                className="bg-blue-500 text-white p-2 rounded mt-2"
+              >
+                Visualiser
+              </button>
             </li>
           ))}
         </ul>
@@ -155,8 +168,14 @@ const CoursEleve: React.FC = () => {
               <p>Durée: {cours.duree.heures}h {cours.duree.minutes}m</p>
               <p>Professeur: {cours.nom_professeur}</p>
               <button
+                onClick={() => handleViewClick(cours)}
+                className="bg-blue-500 text-white p-2 rounded mt-2"
+              >
+                Visualiser
+              </button>
+              <button
                 onClick={() => handleInscriptionClick(cours)}
-                className="bg-green-500 text-white p-2 rounded mt-2"
+                className="bg-green-500 text-white p-2 rounded mt-2 ml-2"
               >
                 S'inscrire
               </button>
@@ -184,6 +203,30 @@ const CoursEleve: React.FC = () => {
                 className="bg-green-500 text-white p-2 rounded"
               >
                 Confirmer
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {viewingCours && (
+        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center">
+          <div className="bg-white p-6 rounded-lg shadow-lg max-w-lg w-full">
+            <h2 className="text-2xl font-bold mb-4">{viewingCours.titre}</h2>
+            {viewingCours.photo && (
+              <img src={viewingCours.photo} alt={viewingCours.titre} className="mb-4 w-full" />
+            )}
+            <p className="mb-4">{viewingCours.description}</p>
+            <p><strong>Type:</strong> {viewingCours.type}</p>
+            <p><strong>Date:</strong> {viewingCours.date_heure_debut}</p>
+            <p><strong>Durée:</strong> {viewingCours.duree.heures}h {viewingCours.duree.minutes}m</p>
+            <p><strong>Professeur:</strong> {viewingCours.nom_professeur}</p>
+            <div className="flex justify-end mt-4">
+              <button
+                onClick={() => setViewingCours(null)}
+                className="bg-blue-500 text-white p-2 rounded"
+              >
+                Fermer
               </button>
             </div>
           </div>

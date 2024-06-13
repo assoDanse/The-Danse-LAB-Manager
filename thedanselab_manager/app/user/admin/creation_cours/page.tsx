@@ -8,8 +8,9 @@ import TitleInput from "@/components/TitleInput";
 import DescriptionInput from "@/components/DescriptionInput";
 import DateInput from "@/components/DateInput";
 import DurationInput from "@/components/DurationInput";
-import { db } from "@/config/firebase-config";
+import { db, storage } from "@/config/firebase-config";
 import { collection, addDoc, Timestamp } from "firebase/firestore";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 const CreateCours: React.FC = () => {
   const [title, setTitle] = useState("");
@@ -19,9 +20,16 @@ const CreateCours: React.FC = () => {
   const [courseType, setCourseType] = useState("");
   const [date, setDate] = useState("");
   const [duration, setDuration] = useState({ hours: 0, minutes: 0 });
+  const [photo, setPhoto] = useState<File | null>(null);
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [message, setMessage] = useState("");
   const router = useRouter();
+
+  const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      setPhoto(e.target.files[0]);
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -34,6 +42,7 @@ const CreateCours: React.FC = () => {
     if (!courseType) formErrors.courseType = "Le type de cours est requis.";
     if (!date) formErrors.date = "La date et l'heure sont requises.";
     if (duration.hours === 0 && duration.minutes === 0) formErrors.duration = "La durée est requise.";
+    if (!photo) formErrors.photo = "La photo est requise.";
 
     if (Object.keys(formErrors).length > 0) {
       setErrors(formErrors);
@@ -45,6 +54,13 @@ const CreateCours: React.FC = () => {
 
     try {
       const dateTimestamp = Timestamp.fromDate(new Date(date));
+      let photoURL = "";
+
+      if (photo) {
+        const photoRef = ref(storage, `photos/${photo.name}`);
+        await uploadBytes(photoRef, photo);
+        photoURL = await getDownloadURL(photoRef);
+      }
 
       await addDoc(collection(db, "cours"), {
         titre: title,
@@ -57,6 +73,7 @@ const CreateCours: React.FC = () => {
         },
         nom_professeur: professorName,
         id_professeur: professorId,
+        photo: photoURL,
       });
 
       setMessage("Cours créé avec succès");
@@ -67,6 +84,7 @@ const CreateCours: React.FC = () => {
       setCourseType("");
       setDate("");
       setDuration({ hours: 0, minutes: 0 });
+      setPhoto(null);
     } catch (error: any) {
       setErrors({ general: `Erreur lors de la création du cours: ${error.message}` });
     }
@@ -88,6 +106,13 @@ const CreateCours: React.FC = () => {
         {errors.date && <p className="text-red-500">{errors.date}</p>}
         <DurationInput duration={duration} setDuration={setDuration} />
         {errors.duration && <p className="text-red-500">{errors.duration}</p>}
+        <div>
+          <label htmlFor="photo" className="block text-sm font-medium text-gray-700">
+            Photo
+          </label>
+          <input type="file" id="photo" onChange={handlePhotoChange} />
+          {errors.photo && <p className="text-red-500">{errors.photo}</p>}
+        </div>
         {errors.general && <p className="text-red-500">{errors.general}</p>}
         {message && <p className="text-green-500">{message}</p>}
         <button type="submit" className="bg-blue-500 text-white p-2 rounded">Créer un cours</button>
