@@ -12,7 +12,10 @@ const Tarifs: React.FC = () => {
         const data = await response.json();
         setTarifData(data);
       } catch (error) {
-        console.error("Erreur lors de la récupération des données des tarifs:", error);
+        console.error(
+          "Erreur lors de la récupération des données des tarifs:",
+          error
+        );
       }
     };
 
@@ -20,7 +23,9 @@ const Tarifs: React.FC = () => {
   }, []);
 
   const handleTarifClick = (tarif: any) => {
-    const userConfirmed = window.confirm(`Voulez-vous vraiment sélectionner ce tarif : ${tarif.titre} ?`);
+    const userConfirmed = window.confirm(
+      `Voulez-vous vraiment sélectionner ce tarif : ${tarif.titre} ?`
+    );
     if (userConfirmed) {
       // Vous pouvez ajouter l'action à effectuer après la confirmation ici
       alert(`Vous avez confirmé le tarif : ${tarif.titre}`);
