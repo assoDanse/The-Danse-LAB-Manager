@@ -16,7 +16,7 @@ const DurationInput: React.FC<DurationInputProps> = ({ duration, setDuration }) 
         type="text"
         value={duration}
         onChange={handleInputChange}
-        placeholder="Enter duration"
+        placeholder="Enter la duré"
       />
     </div>
   );
