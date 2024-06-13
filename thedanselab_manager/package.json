@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "next build && next build && firebase export",
     "start": "next start",
     "lint": "next lint"
   },
@@ -12,12 +12,21 @@
     "@supabase/auth-helpers-nextjs": "^0.10.0",
     "@supabase/ssr": "^0.3.0",
     "@supabase/supabase-js": "^2.43.4",
+    "bcryptjs": "^2.4.3",
+    "cookie": "^0.6.0",
+    "firebase": "^10.12.2",
     "flowbite-react": "^0.9.0",
+    "js-cookie": "^3.0.5",
+    "jsonwebtoken": "^9.0.2",
     "next": "14.2.3",
+    "next-cookies": "^2.0.3",
     "react": "^18",
-    "react-dom": "^18"
+    "react-dom": "^18",
+    "react-hook-form": "^7.51.5"
   },
   "devDependencies": {
+    "@types/js-cookie": "^3.0.6",
+    "@types/jsonwebtoken": "^9.0.6",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",

@@ -6,7 +6,7 @@ export default function ProfesseurLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <div className="flex">
+    <div className="flex flex-grow w-full">
       <SidebarProfesseur />
       {children}
     </div>

@@ -10,7 +10,14 @@ module.exports = {
     flowbite.content(),
   ],
   theme: {
-    extend: {},
+    extend: {colors: {
+      'light-green': '#606C38',
+      'dark-green': '#283618',
+      'sage': '#afb38c',
+      'white-egg': '#FEFAE0',
+      'light-orange': '#DDA15E',
+      'dark-brown': '#BC6C25',
+    },},
   },
   plugins: [
     require('flowbite/plugin'),               //(5)
