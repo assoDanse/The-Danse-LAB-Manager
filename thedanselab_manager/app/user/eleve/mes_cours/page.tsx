@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useState } from "react";
 import CardcoursEleve from "@/components/CardCoursEleve";
 
@@ -5,7 +7,9 @@ const MesCours: React.FC = () => {
   // État pour stocker les données des cours
   const [coursData, setCoursData] = useState<any[]>([]);
   // État pour stocker l'index du cours sur lequel l'utilisateur a cliqué
-  const [selectedCourseIndex, setSelectedCourseIndex] = useState<number | null>(null);
+  const [selectedCourseIndex, setSelectedCourseIndex] = useState<number | null>(
+    null
+  );
   // État pour stocker le lien vidéo à ajouter
   const [videoLink, setVideoLink] = useState<string>("");
 
