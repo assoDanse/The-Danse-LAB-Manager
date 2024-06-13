@@ -1,41 +1,47 @@
 "use client";
-import React, { useState } from "react";
-import EmailInput from "@/components/EmailInput";
-import DescriptionInput from "@/components/DescriptionInput";
+
+import React, { useEffect, useState } from "react";
+
+type ContactInfo = {
+  phoneNumber: string;
+  email: string;
+};
 
 const Contact: React.FC = () => {
-  const [email, setEmail] = useState("");
-  const [description, setDescription] = useState("");
-  const [message, setMessage] = useState("");
+  const [contactInfo, setContactInfo] = useState<ContactInfo | null>(null);
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    // Traitement du formulaire ici, comme envoyer les données à un serveur
-    setMessage("Votre message a été envoyé avec succès !");
-    // Réinitialiser les champs après l'envoi
-    setEmail("");
-    setDescription("");
-  };
+  useEffect(() => {
+    const fetchContactInfo = async () => {
+      try {
+        const response = await fetch('/api/contact');
+        const data = await response.json();
+        setContactInfo(data);
+      } catch (error) {
+        console.error("Erreur lors de la récupération des informations de contact:", error);
+      }
+    };
+
+    fetchContactInfo();
+  }, []);
 
   return (
-    <div className="flex justify-center items-center h-screen w-full">
-      <div className="w-full max-w-md p-4 bg-white rounded shadow-md">
-        <h2 className="text-2xl font-bold mb-4">Contactez-nous</h2>
-        <form onSubmit={handleSubmit}>
-          <div className="mb-4">
-            <EmailInput email={email} setEmail={setEmail} />
-          </div>
-          <div className="mb-4">
-            <DescriptionInput description={description} setDescription={setDescription} />
-          </div>
-          <button
-            type="submit"
-            className="w-full py-2 px-4 bg-blue-500 text-white rounded mt-4"
-          >
-            Envoyer
-          </button>
-        </form>
-        {message && <p className="mt-4 text-green-500">{message}</p>}
+    <div className="flex flex-col items-center justify-center h-screen w-full bg-gray-100">
+      <div className="w-full max-w-md p-8 bg-white rounded shadow-md">
+        <h2 className="text-3xl font-bold mb-6 text-center">Contactez-nous</h2>
+        {contactInfo ? (
+          <>
+            <div className="mb-4">
+              <h3 className="text-xl font-semibold">Numéro de téléphone</h3>
+              <p className="text-gray-700">{contactInfo.phoneNumber}</p>
+            </div>
+            <div className="mb-4">
+              <h3 className="text-xl font-semibold">Adresse e-mail</h3>
+              <p className="text-gray-700">{contactInfo.email}</p>
+            </div>
+          </>
+        ) : (
+          <p className="text-center font-bold">Chargement des informations...</p>
+        )}
       </div>
     </div>
   );
