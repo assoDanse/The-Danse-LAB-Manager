@@ -1,25 +1,22 @@
-// components/dateInput/index.tsx
+// DateInput.tsx
+import React, { ChangeEvent } from "react";
 
-import React, { useState } from "react";
-import { Datepicker } from "flowbite-react";
+interface DateInputProps {
+  date: string;
+  setDate: (date: string) => void;
+}
 
-const DateInput: React.FC = () => {
-  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
-
-  const handleChange = (date: Date | null) => {
-    setSelectedDate(date);
+const DateInput: React.FC<DateInputProps> = ({ date, setDate }) => {
+  const handleDateChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setDate(e.target.value);
   };
 
   return (
-    <div className="flex flex-col">
-      <label>Date</label>
-      <Datepicker
-        selected={selectedDate}
-        onChange={handleChange}
-        placeholder="Select a date"
-        className="w-full border rounded-md p-2"
-      />
-    </div>
+    <input
+      type="date"
+      value={date}
+      onChange={handleDateChange}
+    />
   );
 };
 

@@ -1,19 +1,20 @@
+// PriceInput.tsx
 import React, { ChangeEvent } from "react";
 
 interface PriceInputProps {
-  value: string;
-  onChange: (price: string) => void;
+  price: string;
+  setPrice: (price: string) => void;
 }
 
-const PriceInput: React.FC<PriceInputProps> = ({ value, onChange }) => {
+const PriceInput: React.FC<PriceInputProps> = ({ price, setPrice }) => {
   const handlePriceChange = (e: ChangeEvent<HTMLInputElement>) => {
-    onChange(e.target.value);
+    setPrice(e.target.value);
   };
 
   return (
     <input
       type="text"
-      value={value}
+      value={price}
       onChange={handlePriceChange}
       placeholder="Prix"
     />
