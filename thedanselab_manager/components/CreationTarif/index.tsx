@@ -1,5 +1,6 @@
 import React from "react";
 import { Card } from "flowbite-react";
+import ValidationButton from "../ValidationButton";
 
 type CreationTarifProps = {
   titre: string;
@@ -74,12 +75,7 @@ const CreationTarif: React.FC<CreationTarifProps> = ({
             placeholder="Credit"
           />
         </div>
-        <button
-          type="submit"
-          className="w-full py-2 px-4 bg-blue-500 text-white rounded"
-        >
-          Créer Tarif
-        </button>
+        <ValidationButton text="Créer un Tarif" />
       </form>
     </div>
   );
