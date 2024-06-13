@@ -3,7 +3,17 @@ import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { auth, db } from "@/config/firebase-config";
 import { onAuthStateChanged } from "firebase/auth";
-import { collection, query, where, getDocs, doc, getDoc, Timestamp, addDoc, updateDoc } from "firebase/firestore";
+import {
+  collection,
+  query,
+  where,
+  getDocs,
+  doc,
+  getDoc,
+  Timestamp,
+  addDoc,
+  updateDoc,
+} from "firebase/firestore";
 
 interface Cours {
   id: string;
@@ -42,17 +52,25 @@ const CoursEleve: React.FC = () => {
             where("id_users", "==", user.uid)
           );
           const participationSnapshot = await getDocs(participationQuery);
-          const myCoursIds = participationSnapshot.docs.map(doc => doc.data().id_cours);
+          const myCoursIds = participationSnapshot.docs.map(
+            (doc) => doc.data().id_cours
+          );
 
           const coursSnapshot = await getDocs(collection(db, "cours"));
-          const allCours = coursSnapshot.docs.map(doc => ({
+          const allCours = coursSnapshot.docs.map((doc) => ({
             id: doc.id,
             ...doc.data(),
-            date_heure_debut: (doc.data().date_heure_debut as Timestamp).toDate().toLocaleString(),
+            date_heure_debut: (doc.data().date_heure_debut as Timestamp)
+              .toDate()
+              .toLocaleString(),
           })) as Cours[];
 
-          const myCoursList = allCours.filter(cours => myCoursIds.includes(cours.id));
-          const availableCoursList = allCours.filter(cours => !myCoursIds.includes(cours.id));
+          const myCoursList = allCours.filter((cours) =>
+            myCoursIds.includes(cours.id)
+          );
+          const availableCoursList = allCours.filter(
+            (cours) => !myCoursIds.includes(cours.id)
+          );
 
           setMyCours(myCoursList);
           setAvailableCours(availableCoursList);
@@ -97,20 +115,27 @@ const CoursEleve: React.FC = () => {
         // Créer une nouvelle participation
         await addDoc(collection(db, "participation"), {
           id_users: user.uid,
-          id_cours: selectedCours.id
+          id_cours: selectedCours.id,
         });
 
         // Rechercher et mettre à jour la carte de l'élève pour diminuer le nombre de places restantes
-        const cartesQuery = query(collection(db, "cartes"), where("id_users", "==", user.uid));
+        const cartesQuery = query(
+          collection(db, "cartes"),
+          where("id_users", "==", user.uid)
+        );
         const cartesSnapshot = await getDocs(cartesQuery);
         if (!cartesSnapshot.empty) {
           const carteDoc = cartesSnapshot.docs[0]; // On suppose qu'il n'y a qu'un seul document par utilisateur
           const newPlacesRestantes = carteDoc.data().places_restantes - 1;
-          await updateDoc(carteDoc.ref, { places_restantes: newPlacesRestantes });
+          await updateDoc(carteDoc.ref, {
+            places_restantes: newPlacesRestantes,
+          });
         }
 
         // Mettre à jour la liste des cours disponibles et des cours de l'élève
-        setAvailableCours(availableCours.filter(cours => cours.id !== selectedCours.id));
+        setAvailableCours(
+          availableCours.filter((cours) => cours.id !== selectedCours.id)
+        );
         setMyCours([...myCours, selectedCours]);
         setSelectedCours(null);
         setMessage("Inscription réussie");
@@ -124,17 +149,26 @@ const CoursEleve: React.FC = () => {
   };
 
   if (loading) {
-    return <div className="flex justify-center items-center w-full">Chargement...</div>;
+    return (
+      <div className="flex justify-center items-center w-full">
+        Chargement...
+      </div>
+    );
   }
 
   if (error) {
-    return <div className="flex justify-center items-center w-full">{error}</div>;
+    return (
+      <div className="flex justify-center items-center w-full">{error}</div>
+    );
   }
 
   return (
-
     <div className="flex flex-col items-center w-full mt-4">
-      {message && <div className="bg-green-100 text-green-800 p-4 rounded-lg mb-4">{message}</div>}
+      {message && (
+        <div className="bg-green-100 text-green-800 p-4 rounded-lg mb-4">
+          {message}
+        </div>
+      )}
       <h1 className="text-2xl mb-4">Mes Cours</h1>
       {myCours.length > 0 ? (
         <ul className="w-full max-w-3xl mx-auto mb-8">
@@ -143,7 +177,9 @@ const CoursEleve: React.FC = () => {
               <h2 className="text-xl font-bold">{cours.titre}</h2>
               <p>Type: {cours.type}</p>
               <p>Date: {cours.date_heure_debut}</p>
-              <p>Durée: {cours.duree.heures}h {cours.duree.minutes}m</p>
+              <p>
+                Durée: {cours.duree.heures}h {cours.duree.minutes}m
+              </p>
               <p>Professeur: {cours.nom_professeur}</p>
               <button
                 onClick={() => handleViewClick(cours)}
@@ -166,7 +202,9 @@ const CoursEleve: React.FC = () => {
               <h2 className="text-xl font-bold">{cours.titre}</h2>
               <p>Type: {cours.type}</p>
               <p>Date: {cours.date_heure_debut}</p>
-              <p>Durée: {cours.duree.heures}h {cours.duree.minutes}m</p>
+              <p>
+                Durée: {cours.duree.heures}h {cours.duree.minutes}m
+              </p>
               <p>Professeur: {cours.nom_professeur}</p>
               <button
                 onClick={() => handleViewClick(cours)}
@@ -191,7 +229,9 @@ const CoursEleve: React.FC = () => {
         <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center">
           <div className="bg-white p-6 rounded-lg shadow-lg">
             <h2 className="text-xl mb-4">Confirmer l'inscription</h2>
-            <p>Voulez-vous vous inscrire à ce cours : {selectedCours.titre} ?</p>
+            <p>
+              Voulez-vous vous inscrire à ce cours : {selectedCours.titre} ?
+            </p>
             <div className="flex justify-end mt-4">
               <button
                 onClick={() => setSelectedCours(null)}
@@ -215,13 +255,26 @@ const CoursEleve: React.FC = () => {
           <div className="bg-white p-6 rounded-lg shadow-lg max-w-lg w-full">
             <h2 className="text-2xl font-bold mb-4">{viewingCours.titre}</h2>
             {viewingCours.photo && (
-              <img src={viewingCours.photo} alt={viewingCours.titre} className="mb-4 w-full" />
+              <img
+                src={viewingCours.photo}
+                alt={viewingCours.titre}
+                className="mb-4 w-full"
+              />
             )}
             <p className="mb-4">{viewingCours.description}</p>
-            <p><strong>Type:</strong> {viewingCours.type}</p>
-            <p><strong>Date:</strong> {viewingCours.date_heure_debut}</p>
-            <p><strong>Durée:</strong> {viewingCours.duree.heures}h {viewingCours.duree.minutes}m</p>
-            <p><strong>Professeur:</strong> {viewingCours.nom_professeur}</p>
+            <p>
+              <strong>Type:</strong> {viewingCours.type}
+            </p>
+            <p>
+              <strong>Date:</strong> {viewingCours.date_heure_debut}
+            </p>
+            <p>
+              <strong>Durée:</strong> {viewingCours.duree.heures}h{" "}
+              {viewingCours.duree.minutes}m
+            </p>
+            <p>
+              <strong>Professeur:</strong> {viewingCours.nom_professeur}
+            </p>
             <div className="flex justify-end mt-4">
               <button
                 onClick={() => setViewingCours(null)}
@@ -237,45 +290,45 @@ const CoursEleve: React.FC = () => {
   );
 };
 
-{/* <div className="flex flex-wrap justify-center items-center w-full">
-      {courses.length === 0 ? (
-        <p className="text-center text-gray-600 font-semibold">Aucun cours disponible pour le moment.</p>
-      ) : (
-        courses.map((course, index) => (
-          <div key={index} onClick={() => handleCourseClick(course)} className="w-full md:w-1/2 lg:w-1/3 xl:w-1/4 p-2">
-            <CardcoursVisiteur
-              titre={course.titre}
-              description={course.description}
-              image={course.image}
-              prix={course.prix}
-              date={new Date(course.date)}
-              heure={course.heure}
-              duree={course.duree}
-            />
-          </div>
-        ))
-      )}
-      
-      {showPopup && (
-        <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex justify-center items-center">
-          <div className="bg-white p-8 rounded-lg">
-            <h2 className="text-2xl font-semibold mb-4">{selectedCourse.titre}</h2>
-            <p>{/* Contenu du popup avec les détails du cours */}</p>
-            <div className="mt-4 flex justify-between">
-              <button onClick={handleClosePopup} className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center">
-                Annuler
-              </button>
-              <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded inline-flex items-center">
-                Utiliser les crédits
-              </button>
-              <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded inline-flex items-center">
-                Payer avec Halloasso
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-    </div>
-  ); */}
+// { <div className="flex flex-wrap justify-center items-center w-full">
+//       {courses.length === 0 ? (
+//         <p className="text-center text-gray-600 font-semibold">Aucun cours disponible pour le moment.</p>
+//       ) : (
+//         courses.map((course, index) => (
+//           <div key={index} onClick={() => handleCourseClick(course)} className="w-full md:w-1/2 lg:w-1/3 xl:w-1/4 p-2">
+//             <CardcoursVisiteur
+//               titre={course.titre}
+//               description={course.description}
+//               image={course.image}
+//               prix={course.prix}
+//               date={new Date(course.date)}
+//               heure={course.heure}
+//               duree={course.duree}
+//             />
+//           </div>
+//         ))
+//       )}
+
+//       {showPopup && (
+//         <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex justify-center items-center">
+//           <div className="bg-white p-8 rounded-lg">
+//             <h2 className="text-2xl font-semibold mb-4">{selectedCourse.titre}</h2>
+//             <p>{/* Contenu du popup avec les détails du cours }</p>
+//             <div className="mt-4 flex justify-between">
+//               <button onClick={handleClosePopup} className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center">
+//                 Annuler
+//               </button>
+//               <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded inline-flex items-center">
+//                 Utiliser les crédits
+//               </button>
+//               <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded inline-flex items-center">
+//                 Payer avec Halloasso
+//               </button>
+//             </div>
+//           </div>
+//         </div>
+//       )}
+//     </div>
+//   ); }
 
 export default CoursEleve;
