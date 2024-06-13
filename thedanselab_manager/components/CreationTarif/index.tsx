@@ -19,47 +19,48 @@ const CreationTarif: React.FC<CreationTarifProps> = ({ titre, setTitre, descript
     <div className="flex flex-col items-center justify-center min-h-screen space-y-4">
       <form className="w-full max-w-md p-4 bg-white rounded shadow-md">
         <div className="mb-4">
-          <label className="block text-gray-700">Titre</label>
+       
           <input
-            type="text"
+            type="texte"
             value={titre}
             onChange={(e) => setTitre(e.target.value)}
+            placeholder="Titre"
             className="w-full px-3 py-2 border rounded"
           />
         </div>
         <div className="mb-4">
-          <label className="block text-gray-700">Description</label>
           <textarea
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             className="w-full px-3 py-2 border rounded"
+            placeholder="Description"
           />
         </div>
         <div className="mb-4">
-          <label className="block text-gray-700">Image URL</label>
           <input
             type="text"
             value={image}
             onChange={(e) => setImage(e.target.value)}
             className="w-full px-3 py-2 border rounded"
+            placeholder="Image"
           />
         </div>
         <div className="mb-4">
-          <label className="block text-gray-700">Prix</label>
           <input
             type="text"
             value={prix}
             onChange={(e) => setPrix(e.target.value)}
             className="w-full px-3 py-2 border rounded"
+            placeholder="Prix"
           />
         </div>
         <div className="mb-4">
-          <label className="block text-gray-700">Crédits</label>
           <input
             type="number"
             value={credit}
             onChange={(e) => setCredit(Number(e.target.value))}
             className="w-full px-3 py-2 border rounded"
+            placeholder="Credit"
           />
         </div>
         <button type="submit" className="w-full py-2 px-4 bg-blue-500 text-white rounded">
