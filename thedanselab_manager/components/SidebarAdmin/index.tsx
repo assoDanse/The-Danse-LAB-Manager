@@ -38,22 +38,22 @@ export function SidebarAdmin() {
                   Créer un cours
                 </Sidebar.Item>
                 <Sidebar.Item href="/user/admin/liste_cours" icon={HiBookOpen}>
-                  Voir les cours
+                  Liste des cours
                 </Sidebar.Item>
               </Sidebar.Collapse>
 
               <Sidebar.Collapse icon={HiUserGroup} label="Professeur">
                 <Sidebar.Item
-                  href="/user/admin/list_professeur"
+                  href="/user/admin/creation_professeur"
                   icon={HiUserGroup}
                 >
-                  List des professeurs
+                  Créer un professeur
                 </Sidebar.Item>
                 <Sidebar.Item
-                  href="/user/admin/creation_professeur"
+                  href="/user/admin/list_professeur"
                   icon={HiUserAdd}
                 >
-                  Créer un professeur
+                  List des professeurs
                 </Sidebar.Item>
               </Sidebar.Collapse>
 
@@ -73,18 +73,18 @@ export function SidebarAdmin() {
 
               <Sidebar.Collapse icon={HiUserGroup} label="Tarif">
                 <Sidebar.Item
-                  href="/user/admin/liste_tarif"
-                  icon={HiCreditCard}
-                >
-                  {" "}
-                  List des tarifs{" "}
-                </Sidebar.Item>
-                <Sidebar.Item
                   href="/user/admin/creation_tarif"
                   icon={HiCreditCard}
                 >
                   {" "}
                   Créer un tarif{" "}
+                </Sidebar.Item>
+                <Sidebar.Item
+                  href="/user/admin/liste_tarif"
+                  icon={HiCreditCard}
+                >
+                  {" "}
+                  Liste des tarifs{" "}
                 </Sidebar.Item>
               </Sidebar.Collapse>
 
@@ -102,9 +102,6 @@ export function SidebarAdmin() {
       {/* Sidebar for smaller screens */}
       <div className="flex md:hidden flex-col w-20 transition-width duration-300">
         <Sidebar aria-label="Default sidebar example">
-          <button className="p-4 focus:outline-none" onClick={toggleSidebar}>
-            <FaBars className="text-xl" />
-          </button>
           <Sidebar.Items>
             <Sidebar.ItemGroup>
               <Sidebar.Item href="/user/admin" icon={HiHome}>
@@ -118,22 +115,22 @@ export function SidebarAdmin() {
                   Créer un cours
                 </Sidebar.Item>
                 <Sidebar.Item href="/user/admin/liste_cours" icon={HiBookOpen}>
-                  Voir les cours
+                  Liste des cours
                 </Sidebar.Item>
               </Sidebar.Collapse>
 
               <Sidebar.Collapse icon={HiUserGroup} label="Professeur">
                 <Sidebar.Item
-                  href="/user/admin/list_professeur"
+                  href="/user/admin/creation_professeur"
                   icon={HiUserGroup}
                 >
-                  List des professeurs
+                  Créer un professeur
                 </Sidebar.Item>
                 <Sidebar.Item
-                  href="/user/admin/creation_professeur"
+                  href="/user/admin/list_professeur"
                   icon={HiUserAdd}
                 >
-                  Créer un professeur
+                  List des professeurs
                 </Sidebar.Item>
               </Sidebar.Collapse>
 
@@ -153,18 +150,18 @@ export function SidebarAdmin() {
 
               <Sidebar.Collapse icon={HiUserGroup} label="Tarif">
                 <Sidebar.Item
-                  href="/user/admin/liste_tarif"
-                  icon={HiCreditCard}
-                >
-                  {" "}
-                  List des tarifs{" "}
-                </Sidebar.Item>
-                <Sidebar.Item
                   href="/user/admin/creation_tarif"
                   icon={HiCreditCard}
                 >
                   {" "}
                   Créer un tarif{" "}
+                </Sidebar.Item>
+                <Sidebar.Item
+                  href="/user/admin/liste_tarif"
+                  icon={HiCreditCard}
+                >
+                  {" "}
+                  Liste des tarifs{" "}
                 </Sidebar.Item>
               </Sidebar.Collapse>
 
