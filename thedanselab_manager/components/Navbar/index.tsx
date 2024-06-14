@@ -24,11 +24,14 @@ function Navbar_() {
           if (userDoc.exists()) {
             const userData = userDoc.data();
             console.log("User data retrieved:", userData);
-            setUserName(userData.name);
-            setUserFirstName(userData.firstName);
-            setUserStatus(userData.status);
-            if (userData.status === "professeur" && userData.photoURL) {
-              setPhotoURL(userData.photoURL);
+            // Ajoutez une vérification pour s'assurer que l'utilisateur est bien un admin
+            if (userData.status === "admin") {
+              setUserName(userData.name);
+              setUserFirstName(userData.firstName);
+              setUserStatus(userData.status);
+              if (userData.status === "professeur" && userData.photoURL) {
+                setPhotoURL(userData.photoURL);
+              }
             }
           } else {
             console.log("No such document!");
