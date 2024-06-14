@@ -19,6 +19,9 @@ export function SidebarEleve() {
             Accueil
           </Sidebar.Item>
           <Sidebar.Item href="/user/eleve/cours" icon={HiBookOpen}>
+            Cours
+          </Sidebar.Item>
+          <Sidebar.Item href="/user/eleve/mes_cours" icon={HiBookOpen}>
             Mes cours
           </Sidebar.Item>
           <Sidebar.Item href="/user/eleve/tarifs" icon={HiCreditCard}>

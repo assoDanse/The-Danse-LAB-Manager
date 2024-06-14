@@ -1,5 +1,6 @@
-import React from 'react';
-import { Card } from 'flowbite-react';
+import React from "react";
+import { Card } from "flowbite-react";
+import ValidationButton from "../ValidationButton";
 
 type CreationTarifProps = {
   titre: string;
@@ -14,84 +15,68 @@ type CreationTarifProps = {
   setCredit: (credit: number) => void;
 };
 
-const CreationTarif: React.FC<CreationTarifProps> = ({ titre, setTitre, description, setDescription, image, setImage, prix, setPrix, credit, setCredit }) => {
+const CreationTarif: React.FC<CreationTarifProps> = ({
+  titre,
+  setTitre,
+  description,
+  setDescription,
+  image,
+  setImage,
+  prix,
+  setPrix,
+  credit,
+  setCredit,
+}) => {
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen space-y-4">
-      <form className="w-full max-w-md p-4 bg-white rounded shadow-md">
-        <div className="mb-4">
-          <label className="block text-gray-700">Titre</label>
+    <div className="max-w-sm w-full p-8 bg-white rounded-lg shadow-md ">
+      <h1 className="text-center text-2xl mb-6">Créer un tarif</h1>
+      <form className="flex flex-col gap-5">
+        <div className="">
           <input
-            type="text"
+            type="texte"
             value={titre}
             onChange={(e) => setTitre(e.target.value)}
+            placeholder="Titre"
             className="w-full px-3 py-2 border rounded"
           />
         </div>
-        <div className="mb-4">
-          <label className="block text-gray-700">Description</label>
+        <div className="">
           <textarea
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             className="w-full px-3 py-2 border rounded"
+            placeholder="Description"
           />
         </div>
-        <div className="mb-4">
-          <label className="block text-gray-700">Image URL</label>
+        <div className="">
           <input
             type="text"
             value={image}
             onChange={(e) => setImage(e.target.value)}
             className="w-full px-3 py-2 border rounded"
+            placeholder="Image"
           />
         </div>
-        <div className="mb-4">
-          <label className="block text-gray-700">Prix</label>
+        <div className="">
           <input
             type="text"
             value={prix}
             onChange={(e) => setPrix(e.target.value)}
             className="w-full px-3 py-2 border rounded"
+            placeholder="Prix"
           />
         </div>
-        <div className="mb-4">
-          <label className="block text-gray-700">Crédits</label>
+        <div className="">
           <input
             type="number"
             value={credit}
             onChange={(e) => setCredit(Number(e.target.value))}
             className="w-full px-3 py-2 border rounded"
+            placeholder="Credit"
           />
         </div>
-        <button type="submit" className="w-full py-2 px-4 bg-blue-500 text-white rounded">
-          Créer Tarif
-        </button>
+        <ValidationButton text="Créer un Tarif" />
       </form>
-
-      <div className="mt-8">
-        <Card className="max-w-sm m-auto">
-          {image && (
-            <img
-              className="w-full h-48 object-cover"
-              src={image}
-              alt={titre}
-            />
-          )}
-          <div className="p-4">
-            <h5 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
-              {titre}
-            </h5>
-            <p className="font-normal text-gray-700 dark:text-gray-400">
-              {description}
-            </p>
-            <p className="font-normal text-gray-700 dark:text-gray-400">
-              {prix}
-            </p>
-            <p className="font-normal text-gray-700 dark:text-gray-400">
-              Crédits : {credit}
-            </p>
-          </div>
-        </Card>
-      </div>
     </div>
   );
 };

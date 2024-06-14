@@ -12,21 +12,19 @@ const CreateTarifPage: React.FC = () => {
   const [credit, setCredit] = useState<number>(0);
 
   return (
-    <div className="flex min-h-screen">
-      <div className="flex-grow p-4">
-        <CreationTarif
-          titre={titre}
-          setTitre={setTitre}
-          description={description}
-          setDescription={setDescription}
-          image={image}
-          setImage={setImage}
-          prix={prix}
-          setPrix={setPrix}
-          credit={credit}
-          setCredit={setCredit}
-        />
-      </div>
+    <div className="flex justify-center items-center w-full">
+      <CreationTarif
+        titre={titre}
+        setTitre={setTitre}
+        description={description}
+        setDescription={setDescription}
+        image={image}
+        setImage={setImage}
+        prix={prix}
+        setPrix={setPrix}
+        credit={credit}
+        setCredit={setCredit}
+      />
     </div>
   );
 };

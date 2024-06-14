@@ -1,16 +1,44 @@
 "use client";
-import React, { useState } from "react";
-// import { supabase } from "../supabaseClient";
+
+import React, { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import EmailInput from "@/components/EmailInput";
 import PasswordInput from "@/components/PasswordInput";
 import ValidationButton from "@/components/ValidationButton";
-import { useRouter } from "next/navigation";
+import { auth, db } from "@/config/firebase-config"; // Assurez-vous que cette importation est correcte
+import { signInWithEmailAndPassword, onAuthStateChanged } from "firebase/auth";
+import { doc, getDoc } from "firebase/firestore";
 
-const LogUserForm: React.FC = () => {
+const Login: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [message, setMessage] = useState(""); // Pour afficher les messages de succès
   const router = useRouter();
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        // Récupérer le statut de l'utilisateur à partir de Firestore
+        const userDoc = await getDoc(doc(db, "users", user.uid));
+        if (userDoc.exists()) {
+          const userData = userDoc.data();
+          const userStatus = userData.status;
+
+          // Rediriger vers la page appropriée en fonction du statut
+          if (userStatus === "eleve") {
+            router.push("/user/eleve");
+          } else if (userStatus === "professeur") {
+            router.push("/user/professeur");
+          } else if (userStatus === "admin") {
+            router.push("/user/admin");
+          }
+        }
+      }
+    });
+
+    return () => unsubscribe();
+  }, [router]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -21,70 +49,39 @@ const LogUserForm: React.FC = () => {
     }
 
     setError("");
+    setMessage("");
 
-    // Vérifiez si l'utilisateur existe dans la base de données
-    const { data: userData, error: userError } = await supabase
-      .from("user")
-      .select("id, email, password")
-      .eq("email", email.toLowerCase());
-
-    if (userError) {
-      setError(
-        "Une erreur s'est produite lors de la connexion. Veuillez réessayer."
+    try {
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        email,
+        password
       );
-      return;
-    }
+      const user = userCredential.user;
+      setMessage(`Connecté en tant que : ${user.email}`);
 
-    if (userData && userData.length > 0) {
-      const user = userData[0];
+      // Récupérer le statut de l'utilisateur à partir de Firestore
+      const userDoc = await getDoc(doc(db, "users", user.uid));
+      if (userDoc.exists()) {
+        const userData = userDoc.data();
+        const userStatus = userData.status;
 
-      // Comparez le mot de passe entré avec le mot de passe stocké
-      if (user.password === password) {
-        // Mot de passe correct, récupérez le grade de l'utilisateur
-        const { data: gradeData, error: gradeError } = await supabase
-          .from("comporte")
-          .select("id_utilisateur, id_1")
-          .eq("id_utilisateur", user.id);
-
-        if (gradeError) {
-          setError(
-            "Une erreur s'est produite lors de la récupération du grade. Veuillez réessayer."
-          );
-          return;
-        }
-
-        if (gradeData && gradeData.length > 0) {
-          const grade = gradeData[0].id_1;
-
-          // Redirigez l'utilisateur en fonction du grade
-          switch (grade) {
-            case 1:
-              router.push("http://localhost:3000/admin");
-              break;
-            case 2:
-              router.push("http://localhost:3000/manager");
-              break;
-            case 3:
-              router.push("http://localhost:3000/user");
-              break;
-            default:
-              setError(
-                "Grade non reconnu. Veuillez contacter l'administrateur."
-              );
-              break;
-          }
+        // Rediriger vers la page appropriée en fonction du statut
+        if (userStatus === "eleve") {
+          router.push("/user/eleve");
+        } else if (userStatus === "professeur") {
+          router.push("/user/professeur");
+        } else if (userStatus === "admin") {
+          router.push("/user/admin");
         } else {
-          setError(
-            "L'utilisateur n'a pas de grade attribué. Veuillez contacter l'administrateur."
-          );
+          setError("Statut utilisateur inconnu.");
         }
       } else {
-        // Mot de passe incorrect
-        setError("Mot de passe incorrect. Veuillez réessayer.");
+        setError("Erreur de récupération des informations utilisateur.");
       }
-    } else {
-      // L'utilisateur n'existe pas, affichez un message d'erreur
-      setError("Utilisateur non reconnu. Veuillez vérifier vos informations.");
+    } catch (error: any) {
+      setError(`Erreur de connexion: ${error.message}`);
+      console.error(error.code, error.message);
     }
   };
 
@@ -97,16 +94,17 @@ const LogUserForm: React.FC = () => {
           <EmailInput email={email} setEmail={setEmail} />
           <PasswordInput password={password} setPassword={setPassword} />
           {error && <p className="text-red-500">{error}</p>}
+          {message && <p className="text-green-500">{message}</p>}
           <ValidationButton text="Se connecter" />
           <div className="flex justify-around">
             <a
-              className="text-sm text-blue-500 underline text-center"
+              className="text-sm text-light-orange underline text-center"
               href="/auth/signin"
             >
               Créer un compte
             </a>
             <a
-              className="text-sm text-blue-500 underline text-center"
+              className="text-sm text-light-orange underline text-center"
               href="/auth/reset_password"
             >
               Mot de passe oublié
@@ -118,4 +116,4 @@ const LogUserForm: React.FC = () => {
   );
 };
 
-export default LogUserForm;
+export default Login;
