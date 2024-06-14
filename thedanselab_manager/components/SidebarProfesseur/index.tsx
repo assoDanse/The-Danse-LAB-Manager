@@ -17,6 +17,9 @@ export function SidebarProfesseur() {
           <Sidebar.Item href="/user/professeur/creation_eleve" icon={FaCog}>
             Création élève
           </Sidebar.Item>
+          <Sidebar.Item href="/user/professeur/edit_profil" icon={FaCog}>
+            Mes informations
+          </Sidebar.Item>
         </Sidebar.ItemGroup>
       </Sidebar.Items>
     </Sidebar>
