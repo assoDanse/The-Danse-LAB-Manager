@@ -1,6 +1,6 @@
-"use client"
+"use client";
 import React, { useEffect, useState } from "react";
-import TableSkeleton from "@/components/TableSkeleton/intex";
+import TableSkeleton from "@/components/TableSkeleton";
 
 interface Tarif {
   id: string;

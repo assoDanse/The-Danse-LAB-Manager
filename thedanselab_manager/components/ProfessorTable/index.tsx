@@ -1,6 +1,6 @@
 // components/ProfessorTable.tsx
 import React, { useEffect, useState } from "react";
-import TableSkeleton from "../TableSkeleton/intex";
+import TableSkeleton from "../TableSkeleton";
 
 interface Professor {
   id: string;

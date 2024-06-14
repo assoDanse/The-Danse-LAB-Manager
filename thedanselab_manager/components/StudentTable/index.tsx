@@ -1,6 +1,7 @@
+"use client";
 // components/StudentTable.tsx
 import React, { useEffect, useState } from "react";
-import TableSkeleton from "../TableSkeleton/intex";
+import TableSkeleton from "../TableSkeleton";
 
 interface Student {
   id: string;
