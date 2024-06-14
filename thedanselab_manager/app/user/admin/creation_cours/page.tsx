@@ -11,6 +11,7 @@ import DurationInput from "@/components/DurationInput";
 import { db, storage } from "@/config/firebase-config";
 import { collection, addDoc, Timestamp } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import ValidationButton from "@/components/ValidationButton";
 
 const CreateCours: React.FC = () => {
   const [title, setTitle] = useState("");
@@ -99,51 +100,53 @@ const CreateCours: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col justify-center items-center w-full mt-4 space-y-4">
-      <h1 className="text-2xl mb-4">Création Cours</h1>
-      <form onSubmit={handleSubmit} className="flex flex-col gap-5">
-        <TitleInput title={title} setTitle={setTitle} />
-        {errors.title && <p className="text-red-500">{errors.title}</p>}
-        <DescriptionInput
-          description={description}
-          setDescription={setDescription}
-        />
-        {errors.description && (
-          <p className="text-red-500">{errors.description}</p>
-        )}
-        <ProfesseurInput
-          professorId={professorId}
-          setProfessorId={setProfessorId}
-          setProfessorName={setProfessorName}
-        />
-        {errors.professor && <p className="text-red-500">{errors.professor}</p>}
-        <TypeDeCoursInput
-          typeDeCours={courseType}
-          setTypeDeCours={setCourseType}
-        />
-        {errors.courseType && (
-          <p className="text-red-500">{errors.courseType}</p>
-        )}
-        <DateInput date={date} setDate={setDate} />
-        {errors.date && <p className="text-red-500">{errors.date}</p>}
-        <DurationInput duration={duration} setDuration={setDuration} />
-        {errors.duration && <p className="text-red-500">{errors.duration}</p>}
-        <div>
-          <label
-            htmlFor="photo"
-            className="block text-sm font-medium text-gray-700"
-          >
-            Photo
-          </label>
-          <input type="file" id="photo" onChange={handlePhotoChange} />
-          {errors.photo && <p className="text-red-500">{errors.photo}</p>}
-        </div>
-        {errors.general && <p className="text-red-500">{errors.general}</p>}
-        {message && <p className="text-green-500">{message}</p>}
-        <button type="submit" className="bg-blue-500 text-white p-2 rounded">
-          Créer un cours
-        </button>
-      </form>
+    <div className="flex justify-center items-center w-full">
+      <div className="max-w-sm w-full p-8 bg-white rounded-lg shadow-md my-2">
+        <h1 className="text-center text-2xl mb-6">Créer un cours</h1>
+        <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+          <TitleInput title={title} setTitle={setTitle} />
+          {errors.title && <p className="text-red-500">{errors.title}</p>}
+          <DescriptionInput
+            description={description}
+            setDescription={setDescription}
+          />
+          {errors.description && (
+            <p className="text-red-500">{errors.description}</p>
+          )}
+          <ProfesseurInput
+            professorId={professorId}
+            setProfessorId={setProfessorId}
+            setProfessorName={setProfessorName}
+          />
+          {errors.professor && (
+            <p className="text-red-500">{errors.professor}</p>
+          )}
+          <TypeDeCoursInput
+            typeDeCours={courseType}
+            setTypeDeCours={setCourseType}
+          />
+          {errors.courseType && (
+            <p className="text-red-500">{errors.courseType}</p>
+          )}
+          <DateInput date={date} setDate={setDate} />
+          {errors.date && <p className="text-red-500">{errors.date}</p>}
+          <DurationInput duration={duration} setDuration={setDuration} />
+          {errors.duration && <p className="text-red-500">{errors.duration}</p>}
+          <div>
+            <label
+              htmlFor="photo"
+              className="block text-sm font-medium text-gray-700"
+            >
+              Photo
+            </label>
+            <input type="file" id="photo" onChange={handlePhotoChange} />
+            {errors.photo && <p className="text-red-500">{errors.photo}</p>}
+          </div>
+          {errors.general && <p className="text-red-500">{errors.general}</p>}
+          {message && <p className="text-green-500">{message}</p>}
+          <ValidationButton text="Créer un cours" />
+        </form>
+      </div>
     </div>
   );
 };

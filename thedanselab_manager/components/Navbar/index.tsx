@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Button, Navbar } from "flowbite-react";
+import { Button, Navbar, Popover } from "flowbite-react";
 import Image from "next/image";
 import Logo from "@/public/Logo-150x150.jpg";
 import { auth, db } from "@/config/firebase-config";
@@ -104,9 +104,29 @@ function Navbar_() {
                 className="rounded-full mr-4"
               />
             )}
-            <span className="self-center whitespace-nowrap text-xl font-semibold dark:text-white ml-4 max-md:hidden">
-              {userFirstName} {userName}
-            </span>
+            <Popover
+              aria-labelledby="default-popover"
+              content={
+                <div className="w-64 text-sm text-gray-500 dark:text-gray-400">
+                  <div className="  bg-light-orange px-3 py-2 dark:border-gray-600 dark:bg-gray-700">
+                    <h3
+                      id="default-popover"
+                      className="font-semibold text-gray-900 dark:text-white"
+                    >
+                      Compte
+                    </h3>
+                  </div>
+                  <div className="px-3 py-2 bg-white-egg ">
+                    <span className="flex self-center whitespace-nowrap text-xl font-semibold dark:text-white ml-4 max-md:hidden">
+                      {userFirstName} {userName}
+                    </span>
+                  </div>
+                </div>
+              }
+              trigger="hover"
+            >
+              <Button>Profil</Button>
+            </Popover>
           </>
         )}
         {userName && userFirstName && (
@@ -118,7 +138,7 @@ function Navbar_() {
           </Button>
         )}
         {!userName && !userFirstName && (
-          <Button className="ml-4" href="/auth/login">
+          <Button className="ml-4 bg-dark-brown" href="/auth/login">
             Se connecter
           </Button>
         )}
@@ -140,12 +160,26 @@ function Navbar_() {
             </span>
           </div>
         )}
-        <Navbar.Link href={getHomeLink()} active>
+        <Navbar.Link
+          className="text-white-egg hover:text-light-orange"
+          href={getHomeLink()}
+        >
           Accueil
         </Navbar.Link>
-        <Navbar.Link href={getCoursesLink()}>Cours</Navbar.Link>
-        <Navbar.Link href="/user/visiteur/tarifs">Tarifs</Navbar.Link>
-        <Navbar.Link href="/user/visiteur/contact">Contact</Navbar.Link>
+        <Navbar.Link className="text-white-egg" href={getCoursesLink()}>
+          Cours
+        </Navbar.Link>
+        <Navbar.Link className="text-white-egg" href="/user/visiteur/tarifs">
+          Tarifs
+        </Navbar.Link>
+        <Navbar.Link className="text-white-egg" href="/user/visiteur/contact">
+          Contact
+        </Navbar.Link>
+        {!userName && !userFirstName && (
+          <Button className="md:hidden mt-4 bg-dark-brown" href="/auth/login">
+            Se connecter
+          </Button>
+        )}
         {userName && userFirstName && (
           <Button
             className="mt-4 bg-red-500 hover:bg-red-700 text-white md:hidden"
