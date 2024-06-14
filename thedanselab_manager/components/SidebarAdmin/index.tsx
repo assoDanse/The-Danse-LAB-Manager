@@ -23,7 +23,7 @@ export function SidebarAdmin() {
   return (
     <div className="flex">
       {/* Sidebar for larger screens */}
-      <div className="hidden md:flex">
+      <div className="max-md:hidden md:flex">
         <Sidebar aria-label="Default sidebar example">
           <Sidebar.Items>
             <Sidebar.ItemGroup>
@@ -101,10 +101,10 @@ export function SidebarAdmin() {
 
       {/* Sidebar for smaller screens */}
       <div className="flex md:hidden flex-col w-20 transition-width duration-300">
-        <button className="p-4 focus:outline-none" onClick={toggleSidebar}>
-          <FaBars className="text-xl" />
-        </button>
         <Sidebar aria-label="Default sidebar example">
+          <button className="p-4 focus:outline-none" onClick={toggleSidebar}>
+            <FaBars className="text-xl" />
+          </button>
           <Sidebar.Items>
             <Sidebar.ItemGroup>
               <Sidebar.Item href="/user/admin" icon={HiHome}>
