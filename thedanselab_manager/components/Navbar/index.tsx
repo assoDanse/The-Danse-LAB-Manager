@@ -138,7 +138,7 @@ function Navbar_() {
           </Button>
         )}
         {!userName && !userFirstName && (
-          <Button className="ml-4" href="/auth/login">
+          <Button className="ml-4 bg-dark-brown" href="/auth/login">
             Se connecter
           </Button>
         )}
@@ -175,6 +175,11 @@ function Navbar_() {
         <Navbar.Link className="text-white-egg" href="/user/visiteur/contact">
           Contact
         </Navbar.Link>
+        {!userName && !userFirstName && (
+          <Button className="md:hidden mt-4 bg-dark-brown" href="/auth/login">
+            Se connecter
+          </Button>
+        )}
         {userName && userFirstName && (
           <Button
             className="mt-4 bg-red-500 hover:bg-red-700 text-white md:hidden"
