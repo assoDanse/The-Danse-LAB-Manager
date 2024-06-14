@@ -1,5 +1,3 @@
-"use client";
-
 import { Sidebar } from "flowbite-react";
 import {
   HiHome,
@@ -12,7 +10,7 @@ import {
 
 export function SidebarEleve() {
   return (
-    <Sidebar aria-label="Default sidebar example">
+    <Sidebar aria-label="Default sidebar example" className="sidebar-custom">
       <Sidebar.Items>
         <Sidebar.ItemGroup>
           <Sidebar.Item href="/user/eleve" icon={HiHome}>
