@@ -5,6 +5,8 @@ import React, { useEffect, useState } from "react";
 type ContactInfo = {
   phoneNumber: string;
   email: string;
+  facebook: string;
+  instagram: string;
 };
 
 const Contact: React.FC = () => {
@@ -41,11 +43,21 @@ const Contact: React.FC = () => {
               <h3 className="text-xl font-semibold">Adresse e-mail</h3>
               <p className="text-gray-700">{contactInfo.email}</p>
             </div>
+            <div className="mb-4">
+              <h3 className="text-xl font-semibold">Facebook</h3>
+              <a href={contactInfo.facebook} className="text-blue-500" target="_blank" rel="noopener noreferrer">
+                {contactInfo.facebook}
+              </a>
+            </div>
+            <div className="mb-4">
+              <h3 className="text-xl font-semibold">Instagram</h3>
+              <a href={contactInfo.instagram} className="text-pink-500" target="_blank" rel="noopener noreferrer">
+                {contactInfo.instagram}
+              </a>
+            </div>
           </>
         ) : (
-          <p className="text-center font-bold">
-            Chargement des informations...
-          </p>
+          <p className="text-center font-bold">Chargement des informations...</p>
         )}
       </div>
     </div>
