@@ -71,7 +71,7 @@ export function SidebarAdmin() {
                 </Sidebar.Item>
               </Sidebar.Collapse>
 
-              <Sidebar.Collapse icon={HiUserGroup} label="Tarif">
+              <Sidebar.Collapse icon={HiCreditCard} label="Tarif">
                 <Sidebar.Item
                   href="/user/admin/creation_tarif"
                   icon={HiCreditCard}
@@ -101,15 +101,15 @@ export function SidebarAdmin() {
 
       {/* Sidebar for smaller screens */}
       <div className="flex md:hidden flex-col w-20 transition-width duration-300">
-        <button className="p-4 focus:outline-none" onClick={toggleSidebar}>
-          <FaBars className="text-xl" />
-        </button>
         <Sidebar
           aria-label="Default sidebar example"
           className={`${
             isExpanded ? "w-64" : "w-20"
           } transition-width duration-300`}
         >
+          <button className="p-2 focus:outline-none" onClick={toggleSidebar}>
+            <FaBars className="text-xl" />
+          </button>
           <Sidebar.Items>
             <Sidebar.ItemGroup>
               <Sidebar.Item href="/user/admin" icon={HiHome}>
