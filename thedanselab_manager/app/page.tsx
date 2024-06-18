@@ -1,10 +1,10 @@
 import React from "react";
-import TitleInput from "@/components/TiltleInput";
+import TitleInput from "@/components/TitleInput";
 const Home: React.FC = () => {
   return (
     <div className="flex justify-center items-center w-full">
       <div>
-        <TitleInput/>
+   
       </div>
     </div>
   );

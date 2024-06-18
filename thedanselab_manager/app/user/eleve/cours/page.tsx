@@ -17,6 +17,7 @@ interface Cours {
     minutes: number;
   };
   photo: string;
+  places_restantes: number; // Add this field
 }
 
 const CoursEleve: React.FC = () => {
@@ -80,8 +81,25 @@ const CoursEleve: React.FC = () => {
     return () => unsubscribe();
   }, [router]);
 
-  const handleInscriptionClick = (cours: Cours) => {
-    setSelectedCours(cours);
+  const handleInscriptionClick = async (cours: Cours) => {
+    const user = auth.currentUser;
+    if (user) {
+      const cartesQuery = query(collection(db, "cartes"), where("id_users", "==", user.uid));
+      const cartesSnapshot = await getDocs(cartesQuery);
+      if (!cartesSnapshot.empty) {
+        const carteDoc = cartesSnapshot.docs[0];
+        const placesRestantes = carteDoc.data().places_restantes;
+        if (placesRestantes > 0) {
+          setSelectedCours(cours);
+        } else {
+          setMessage("Aucune place restante sur votre carte.");
+        }
+      } else {
+        setMessage("Aucune carte trouvée pour cet utilisateur.");
+      }
+    } else {
+      setError("User not logged in");
+    }
   };
 
   const handleViewClick = (cours: Cours) => {
@@ -107,6 +125,14 @@ const CoursEleve: React.FC = () => {
           const carteDoc = cartesSnapshot.docs[0]; // On suppose qu'il n'y a qu'un seul document par utilisateur
           const newPlacesRestantes = carteDoc.data().places_restantes - 1;
           await updateDoc(carteDoc.ref, { places_restantes: newPlacesRestantes });
+        }
+
+        // Mettre à jour les places restantes pour le cours
+        const coursDocRef = doc(db, "cours", selectedCours.id);
+        const coursDoc = await getDoc(coursDocRef);
+        if (coursDoc.exists()) {
+          const newPlacesRestantes = coursDoc.data().places_restantes - 1;
+          await updateDoc(coursDocRef, { places_restantes: newPlacesRestantes });
         }
 
         // Mettre à jour la liste des cours disponibles et des cours de l'élève
@@ -168,6 +194,7 @@ const CoursEleve: React.FC = () => {
               <p>Date: {cours.date_heure_debut}</p>
               <p>Durée: {cours.duree.heures}h {cours.duree.minutes}m</p>
               <p>Professeur: {cours.nom_professeur}</p>
+              <p>Places restantes: {cours.places_restantes}</p>
               <button
                 onClick={() => handleViewClick(cours)}
                 className="bg-blue-500 text-white p-2 rounded mt-2"
@@ -236,46 +263,5 @@ const CoursEleve: React.FC = () => {
     </div>
   );
 };
-
-{/* <div className="flex flex-wrap justify-center items-center w-full">
-      {courses.length === 0 ? (
-        <p className="text-center text-gray-600 font-semibold">Aucun cours disponible pour le moment.</p>
-      ) : (
-        courses.map((course, index) => (
-          <div key={index} onClick={() => handleCourseClick(course)} className="w-full md:w-1/2 lg:w-1/3 xl:w-1/4 p-2">
-            <CardcoursVisiteur
-              titre={course.titre}
-              description={course.description}
-              image={course.image}
-              prix={course.prix}
-              date={new Date(course.date)}
-              heure={course.heure}
-              duree={course.duree}
-            />
-          </div>
-        ))
-      )}
-      
-      {showPopup && (
-        <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex justify-center items-center">
-          <div className="bg-white p-8 rounded-lg">
-            <h2 className="text-2xl font-semibold mb-4">{selectedCourse.titre}</h2>
-            <p>{/* Contenu du popup avec les détails du cours */}</p>
-            <div className="mt-4 flex justify-between">
-              <button onClick={handleClosePopup} className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center">
-                Annuler
-              </button>
-              <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded inline-flex items-center">
-                Utiliser les crédits
-              </button>
-              <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded inline-flex items-center">
-                Payer avec Halloasso
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-    </div>
-  ); */}
 
 export default CoursEleve;
