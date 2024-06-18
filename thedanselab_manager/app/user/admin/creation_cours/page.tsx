@@ -1,5 +1,4 @@
-"use client";
-
+"use client"
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import ProfesseurInput from "@/components/ProfesseurInput";
@@ -21,6 +20,7 @@ const CreateCours: React.FC = () => {
   const [courseType, setCourseType] = useState("");
   const [date, setDate] = useState("");
   const [duration, setDuration] = useState({ hours: 0, minutes: 0 });
+  const [periodicity, setPeriodicity] = useState<number>(1); // Ajout de la périodicité en nombre de semaines
   const [photo, setPhoto] = useState<File | null>(null);
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [message, setMessage] = useState("");
@@ -51,11 +51,6 @@ const CreateCours: React.FC = () => {
       return;
     }
 
-    if (!validatePrice(price)) {
-      setError("Prix invalide");
-      return;
-    }
-
     setErrors({});
     setMessage("");
 
@@ -81,6 +76,7 @@ const CreateCours: React.FC = () => {
         nom_professeur: professorName,
         id_professeur: professorId,
         photo: photoURL,
+        periodicite: periodicity, // Ajout de la périodicité au document de cours
       });
 
       setMessage("Cours créé avec succès");
@@ -91,6 +87,7 @@ const CreateCours: React.FC = () => {
       setCourseType("");
       setDate("");
       setDuration({ hours: 0, minutes: 0 });
+      setPeriodicity(1); // Réinitialisation de la périodicité après création du cours
       setPhoto(null);
     } catch (error: any) {
       setErrors({
@@ -144,12 +141,30 @@ const CreateCours: React.FC = () => {
           </div>
           {errors.general && <p className="text-red-500">{errors.general}</p>}
           {message && <p className="text-green-500">{message}</p>}
+          <div className="flex items-center gap-2">
+            <label htmlFor="periodicity" className="text-sm font-medium text-gray-700">
+              Périodicité (en semaines)
+            </label>
+            <input
+              type="number"
+              id="periodicity"
+              value={periodicity}
+              onChange={(e) => setPeriodicity(parseInt(e.target.value))}
+              className="border border-gray-300 rounded-md px-2 py-1"
+              min={1}
+              max={52}
+              required
+            />
+          </div>
           <ValidationButton text="Créer un cours" />
         </form>
       </div>
     </div>
   );
 };
+
+export default CreateCours;
+
 
 {
   /* <div className="flex justify-center items-center w-full">
@@ -176,5 +191,3 @@ const CreateCours: React.FC = () => {
         </form>
       </div> */
 }
-
-export default CreateCours;
