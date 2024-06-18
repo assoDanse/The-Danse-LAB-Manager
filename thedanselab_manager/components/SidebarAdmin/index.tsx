@@ -11,7 +11,7 @@ import {
   HiCurrencyDollar,
   HiPlusCircle,
 } from "react-icons/hi";
-import { FaBars, FaUserEdit } from "react-icons/fa";  // Ajouter FaUserEdit pour les icônes de modification
+import { FaBars, FaUserEdit } from "react-icons/fa"; // Ajouter FaUserEdit pour les icônes de modification
 
 export function SidebarAdmin() {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -55,8 +55,12 @@ export function SidebarAdmin() {
                 >
                   List des professeurs
                 </Sidebar.Item>
-                <Sidebar.Item 
-                  href="/user/admin/modifier_prof" icon={FaUserEdit}> Modifier professeur
+                <Sidebar.Item
+                  href="/user/admin/modifier_prof"
+                  icon={FaUserEdit}
+                >
+                  {" "}
+                  Modifier professeur
                 </Sidebar.Item>
               </Sidebar.Collapse>
 
@@ -70,8 +74,12 @@ export function SidebarAdmin() {
                 <Sidebar.Item href="/user/admin/list_eleve" icon={HiUserGroup}>
                   Liste des élèves
                 </Sidebar.Item>
-                <Sidebar.Item 
-                  href="/user/admin/modifier_eleve" icon={FaUserEdit}> Modifier élève
+                <Sidebar.Item
+                  href="/user/admin/modifier_eleve"
+                  icon={FaUserEdit}
+                >
+                  {" "}
+                  Modifier élève
                 </Sidebar.Item>
               </Sidebar.Collapse>
 
@@ -107,17 +115,17 @@ export function SidebarAdmin() {
           <Sidebar.Items>
             <Sidebar.ItemGroup>
               <Sidebar.Item href="/user/admin" icon={HiHome}>
-                Accueil
+                {isExpanded && "Accueil"}
               </Sidebar.Item>
               <Sidebar.Collapse icon={HiBookOpen} label="Cours">
                 <Sidebar.Item
                   href="/user/admin/creation_cours"
                   icon={HiPlusCircle}
                 >
-                  Créer un cours
+                  {isExpanded && "Créer un cours"}
                 </Sidebar.Item>
                 <Sidebar.Item href="/user/admin/liste_cours" icon={HiBookOpen}>
-                  Liste des cours
+                  {isExpanded && "Liste des cour"}s
                 </Sidebar.Item>
               </Sidebar.Collapse>
 
@@ -126,16 +134,19 @@ export function SidebarAdmin() {
                   href="/user/admin/creation_professeur"
                   icon={HiUserGroup}
                 >
-                  Créer un professeur
+                  {isExpanded && "Créer un professeur"}
                 </Sidebar.Item>
                 <Sidebar.Item
                   href="/user/admin/list_professeur"
                   icon={HiUserAdd}
                 >
-                  List des professeurs
+                  {isExpanded && "List des professeur"}s
                 </Sidebar.Item>
-                <Sidebar.Item 
-                  href="/user/admin/modifier_prof" icon={FaUserEdit}> Modifier professeur
+                <Sidebar.Item
+                  href="/user/admin/modifier_prof"
+                  icon={FaUserEdit}
+                >
+                  {isExpanded && "Modifier professeur"}
                 </Sidebar.Item>
               </Sidebar.Collapse>
 
@@ -144,13 +155,16 @@ export function SidebarAdmin() {
                   href="/user/admin/creation_eleve"
                   icon={HiUserAdd}
                 >
-                  Créer un élève
+                  {isExpanded && "Créer un élève"}
                 </Sidebar.Item>
                 <Sidebar.Item href="/user/admin/list_eleve" icon={HiUserGroup}>
-                  Liste des élèves
+                  {isExpanded && "Liste des élèves"}
                 </Sidebar.Item>
-                <Sidebar.Item 
-                  href="/user/admin/modifier_eleve" icon={FaUserEdit}> Modifier élève
+                <Sidebar.Item
+                  href="/user/admin/modifier_eleve"
+                  icon={FaUserEdit}
+                >
+                  {isExpanded && "Modifier élève"}
                 </Sidebar.Item>
               </Sidebar.Collapse>
 
@@ -159,7 +173,7 @@ export function SidebarAdmin() {
                   href="/user/admin/creation_tarif"
                   icon={HiCreditCard}
                 >
-                  Créer un tarif
+                  {isExpanded && ""}Créer un tarif
                 </Sidebar.Item>
                 <Sidebar.Item
                   href="/user/admin/liste_tarif"
