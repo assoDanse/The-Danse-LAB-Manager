@@ -81,6 +81,29 @@ function Navbar_() {
     }
   };
 
+  const getTarifsLink = () => {
+    if (userStatus === "admin") {
+      return "/user/admin/tarifs";
+    } else if (userStatus === "professeur") {
+      return "/user/professeur/tarifs";
+    } else if (userStatus === "eleve") {
+      return "/user/eleve/tarifs";
+    } else {
+      return "/user/visiteur/tarifs";
+    }
+  };
+  const getContactLink = () => {
+    if (userStatus === "admin") {
+      return "/user/admin/contact";
+    } else if (userStatus === "professeur") {
+      return "/user/professeur/contact";
+    } else if (userStatus === "eleve") {
+      return "/user/eleve/contact";
+    } else {
+      return "/user/visiteur/contact";
+    }
+  };
+
   return (
     <Navbar className="md:sticky top-0 p-4 w-full bg-light-green" fluid rounded>
       <Navbar.Brand href="https://thedancelab.fr/">
@@ -169,10 +192,10 @@ function Navbar_() {
         <Navbar.Link className="text-white-egg" href={getCoursesLink()}>
           Cours
         </Navbar.Link>
-        <Navbar.Link className="text-white-egg" href="/user/visiteur/tarifs">
+        <Navbar.Link className="text-white-egg" href={getTarifsLink()}>
           Tarifs
         </Navbar.Link>
-        <Navbar.Link className="text-white-egg" href="/user/visiteur/contact">
+        <Navbar.Link className="text-white-egg" href={getContactLink()}>
           Contact
         </Navbar.Link>
         {!userName && !userFirstName && (

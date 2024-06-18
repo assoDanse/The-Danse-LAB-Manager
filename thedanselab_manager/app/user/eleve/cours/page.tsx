@@ -27,6 +27,7 @@ interface Cours {
     minutes: number;
   };
   photo: string;
+  places_restantes: number; // Add this field
 }
 
 const CoursEleve: React.FC = () => {
@@ -98,8 +99,28 @@ const CoursEleve: React.FC = () => {
     return () => unsubscribe();
   }, [router]);
 
-  const handleInscriptionClick = (cours: Cours) => {
-    setSelectedCours(cours);
+  const handleInscriptionClick = async (cours: Cours) => {
+    const user = auth.currentUser;
+    if (user) {
+      const cartesQuery = query(
+        collection(db, "cartes"),
+        where("id_users", "==", user.uid)
+      );
+      const cartesSnapshot = await getDocs(cartesQuery);
+      if (!cartesSnapshot.empty) {
+        const carteDoc = cartesSnapshot.docs[0];
+        const placesRestantes = carteDoc.data().places_restantes;
+        if (placesRestantes > 0) {
+          setSelectedCours(cours);
+        } else {
+          setMessage("Aucune place restante sur votre carte.");
+        }
+      } else {
+        setMessage("Aucune carte trouvée pour cet utilisateur.");
+      }
+    } else {
+      setError("User not logged in");
+    }
   };
 
   const handleViewClick = (cours: Cours) => {
@@ -128,6 +149,26 @@ const CoursEleve: React.FC = () => {
           const carteDoc = cartesSnapshot.docs[0]; // On suppose qu'il n'y a qu'un seul document par utilisateur
           const newPlacesRestantes = carteDoc.data().places_restantes - 1;
           await updateDoc(carteDoc.ref, {
+            places_restantes: newPlacesRestantes,
+          });
+        }
+
+        // Mettre à jour les places restantes pour le cours
+        const coursDocRef = doc(db, "cours", selectedCours.id);
+        const coursDoc = await getDoc(coursDocRef);
+        if (coursDoc.exists()) {
+          const newPlacesRestantes = coursDoc.data().places_restantes - 1;
+          await updateDoc(coursDocRef, {
+            places_restantes: newPlacesRestantes,
+          });
+        }
+
+        // Mettre à jour les places restantes pour le cours
+        const coursDocRef = doc(db, "cours", selectedCours.id);
+        const coursDoc = await getDoc(coursDocRef);
+        if (coursDoc.exists()) {
+          const newPlacesRestantes = coursDoc.data().places_restantes - 1;
+          await updateDoc(coursDocRef, {
             places_restantes: newPlacesRestantes,
           });
         }
@@ -206,6 +247,7 @@ const CoursEleve: React.FC = () => {
                 Durée: {cours.duree.heures}h {cours.duree.minutes}m
               </p>
               <p>Professeur: {cours.nom_professeur}</p>
+              <p>Places restantes: {cours.places_restantes}</p>
               <button
                 onClick={() => handleViewClick(cours)}
                 className="bg-blue-500 text-white p-2 rounded mt-2"
