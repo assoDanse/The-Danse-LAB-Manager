@@ -94,6 +94,14 @@ export function SidebarAdmin() {
               >
                 Comptabilité
               </Sidebar.Item>
+
+              <Sidebar.Item
+                href="/user/admin/modifier_contact"
+                icon={HiCurrencyDollar}
+              >
+                Modifier les contact
+              </Sidebar.Item>
+              
             </Sidebar.ItemGroup>
           </Sidebar.Items>
         </Sidebar>
