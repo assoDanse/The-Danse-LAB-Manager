@@ -54,18 +54,28 @@ const modifier_contact: React.FC = () => {
         alert("Erreur lors de la mise à jour des informations de contact.");
       }
     } catch (error) {
-      console.error("Erreur lors de la mise à jour des informations de contact:", error);
+      console.error(
+        "Erreur lors de la mise à jour des informations de contact:",
+        error
+      );
     }
   };
 
   return (
-    <div className="flex flex-col items-center justify-center w-full bg-gray-100">
+    <div className="flex justify-center items-center w-full">
       <div className="w-full max-w-md p-8 bg-white rounded shadow-md">
-        <h2 className="text-3xl font-bold mb-6 text-center">Modifier les informations de contact</h2>
+        <h2 className="text-3xl font-bold mb-6 text-center">
+          Modifier les informations de contact
+        </h2>
         {contactInfo ? (
           <form onSubmit={handleSubmit}>
             <div className="mb-4">
-              <label htmlFor="phoneNumber" className="block text-lg font-semibold">Numéro de téléphone</label>
+              <label
+                htmlFor="phoneNumber"
+                className="block text-lg font-semibold"
+              >
+                Numéro de téléphone
+              </label>
               <input
                 type="text"
                 id="phoneNumber"
@@ -76,7 +86,9 @@ const modifier_contact: React.FC = () => {
               />
             </div>
             <div className="mb-4">
-              <label htmlFor="email" className="block text-lg font-semibold">Adresse e-mail</label>
+              <label htmlFor="email" className="block text-lg font-semibold">
+                Adresse e-mail
+              </label>
               <input
                 type="email"
                 id="email"
@@ -87,7 +99,9 @@ const modifier_contact: React.FC = () => {
               />
             </div>
             <div className="mb-4">
-              <label htmlFor="facebook" className="block text-lg font-semibold">Facebook</label>
+              <label htmlFor="facebook" className="block text-lg font-semibold">
+                Facebook
+              </label>
               <input
                 type="text"
                 id="facebook"
@@ -98,7 +112,12 @@ const modifier_contact: React.FC = () => {
               />
             </div>
             <div className="mb-4">
-              <label htmlFor="instagram" className="block text-lg font-semibold">Instagram</label>
+              <label
+                htmlFor="instagram"
+                className="block text-lg font-semibold"
+              >
+                Instagram
+              </label>
               <input
                 type="text"
                 id="instagram"
@@ -116,7 +135,9 @@ const modifier_contact: React.FC = () => {
             </button>
           </form>
         ) : (
-          <p className="text-center font-bold">Chargement des informations...</p>
+          <p className="text-center font-bold">
+            Chargement des informations...
+          </p>
         )}
       </div>
     </div>
