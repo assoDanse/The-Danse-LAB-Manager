@@ -1,85 +1,137 @@
 "use client";
+import React, { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { auth, db } from "@/config/firebase-config";
+import { onAuthStateChanged } from "firebase/auth";
+import { collection, query, where, getDocs, Timestamp } from "firebase/firestore";
 
-import React, { useState } from "react";
-import CardcoursEleve from "@/components/CardCoursEleve";
+interface Cours {
+  id: string;
+  titre: string;
+  description: string;
+  type: string;
+  nom_professeur: string;
+  date_heure_debut: string;
+  duree: {
+    heures: number;
+    minutes: number;
+  };
+  photo: string;
+}
 
 const MesCours: React.FC = () => {
-  // État pour stocker les données des cours
-  const [coursData, setCoursData] = useState<any[]>([]);
-  // État pour stocker l'index du cours sur lequel l'utilisateur a cliqué
-  const [selectedCourseIndex, setSelectedCourseIndex] = useState<number | null>(
-    null
-  );
-  // État pour stocker le lien vidéo à ajouter
-  const [videoLink, setVideoLink] = useState<string>("");
+  const [myCours, setMyCours] = useState<Cours[]>([]);
+  const [viewingCours, setViewingCours] = useState<Cours | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+  const router = useRouter();
 
-  // Fonction pour gérer l'ouverture du popup et la sélection du cours
-  const handleCourseClick = (index: number) => {
-    setSelectedCourseIndex(index);
-  };
+  useEffect(() => {
+    const fetchCours = async () => {
+      setLoading(true);
+      setError(null);
 
-  // Fonction pour gérer l'ajout du lien vidéo au cours sélectionné
-  const handleAddVideoLink = () => {
-    if (selectedCourseIndex !== null && videoLink.trim() !== "") {
-      const updatedCoursData = [...coursData];
-      const courseToUpdate = updatedCoursData[selectedCourseIndex];
-      if (!courseToUpdate.videos) {
-        courseToUpdate.videos = [];
+      try {
+        const user = auth.currentUser;
+        if (user) {
+          const participationQuery = query(
+            collection(db, "participation"),
+            where("id_users", "==", user.uid)
+          );
+          const participationSnapshot = await getDocs(participationQuery);
+          const myCoursIds = participationSnapshot.docs.map(doc => doc.data().id_cours);
+
+          const coursSnapshot = await getDocs(collection(db, "cours"));
+          const allCours = coursSnapshot.docs.map(doc => ({
+            id: doc.id,
+            ...doc.data(),
+            date_heure_debut: (doc.data().date_heure_debut as Timestamp).toDate().toLocaleString(),
+          })) as Cours[];
+
+          const myCoursList = allCours.filter(cours => myCoursIds.includes(cours.id));
+
+          setMyCours(myCoursList);
+        } else {
+          setError("User not logged in");
+          router.push("/auth/login");
+        }
+      } catch (err) {
+        setError("Erreur lors de la récupération des cours");
+        console.error(err);
+      } finally {
+        setLoading(false);
       }
-      courseToUpdate.videos.push(videoLink);
-      setCoursData(updatedCoursData);
-      // Réinitialiser les états
-      setSelectedCourseIndex(null);
-      setVideoLink("");
-    }
+    };
+
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        fetchCours();
+      } else {
+        setError("User not logged in");
+        router.push("/auth/login");
+      }
+    });
+
+    return () => unsubscribe();
+  }, [router]);
+
+  const handleViewClick = (cours: Cours) => {
+    setViewingCours(cours);
   };
+
+  if (loading) {
+    return <div className="flex justify-center items-center w-full">Chargement...</div>;
+  }
+
+  if (error) {
+    return <div className="flex justify-center items-center w-full">{error}</div>;
+  }
 
   return (
-    <div className="flex flex-wrap justify-center items-center">
-      {coursData.length > 0 ? (
-        coursData.map((cours, index) => (
-          <div key={index} onClick={() => handleCourseClick(index)}>
-            <CardcoursEleve
-              titre={cours.titre}
-              description={cours.description}
-              image={cours.image}
-              prix={cours.prix}
-              date={cours.date}
-              heure={cours.heure}
-              duree={cours.duree}
-              videos={cours.videos || []} // Passer une liste vide si les vidéos n'existent pas
-            />
-          </div>
-        ))
+    <div className="flex flex-col items-center w-full mt-4">
+      <h1 className="text-2xl mb-4">Mes Cours</h1>
+      {myCours.length > 0 ? (
+        <ul className="w-full max-w-3xl mx-auto mb-8">
+          {myCours.map((cours) => (
+            <li key={cours.id} className="border p-4 mb-2 rounded-lg">
+              <h2 className="text-xl font-bold">{cours.titre}</h2>
+              <p>Type: {cours.type}</p>
+              <p>Date: {cours.date_heure_debut}</p>
+              <p>Durée: {cours.duree.heures}h {cours.duree.minutes}m</p>
+              <p>Professeur: {cours.nom_professeur}</p>
+              <button
+                onClick={() => handleViewClick(cours)}
+                className="bg-blue-500 text-white p-2 rounded mt-2"
+              >
+                Visualiser
+              </button>
+            </li>
+          ))}
+        </ul>
       ) : (
-        <p className="text-center font-bold">
-          Aucun cours disponible pour le moment.
-        </p>
+        <p className="text-center mb-8">Aucun cours trouvé</p>
       )}
 
-      {/* Popup pour ajouter un lien vidéo */}
-      {selectedCourseIndex !== null && (
-        <div className="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50">
-          <div className="bg-white p-4 rounded-md">
-            <input
-              type="text"
-              placeholder="Ajouter un lien vidéo"
-              className="w-full border-gray-300 rounded-md p-2 mb-2"
-              value={videoLink}
-              onChange={(e) => setVideoLink(e.target.value)}
-            />
-            <button
-              className="bg-blue-500 text-white px-4 py-2 rounded-md mr-2"
-              onClick={handleAddVideoLink}
-            >
-              Ajouter
-            </button>
-            <button
-              className="bg-gray-300 text-gray-700 px-4 py-2 rounded-md"
-              onClick={() => setSelectedCourseIndex(null)}
-            >
-              Annuler
-            </button>
+      {viewingCours && (
+        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center">
+          <div className="bg-white p-6 rounded-lg shadow-lg max-w-lg w-full">
+            <h2 className="text-2xl font-bold mb-4">{viewingCours.titre}</h2>
+            {viewingCours.photo && (
+              <img src={viewingCours.photo} alt={viewingCours.titre} className="mb-4 w-full" />
+            )}
+            <p className="mb-4">{viewingCours.description}</p>
+            <p><strong>Type:</strong> {viewingCours.type}</p>
+            <p><strong>Date:</strong> {viewingCours.date_heure_debut}</p>
+            <p><strong>Durée:</strong> {viewingCours.duree.heures}h {viewingCours.duree.minutes}m</p>
+            <p><strong>Professeur:</strong> {viewingCours.nom_professeur}</p>
+            <div className="flex justify-end mt-4">
+              <button
+                onClick={() => setViewingCours(null)}
+                className="bg-blue-500 text-white p-2 rounded"
+              >
+                Fermer
+              </button>
+            </div>
           </div>
         </div>
       )}
