@@ -9,7 +9,6 @@ import {
   doc,
 } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import SidebarAdmin from "@/components/SidebarAdmin";
 
 interface Cours {
   id: string;
@@ -225,7 +224,7 @@ const PannelAdmin: React.FC = () => {
             <div className="flex justify-end mt-4">
               <button
                 onClick={() => setViewingCours(null)}
-                className="bg-blue-500 text-white p-2 rounded"
+                className="bg-c8 text-white p-2 rounded"
               >
                 Fermer
               </button>

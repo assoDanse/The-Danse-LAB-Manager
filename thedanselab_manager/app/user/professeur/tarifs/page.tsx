@@ -45,24 +45,30 @@ const TarifsAdmin: React.FC = () => {
     fetchTarifs();
   }, []);
 
-
-
   if (loading) {
-    return <div className="flex justify-center items-center w-full">Chargement...</div>;
+    return (
+      <div className="flex justify-center items-center w-full">
+        Chargement...
+      </div>
+    );
   }
 
   if (error) {
-    return <div className="flex justify-center items-center w-full">{error}</div>;
+    return (
+      <div className="flex justify-center items-center w-full">{error}</div>
+    );
   }
 
   return (
     <div className="flex flex-col items-center w-full">
       <h1 className="text-2xl mb-4">Gestion des Tarifs</h1>
-      {message && <div className="bg-green-100 text-green-800 p-4 rounded-lg mb-4">{message}</div>}
       {tarifs.length > 0 ? (
-        <ul className="w-full max-w-3xl mx-auto">
+        <ul className="md:grid md:grid-cols-2 md:gap-4 w-full max-w-3xl mx-auto">
           {tarifs.map((tarif) => (
-            <li key={tarif.id} className="border p-4 mb-2 rounded-lg">
+            <li
+              key={tarif.id}
+              className="bg-c0 border border-c4 p-4 mb-2 rounded-lg shadow-lg"
+            >
               <h2 className="text-xl font-bold">{tarif.titre}</h2>
               <img
                 src={tarif.image}
