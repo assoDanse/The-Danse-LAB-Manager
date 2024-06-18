@@ -7,7 +7,7 @@ import EmailInput from "@/components/EmailInput";
 import PasswordInput from "@/components/PasswordInput";
 import ValidationButton from "@/components/ValidationButton";
 import FirstNameInput from "@/components/FirstNameInput";
-import DialogueBoxInput from "@/components/DialogueBoxInput";
+import DialogueBoxInput from "@/components/DialogueBoxinput";
 import { Label } from "flowbite-react";
 import { auth, db, storage } from "@/config/firebase-config"; // Assurez-vous que cette importation est correcte
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
