@@ -105,10 +105,10 @@ function Navbar_() {
   };
 
   return (
-    <Navbar className="md:sticky top-0 p-4 w-full bg-light-green" fluid rounded>
+    <Navbar className="md:sticky top-0 p-4 w-full bg-c2 text-c3" fluid rounded>
       <Navbar.Brand href="https://thedancelab.fr/">
         <Image src={Logo} width={75} height={75} alt="Logo" />
-        <span className="self-center whitespace-nowrap text-xl font-semibold dark:text-white-egg ml-4">
+        <span className="self-center whitespace-nowrap text-xl font-semibold dark:text-c3 ml-4">
           The Dance Lab
         </span>
       </Navbar.Brand>
@@ -131,7 +131,7 @@ function Navbar_() {
               aria-labelledby="default-popover"
               content={
                 <div className="w-64 text-sm text-gray-500 dark:text-gray-400">
-                  <div className="  bg-light-orange px-3 py-2 dark:border-gray-600 dark:bg-gray-700">
+                  <div className="  bg-c4 px-3 py-2 dark:border-gray-600 dark:bg-gray-700">
                     <h3
                       id="default-popover"
                       className="font-semibold text-gray-900 dark:text-white"
@@ -148,20 +148,20 @@ function Navbar_() {
               }
               trigger="hover"
             >
-              <Button>Profil</Button>
+              <Button className="bg-c5">Profil</Button>
             </Popover>
           </>
         )}
         {userName && userFirstName && (
           <Button
-            className="ml-4 bg-red-500 hover:bg-red-700 text-white"
+            className="ml-4 bg-c6 hover:bg-red-700 text-white"
             onClick={handleLogout}
           >
             Se déconnecter
           </Button>
         )}
         {!userName && !userFirstName && (
-          <Button className="ml-4 bg-dark-brown" href="/auth/login">
+          <Button className="ml-4 bg-c5" href="/auth/login">
             Se connecter
           </Button>
         )}
@@ -172,7 +172,7 @@ function Navbar_() {
             {userStatus === "professeur" && photoURL && (
               <Image
                 src={photoURL}
-                alt="Profile"
+                alt="Profil"
                 width={40}
                 height={40}
                 className="rounded-full mb-2"
@@ -183,29 +183,26 @@ function Navbar_() {
             </span>
           </div>
         )}
-        <Navbar.Link
-          className="text-white-egg hover:text-light-orange"
-          href={getHomeLink()}
-        >
+        <Navbar.Link className="text-c3 ml-5" href={getHomeLink()}>
           Accueil
         </Navbar.Link>
-        <Navbar.Link className="text-white-egg" href={getCoursesLink()}>
+        <Navbar.Link className="text-c3" href={getCoursesLink()}>
           Cours
         </Navbar.Link>
-        <Navbar.Link className="text-white-egg" href={getTarifsLink()}>
+        <Navbar.Link className="text-c3" href={getTarifsLink()}>
           Tarifs
         </Navbar.Link>
         <Navbar.Link className="text-white-egg" href={getContactLink()}>
           Contact
         </Navbar.Link>
         {!userName && !userFirstName && (
-          <Button className="md:hidden mt-4 bg-dark-brown" href="/auth/login">
+          <Button className="md:hidden mt-4 bg-c5" href="/auth/login">
             Se connecter
           </Button>
         )}
         {userName && userFirstName && (
           <Button
-            className="mt-4 bg-red-500 hover:bg-red-700 text-white md:hidden"
+            className="mt-4 bg-c6 hover:bg-red-700 text-white md:hidden"
             onClick={handleLogout}
           >
             Se déconnecter

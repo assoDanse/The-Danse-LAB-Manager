@@ -208,7 +208,10 @@ const CoursEleve: React.FC = () => {
       {availableCours.length > 0 ? (
         <ul className="w-full max-w-3xl mx-auto">
           {availableCours.map((cours) => (
-            <li key={cours.id} className="border p-4 mb-2 rounded-lg">
+            <li
+              key={cours.id}
+              className="bg-sand border-2 border-salmon p-4 mb-2 rounded-lg shadow-lg"
+            >
               <h2 className="text-xl font-bold">{cours.titre}</h2>
               <p>Type: {cours.type}</p>
               <p>Date: {cours.date_heure_debut}</p>

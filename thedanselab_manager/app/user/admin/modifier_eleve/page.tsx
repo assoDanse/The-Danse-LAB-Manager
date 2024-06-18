@@ -7,7 +7,13 @@ import EmailInput from "@/components/EmailInput";
 import PasswordInput from "@/components/PasswordInput";
 import ValidationButton from "@/components/ValidationButton";
 import { auth, db } from "@/config/firebase-config"; // Assurez-vous que cette importation est correcte
-import { collection, getDocs, doc, updateDoc, deleteDoc } from "firebase/firestore";
+import {
+  collection,
+  getDocs,
+  doc,
+  updateDoc,
+  deleteDoc,
+} from "firebase/firestore";
 import { updateEmail, updatePassword, deleteUser } from "firebase/auth";
 
 const modifier_eleve: React.FC = () => {
@@ -23,10 +29,12 @@ const modifier_eleve: React.FC = () => {
     const fetchEleves = async () => {
       try {
         const querySnapshot = await getDocs(collection(db, "users"));
-        const eleveList = querySnapshot.docs.map(doc => ({
-          id: doc.id,
-          ...doc.data()
-        })).filter(eleve => eleve.status === "eleve");
+        const eleveList = querySnapshot.docs
+          .map((doc) => ({
+            id: doc.id,
+            ...doc.data(),
+          }))
+          .filter((eleve) => eleve.status === "eleve");
         setEleves(eleveList);
       } catch (error) {
         console.error("Erreur lors de la récupération des élèves:", error);
@@ -37,7 +45,7 @@ const modifier_eleve: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    const selectedEleve = eleves.find(eleve => eleve.id === selectedEleveId);
+    const selectedEleve = eleves.find((eleve) => eleve.id === selectedEleveId);
     if (selectedEleve) {
       setEmail(selectedEleve.email);
       setPassword("");
@@ -74,7 +82,9 @@ const modifier_eleve: React.FC = () => {
 
       setMessage(`Informations mises à jour pour ${email}`);
     } catch (error: any) {
-      setError(`Erreur lors de la mise à jour des informations: ${error.message}`);
+      setError(
+        `Erreur lors de la mise à jour des informations: ${error.message}`
+      );
     }
   };
 
@@ -99,7 +109,7 @@ const modifier_eleve: React.FC = () => {
       }
 
       // Mettre à jour l'état pour retirer l'élève supprimé de la liste
-      setEleves(eleves.filter(eleve => eleve.id !== selectedEleveId));
+      setEleves(eleves.filter((eleve) => eleve.id !== selectedEleveId));
       setSelectedEleveId("");
       setEmail("");
       setPassword("");
@@ -132,13 +142,14 @@ const modifier_eleve: React.FC = () => {
             </Select>
           </div>
           <EmailInput email={email} setEmail={setEmail} />
-          <PasswordInput password={password} setPassword={setPassword} /> {/* Facultatif */}
+          <PasswordInput password={password} setPassword={setPassword} />{" "}
+          {/* Facultatif */}
           {error && <p className="text-red-500">{error}</p>}
           {message && <p className="text-green-500">{message}</p>}
           <ValidationButton text="Mettre à jour" />
           <button
             type="button"
-            className="mt-2 bg-red-500 text-white p-2 rounded-lg"
+            className="bg-c6 hover:bg-c7 text-white font-bold py-2 px-4 rounded min-w-full"
             onClick={handleDelete}
           >
             Supprimer élève

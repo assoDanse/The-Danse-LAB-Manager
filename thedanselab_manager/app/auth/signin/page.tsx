@@ -44,7 +44,9 @@ const CreateUserForm: React.FC = () => {
     }
 
     if (!validatePassword(password)) {
-      setError("Le mot de passe doit contenir au moins 6 caractères, une majuscule et un chiffre");
+      setError(
+        "Le mot de passe doit contenir au moins 6 caractères, une majuscule et un chiffre"
+      );
       return;
     }
 
@@ -52,7 +54,11 @@ const CreateUserForm: React.FC = () => {
     setMessage("");
 
     try {
-      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
       const user = userCredential.user;
 
       // Ajouter les informations utilisateur à Firestore
@@ -72,10 +78,12 @@ const CreateUserForm: React.FC = () => {
       // Rediriger vers la page de l'élève
       router.push("/user/eleve");
     } catch (error: any) {
-      if (error.code === 'auth/email-already-in-use') {
-        setError('Cet utilisateur existe déjà');
+      if (error.code === "auth/email-already-in-use") {
+        setError("Cet utilisateur existe déjà");
       } else {
-        setError(`Erreur lors de la création de l'utilisateur: ${error.message}`);
+        setError(
+          `Erreur lors de la création de l'utilisateur: ${error.message}`
+        );
       }
     }
   };
@@ -93,10 +101,7 @@ const CreateUserForm: React.FC = () => {
           {error && <p className="text-red-500">{error}</p>}
           {message && <p className="text-green-500">{message}</p>}
           <ValidationButton text="Créer un compte" />
-          <a
-            className="text-sm text-blue-500 underline text-center"
-            href="/auth/login"
-          >
+          <a className="text-sm  underline text-center" href="/auth/login">
             Se connecter
           </a>
         </form>

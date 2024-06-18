@@ -10,7 +10,14 @@ import ValidationButton from "@/components/ValidationButton";
 import FirstNameInput from "@/components/FirstNameInput";
 import DialogueBoxInput from "@/components/DialogueBoxinput";
 import { auth, db, storage } from "@/config/firebase-config";
-import { doc, getDoc, updateDoc, deleteDoc, collection, getDocs } from "firebase/firestore";
+import {
+  doc,
+  getDoc,
+  updateDoc,
+  deleteDoc,
+  collection,
+  getDocs,
+} from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { updateEmail, updatePassword, deleteUser } from "firebase/auth";
 
@@ -47,7 +54,9 @@ const modifier_prof: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    const selectedProfessor = professors.find((prof) => prof.id === selectedProfessorId);
+    const selectedProfessor = professors.find(
+      (prof) => prof.id === selectedProfessorId
+    );
     if (selectedProfessor) {
       setName(selectedProfessor.name);
       setFirstName(selectedProfessor.firstName);
@@ -76,7 +85,10 @@ const modifier_prof: React.FC = () => {
       };
 
       if (photo) {
-        const storageRef = ref(storage, `profile_pictures/${selectedProfessorId}`);
+        const storageRef = ref(
+          storage,
+          `profile_pictures/${selectedProfessorId}`
+        );
         await uploadBytes(storageRef, photo);
         const photoURL = await getDownloadURL(storageRef);
         updates.photoURL = photoURL;
@@ -98,7 +110,9 @@ const modifier_prof: React.FC = () => {
 
       setMessage(`Informations mises à jour pour ${email}`);
     } catch (error: any) {
-      setError(`Erreur lors de la mise à jour des informations: ${error.message}`);
+      setError(
+        `Erreur lors de la mise à jour des informations: ${error.message}`
+      );
     }
   };
 
@@ -129,7 +143,9 @@ const modifier_prof: React.FC = () => {
       }
 
       // Mettre à jour l'état pour retirer le professeur supprimé de la liste
-      setProfessors(professors.filter((prof) => prof.id !== selectedProfessorId));
+      setProfessors(
+        professors.filter((prof) => prof.id !== selectedProfessorId)
+      );
       setSelectedProfessorId("");
       setName("");
       setFirstName("");
@@ -150,7 +166,10 @@ const modifier_prof: React.FC = () => {
         <h1 className="text-center text-2xl mb-6">Modifier un Professeur</h1>
         <form onSubmit={handleSubmit} className="flex flex-col gap-5">
           <div>
-            <Label htmlFor="professor-select" value="Sélectionnez un professeur" />
+            <Label
+              htmlFor="professor-select"
+              value="Sélectionnez un professeur"
+            />
             <Select
               id="professor-select"
               required
@@ -168,14 +187,28 @@ const modifier_prof: React.FC = () => {
           <NameInput name={name} setName={setName} />
           <FirstNameInput FirstName={firstName} setFirstName={setFirstName} />
           <EmailInput email={email} setEmail={setEmail} />
-          <PasswordInput password={password} setPassword={setPassword} /> {/* Facultatif */}
-          <Label htmlFor="file-upload-helper-text" value="Photo" className="text-center" />
-          <input type="file" id="file-upload-helper-text" accept="image/*" onChange={handlePhotoChange} />
+          <PasswordInput password={password} setPassword={setPassword} />{" "}
+          {/* Facultatif */}
+          <Label
+            htmlFor="file-upload-helper-text"
+            value="Photo"
+            className="text-center"
+          />
+          <input
+            type="file"
+            id="file-upload-helper-text"
+            accept="image/*"
+            onChange={handlePhotoChange}
+          />
           <DialogueBoxInput DialogueBox={bio} setDialogueBox={setBio} />
           {error && <p className="text-red-500">{error}</p>}
           {message && <p className="text-green-500">{message}</p>}
           <ValidationButton text="Mettre à jour" />
-          <button type="button" className="mt-2 bg-red-500 text-white p-2 rounded-lg" onClick={handleDelete}>
+          <button
+            type="button"
+            className=" bg-c6 hover:bg-c7 text-white font-bold py-2 px-4 rounded min-w-full"
+            onClick={handleDelete}
+          >
             Supprimer professeur
           </button>
         </form>
