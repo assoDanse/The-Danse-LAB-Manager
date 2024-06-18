@@ -14,8 +14,8 @@ const CreateTarifPage: React.FC = () => {
   const [titre, setTitre] = useState("");
   const [description, setDescription] = useState("");
   const [image, setImage] = useState<File | null>(null);
-  const [prix, setPrix] = useState("");
-  const [credit, setCredit] = useState<number>(0);
+  const [prix, setPrix] = useState<number>();
+  const [credit, setCredit] = useState<number>();
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
@@ -38,15 +38,15 @@ const CreateTarifPage: React.FC = () => {
         titre,
         description,
         image: imageUrl,
-        prix: parseFloat(prix),
-        credit
+        prix,
+        credit,
       });
 
       setMessage("Tarif créé avec succès");
       setTitre("");
       setDescription("");
       setImage(null);
-      setPrix("");
+      setPrix(0);
       setCredit(0);
     } catch (err) {
       setError("Erreur lors de la création du tarif");
@@ -55,9 +55,17 @@ const CreateTarifPage: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col items-center w-full">
-      {message && <div className="bg-green-100 text-green-800 p-4 rounded-lg mb-4">{message}</div>}
-      {error && <div className="bg-red-100 text-red-800 p-4 rounded-lg mb-4">{error}</div>}
+    <div className="flex justify-center items-center w-full">
+      {message && (
+        <div className="bg-green-100 text-green-800 p-4 rounded-lg mb-4">
+          {message}
+        </div>
+      )}
+      {error && (
+        <div className="bg-red-100 text-red-800 p-4 rounded-lg mb-4">
+          {error}
+        </div>
+      )}
       <CreationTarif
         titre={titre}
         setTitre={setTitre}

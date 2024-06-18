@@ -11,13 +11,17 @@ module.exports = {
   ],
   theme: {
     extend: {colors: {
-      'light-green': '#606C38',
-      'dark-green': '#283618',
-      'sage': '#afb38c',
-      'white-egg': '#FEFAE0',
-      'salmon': '#f2d9b0',
-      'light-orange': '#DDA15E',
-      'dark-brown': '#BC6C25',
+      'c0': '#f4dfb8',
+      'c1': '#606c38',
+      'c2': '#283618',
+      'c3': '#fefae0',
+      'c4': '#dda15e',
+      'c5': '#bc6c25',
+      'c6': '#bb3d31',
+      'c7': '#cc493e',
+      'c8': '#0088CD',
+      'skeleton': '#f4dfb8'
+      
     },},
   },
   plugins: [
