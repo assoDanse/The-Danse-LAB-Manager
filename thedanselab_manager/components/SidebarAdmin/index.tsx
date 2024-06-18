@@ -11,7 +11,7 @@ import {
   HiCurrencyDollar,
   HiPlusCircle,
 } from "react-icons/hi";
-import { FaBars } from "react-icons/fa";
+import { FaBars, FaUserEdit } from "react-icons/fa";  // Ajouter FaUserEdit pour les icônes de modification
 
 export function SidebarAdmin() {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -55,6 +55,9 @@ export function SidebarAdmin() {
                 >
                   List des professeurs
                 </Sidebar.Item>
+                <Sidebar.Item 
+                  href="/user/admin/modifier_prof" icon={FaUserEdit}> Modifier professeur
+                </Sidebar.Item>
               </Sidebar.Collapse>
 
               <Sidebar.Collapse icon={HiUserGroup} label="Elève">
@@ -62,12 +65,13 @@ export function SidebarAdmin() {
                   href="/user/admin/creation_eleve"
                   icon={HiUserAdd}
                 >
-                  {" "}
-                  Créer un élève{" "}
+                  Créer un élève
                 </Sidebar.Item>
                 <Sidebar.Item href="/user/admin/list_eleve" icon={HiUserGroup}>
-                  {" "}
-                  Liste des élèves{" "}
+                  Liste des élèves
+                </Sidebar.Item>
+                <Sidebar.Item 
+                  href="/user/admin/modifier_eleve" icon={FaUserEdit}> Modifier élève
                 </Sidebar.Item>
               </Sidebar.Collapse>
 
@@ -76,15 +80,13 @@ export function SidebarAdmin() {
                   href="/user/admin/creation_tarif"
                   icon={HiCreditCard}
                 >
-                  {" "}
-                  Créer un tarif{" "}
+                  Créer un tarif
                 </Sidebar.Item>
                 <Sidebar.Item
                   href="/user/admin/liste_tarif"
                   icon={HiCreditCard}
                 >
-                  {" "}
-                  Liste des tarifs{" "}
+                  Liste des tarifs
                 </Sidebar.Item>
               </Sidebar.Collapse>
 
@@ -132,6 +134,9 @@ export function SidebarAdmin() {
                 >
                   List des professeurs
                 </Sidebar.Item>
+                <Sidebar.Item 
+                  href="/user/admin/modifier_prof" icon={FaUserEdit}> Modifier professeur
+                </Sidebar.Item>
               </Sidebar.Collapse>
 
               <Sidebar.Collapse icon={HiUserGroup} label="Elève">
@@ -139,29 +144,28 @@ export function SidebarAdmin() {
                   href="/user/admin/creation_eleve"
                   icon={HiUserAdd}
                 >
-                  {" "}
-                  Créer un élève{" "}
+                  Créer un élève
                 </Sidebar.Item>
                 <Sidebar.Item href="/user/admin/list_eleve" icon={HiUserGroup}>
-                  {" "}
-                  Liste des élèves{" "}
+                  Liste des élèves
+                </Sidebar.Item>
+                <Sidebar.Item 
+                  href="/user/admin/modifier_eleve" icon={FaUserEdit}> Modifier élève
                 </Sidebar.Item>
               </Sidebar.Collapse>
 
-              <Sidebar.Collapse icon={HiUserGroup} label="Tarif">
+              <Sidebar.Collapse icon={HiCreditCard} label="Tarif">
                 <Sidebar.Item
                   href="/user/admin/creation_tarif"
                   icon={HiCreditCard}
                 >
-                  {" "}
-                  Créer un tarif{" "}
+                  Créer un tarif
                 </Sidebar.Item>
                 <Sidebar.Item
                   href="/user/admin/liste_tarif"
                   icon={HiCreditCard}
                 >
-                  {" "}
-                  Liste des tarifs{" "}
+                  Liste des tarifs
                 </Sidebar.Item>
               </Sidebar.Collapse>
 
