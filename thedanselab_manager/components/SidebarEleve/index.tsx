@@ -27,6 +27,9 @@ export function SidebarEleve() {
           <Sidebar.Item href="/user/eleve/tarifs" icon={HiCreditCard}>
             Les tarifs
           </Sidebar.Item>
+          <Sidebar.Item href="/user/eleve/cartes" icon={HiCreditCard}>
+            Mes cartes
+          </Sidebar.Item>
         </Sidebar.ItemGroup>
       </Sidebar.Items>
     </Sidebar>
