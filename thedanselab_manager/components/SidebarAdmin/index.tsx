@@ -101,7 +101,6 @@ export function SidebarAdmin() {
               >
                 Modifier les contact
               </Sidebar.Item>
-              
             </Sidebar.ItemGroup>
           </Sidebar.Items>
         </Sidebar>
@@ -178,6 +177,12 @@ export function SidebarAdmin() {
                 icon={HiCurrencyDollar}
               >
                 Comptabilité
+              </Sidebar.Item>
+              <Sidebar.Item
+                href="/user/admin/modifier_contact"
+                icon={HiCurrencyDollar}
+              >
+                {isExpanded && "Modifier les contact"}
               </Sidebar.Item>
             </Sidebar.ItemGroup>
           </Sidebar.Items>
