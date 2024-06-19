@@ -8,7 +8,10 @@ import PasswordInput from "@/components/PasswordInput";
 import ValidationButton from "@/components/ValidationButton";
 import FirstNameInput from "@/components/FirstNameInput";
 import { auth, db } from "@/config/firebase-config"; // Assurez-vous que cette importation est correcte
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+} from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
 
 const CreateEleve: React.FC = () => {
@@ -54,6 +57,23 @@ const CreateEleve: React.FC = () => {
     setMessage("");
 
     try {
+      const admin = auth.currentUser; // Sauvegarder l'utilisateur admin actuel
+      let adminEmail = "";
+      let adminPassword = "";
+
+      if (admin) {
+        adminEmail = admin.email || "";
+        const adminPasswordPrompt = prompt(
+          "Veuillez entrer votre mot de passe pour continuer:"
+        );
+        if (adminPasswordPrompt) {
+          adminPassword = adminPasswordPrompt;
+        } else {
+          setError("Mot de passe requis pour continuer");
+          return;
+        }
+      }
+
       const userCredential = await createUserWithEmailAndPassword(
         auth,
         email,
@@ -69,11 +89,16 @@ const CreateEleve: React.FC = () => {
         status: "eleve", // Définir le statut par défaut à "eleve"
       });
 
-      setMessage(`Utilisateur créé : ${user.email}`);
+      setMessage(`Utilisateur créé : ${email}`);
       setName("");
       setFirstName("");
       setEmail("");
       setPassword("");
+
+      // Reconnecter l'administrateur
+      if (admin && adminEmail && adminPassword) {
+        await signInWithEmailAndPassword(auth, adminEmail, adminPassword);
+      }
     } catch (error: any) {
       if (error.code === "auth/email-already-in-use") {
         setError("Cet utilisateur existe déjà");
