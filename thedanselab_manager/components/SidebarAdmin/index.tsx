@@ -111,6 +111,9 @@ export function SidebarAdmin() {
               >
                 Modifier les contact
               </Sidebar.Item>
+              <Sidebar.Item     href="/user/admin/Creation_Admin" icon={HiUserAdd}>
+                Creation Admin
+              </Sidebar.Item>
             </Sidebar.ItemGroup>
           </Sidebar.Items>
         </Sidebar>
@@ -198,12 +201,18 @@ export function SidebarAdmin() {
               >
                 {isExpanded && "Comptabilité"}
               </Sidebar.Item>
+
               <Sidebar.Item
                 href="/user/admin/modifier_contact"
                 icon={HiCurrencyDollar}
               >
                 {isExpanded && "Modifier les contact"}
               </Sidebar.Item>
+
+              <Sidebar.Item     href="/user/admin/Creation_Admin" icon={HiUserAdd}>
+                {isExpanded && "Creation Admin" }
+              </Sidebar.Item>
+
             </Sidebar.ItemGroup>
           </Sidebar.Items>
         </Sidebar>
