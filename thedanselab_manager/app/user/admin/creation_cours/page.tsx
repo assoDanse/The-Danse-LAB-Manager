@@ -1,11 +1,11 @@
 "use client"
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-import ProfesseurInput from "@/components/ProfesseurInput";
+import ProfesseurInput from "@/components/professeurInput";
 import TypeDeCoursInput from "@/components/TypeDeCoursInput";
 import TitleInput from "@/components/TitleInput";
 import DescriptionInput from "@/components/DescriptionInput";
-import DateInput from "@/components/DateInput";
+import DateInput from "@/components/dateInput";
 import DurationInput from "@/components/DurationInput";
 import { db, storage } from "@/config/firebase-config";
 import { collection, addDoc, Timestamp } from "firebase/firestore";
@@ -24,6 +24,7 @@ const CreateCours: React.FC = () => {
   const [photo, setPhoto] = useState<File | null>(null);
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [message, setMessage] = useState("");
+  const [isRecurrent, setIsRecurrent] = useState(false); // État pour gérer l'affichage de la périodicité
   const router = useRouter();
 
   const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -44,7 +45,9 @@ const CreateCours: React.FC = () => {
     if (!date) formErrors.date = "La date et l'heure sont requises.";
     if (duration.hours === 0 && duration.minutes === 0)
       formErrors.duration = "La durée est requise.";
-    if (!photo) formErrors.photo = "La photo est requise.";
+
+    if (isRecurrent && periodicity < 1)
+      formErrors.periodicity = "La périodicité doit être d'au moins 1 semaine.";
 
     if (Object.keys(formErrors).length > 0) {
       setErrors(formErrors);
@@ -76,7 +79,7 @@ const CreateCours: React.FC = () => {
         nom_professeur: professorName,
         id_professeur: professorId,
         photo: photoURL,
-        periodicite: periodicity, // Ajout de la périodicité au document de cours
+        periodicite: isRecurrent ? periodicity : 1, // Ajout de la périodicité au document de cours
       });
 
       setMessage("Cours créé avec succès");
@@ -89,6 +92,7 @@ const CreateCours: React.FC = () => {
       setDuration({ hours: 0, minutes: 0 });
       setPeriodicity(1); // Réinitialisation de la périodicité après création du cours
       setPhoto(null);
+      setIsRecurrent(false); // Réinitialisation de la case à cocher
     } catch (error: any) {
       setErrors({
         general: `Erreur lors de la création du cours: ${error.message}`,
@@ -129,6 +133,36 @@ const CreateCours: React.FC = () => {
           {errors.date && <p className="text-red-500">{errors.date}</p>}
           <DurationInput duration={duration} setDuration={setDuration} />
           {errors.duration && <p className="text-red-500">{errors.duration}</p>}
+          <div className="flex items-center gap-2">
+            <input
+              type="checkbox"
+              id="recurrent"
+              checked={isRecurrent}
+              onChange={(e) => setIsRecurrent(e.target.checked)}
+              className="border-gray-300 rounded"
+            />
+            <label htmlFor="recurrent" className="text-sm font-medium text-gray-700">
+              Ajouter une récurrence
+            </label>
+          </div>
+          {isRecurrent && (
+            <div className="flex items-center gap-2">
+              <label htmlFor="periodicity" className="text-sm font-medium text-gray-700">
+                Périodicité (en semaines)
+              </label>
+              <input
+                type="number"
+                id="periodicity"
+                value={periodicity}
+                onChange={(e) => setPeriodicity(parseInt(e.target.value))}
+                className="border border-gray-300 rounded-md px-2 py-1"
+                min={1}
+                max={52}
+                required
+              />
+              {errors.periodicity && <p className="text-red-500">{errors.periodicity}</p>}
+            </div>
+          )}
           <div>
             <label
               htmlFor="photo"
@@ -141,21 +175,6 @@ const CreateCours: React.FC = () => {
           </div>
           {errors.general && <p className="text-red-500">{errors.general}</p>}
           {message && <p className="text-green-500">{message}</p>}
-          <div className="flex items-center gap-2">
-            <label htmlFor="periodicity" className="text-sm font-medium text-gray-700">
-              Périodicité (en semaines)
-            </label>
-            <input
-              type="number"
-              id="periodicity"
-              value={periodicity}
-              onChange={(e) => setPeriodicity(parseInt(e.target.value))}
-              className="border border-gray-300 rounded-md px-2 py-1"
-              min={1}
-              max={52}
-              required
-            />
-          </div>
           <ValidationButton text="Créer un cours" />
         </form>
       </div>
@@ -164,6 +183,7 @@ const CreateCours: React.FC = () => {
 };
 
 export default CreateCours;
+
 
 
 {
