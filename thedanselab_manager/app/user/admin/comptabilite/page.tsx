@@ -19,7 +19,8 @@ const ComptabilitePage: React.FC = () => {
   const initialTransactions: Transaction[] = [
     { id: '1', title: 'Cours de danse', date: '2024-06-01T10:00:00', description: 'Cours de danse pour enfants', amount: 50, professor: 'Prof A', course: 'Danse' },
     { id: '2', title: 'Cours de yoga', date: '2024-06-05T14:00:00', description: 'Cours de yoga pour adultes', amount: 75, professor: 'Prof B', course: 'Yoga' },
-    { id: '3', title: 'Cours de peinture', date: '2024-06-10T16:00:00', description: 'Cours de peinture pour adolescents', amount: -60, professor: 'Prof A', course: 'Peinture' },
+    { id: '3', title: 'Cours de peinture', date: '2024-06-10T16:00:00', description: 'Cours de peinture pour adolescents', amount: 60, professor: 'Prof A', course: 'Peinture' },
+    { id: '4', title: 'electrecité', date: '2024-06-10T16:00:00', description: 'cout electrecité', amount: -60, professor: '', course: 'autre' },
   ];
 
   const [transactions, setTransactions] = useState<Transaction[]>(initialTransactions);
