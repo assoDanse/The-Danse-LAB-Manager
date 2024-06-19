@@ -8,7 +8,10 @@ import PasswordInput from "@/components/PasswordInput";
 import ValidationButton from "@/components/ValidationButton";
 import FirstNameInput from "@/components/FirstNameInput";
 import { auth, db } from "@/config/firebase-config"; // Assurez-vous que cette importation est correcte
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+} from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
 
 const Creation_Admin: React.FC = () => {
@@ -54,6 +57,23 @@ const Creation_Admin: React.FC = () => {
     setMessage("");
 
     try {
+      const admin = auth.currentUser; // Sauvegarder l'utilisateur admin actuel
+      let adminEmail = "";
+      let adminPassword = "";
+
+      if (admin) {
+        adminEmail = admin.email || "";
+        const adminPasswordPrompt = prompt(
+          "Veuillez entrer votre mot de passe pour continuer:"
+        );
+        if (adminPasswordPrompt) {
+          adminPassword = adminPasswordPrompt;
+        } else {
+          setError("Mot de passe requis pour continuer");
+          return;
+        }
+      }
+
       const userCredential = await createUserWithEmailAndPassword(
         auth,
         email,
