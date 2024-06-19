@@ -1,8 +1,8 @@
-"use client"
+"use client";
 import React from "react";
 import ProfessorTable from "@/components/ProfessorTable";
 
-const list_professeur: React.FC = () => {
+const ListProfesseur: React.FC = () => {
   return (
     <div className="flex justify-center items-center w-full p-8">
       <div className="max-w-5xl w-full">
@@ -13,4 +13,4 @@ const list_professeur: React.FC = () => {
   );
 };
 
-export default list_professeur;
+export default ListProfesseur;
