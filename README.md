@@ -177,4 +177,9 @@ Autres commandes à installer
 npm install js-cookie
 npm install cookie next-cookies jsonwebtoken
 npm install bcryptjs
+
+```
+ajout instalation comptabilité transformation format excel
+```bash
+npm install @types/xlsx --save-dev
 ```
