@@ -7,9 +7,9 @@ import EmailInput from "@/components/EmailInput";
 import PasswordInput from "@/components/PasswordInput";
 import ValidationButton from "@/components/ValidationButton";
 import FirstNameInput from "@/components/FirstNameInput";
-import { auth, db } from "@/config/firebase-config"; // Assurez-vous que cette importation est correcte
-import { createUserWithEmailAndPassword } from "firebase/auth";
-import { doc, setDoc } from "firebase/firestore";
+import { auth } from "@/config/firebase-config";
+import { httpsCallable } from "firebase/functions";
+import { getFunctions } from "firebase/functions";
 
 const CreateEleve: React.FC = () => {
   const [name, setName] = useState("");
@@ -17,8 +17,9 @@ const CreateEleve: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const [message, setMessage] = useState(""); // Pour afficher les messages de succès
+  const [message, setMessage] = useState("");
   const router = useRouter();
+  const functions = getFunctions();
 
   const validateEmail = (email: string) => {
     const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -27,63 +28,51 @@ const CreateEleve: React.FC = () => {
 
   const validatePassword = (password: string) => {
     const re = /^(?=.*[A-Z])(?=.*\d).{6,}$/;
-    return re.test(password);
+    return re.test(password  );
   };
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+ 
+const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  e.preventDefault();
 
-    if (!name || !firstName || !email || !password) {
-      setError("Veuillez remplir tous les champs.");
-      return;
+  if (!name || !firstName || !email || !password) {
+    setError("Veuillez remplir tous les champs.");
+    return;
+  }
+
+  if (!validateEmail(email)) {
+    setError("Email invalide");
+    return;
+  }
+
+  if (!validatePassword(password)) {
+    setError(
+      "Le mot de passe doit contenir au moins 6 caractères, une majuscule et un chiffre"
+    );
+    return;
+  }
+
+  setError("");
+  setMessage("");
+
+  try {
+    const createStudent = httpsCallable<{ email: string; password: string; name: string; firstName: string }, { email: string }>(functions, 'createStudent');
+    const result = await createStudent({ email, password, name, firstName });
+
+    setMessage(`Utilisateur créé : ${result.data.email}`);
+    setName("");
+    setFirstName("");
+    setEmail("");
+    setPassword("");
+  } catch (error: any) {
+    if (error.code === "auth/email-already-in-use") {
+      setError("Cet utilisateur existe déjà");
+    } else {
+      setError(`Erreur lors de la création de l'utilisateur: ${error.message}`);
     }
+  }
+};
 
-    if (!validateEmail(email)) {
-      setError("Email invalide");
-      return;
-    }
-
-    if (!validatePassword(password)) {
-      setError(
-        "Le mot de passe doit contenir au moins 6 caractères, une majuscule et un chiffre"
-      );
-      return;
-    }
-
-    setError("");
-    setMessage("");
-
-    try {
-      const userCredential = await createUserWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
-      const user = userCredential.user;
-
-      // Ajouter les informations utilisateur à Firestore avec le statut "élève"
-      await setDoc(doc(db, "users", user.uid), {
-        name: name,
-        firstName: firstName,
-        email: email,
-        status: "eleve", // Définir le statut par défaut à "eleve"
-      });
-
-      setMessage(`Utilisateur créé : ${user.email}`);
-      setName("");
-      setFirstName("");
-      setEmail("");
-      setPassword("");
-    } catch (error: any) {
-      if (error.code === "auth/email-already-in-use") {
-        setError("Cet utilisateur existe déjà");
-      } else {
-        setError(
-          `Erreur lors de la création de l'utilisateur: ${error.message}`
-        );
-      }
-    }
-  };
 
   return (
     <div className="flex justify-center items-center w-full">
