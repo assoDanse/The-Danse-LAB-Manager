@@ -1,4 +1,5 @@
 "use client";
+
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { auth, db } from "@/config/firebase-config";
@@ -27,6 +28,13 @@ interface Cours {
     minutes: number;
   };
   photo: string;
+  places_restantes: number; // Add this field
+}
+
+interface Carte {
+  id: string;
+  titre: string;
+  places_restantes: number;
 }
 
 const CoursEleve: React.FC = () => {
@@ -37,6 +45,8 @@ const CoursEleve: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
+  const [availableCartes, setAvailableCartes] = useState<Carte[]>([]);
+  const [selectedCarte, setSelectedCarte] = useState<Carte | null>(null);
   const router = useRouter();
 
   useEffect(() => {
@@ -98,8 +108,29 @@ const CoursEleve: React.FC = () => {
     return () => unsubscribe();
   }, [router]);
 
-  const handleInscriptionClick = (cours: Cours) => {
-    setSelectedCours(cours);
+  const handleInscriptionClick = async (cours: Cours) => {
+    const user = auth.currentUser;
+    if (user) {
+      const cartesQuery = query(
+        collection(db, "cartes"),
+        where("id_users", "==", user.uid),
+        where("places_restantes", ">", 0)
+      );
+      const cartesSnapshot = await getDocs(cartesQuery);
+      const cartesList: Carte[] = cartesSnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      })) as Carte[];
+
+      if (cartesList.length > 0) {
+        setAvailableCartes(cartesList);
+        setSelectedCours(cours);
+      } else {
+        setMessage("Aucune carte disponible avec des places restantes.");
+      }
+    } else {
+      setError("User not logged in");
+    }
   };
 
   const handleViewClick = (cours: Cours) => {
@@ -107,27 +138,29 @@ const CoursEleve: React.FC = () => {
   };
 
   const handleConfirmInscription = async () => {
-    if (!selectedCours) return;
+    if (!selectedCours || !selectedCarte) return;
 
     try {
       const user = auth.currentUser;
       if (user) {
-        // Créer une nouvelle participation
+        // Créer une nouvelle participation avec l'ID de la carte utilisée
         await addDoc(collection(db, "participation"), {
           id_users: user.uid,
           id_cours: selectedCours.id,
+          id_carte: selectedCarte.id, // Ajout de l'ID de la carte
         });
 
-        // Rechercher et mettre à jour la carte de l'élève pour diminuer le nombre de places restantes
-        const cartesQuery = query(
-          collection(db, "cartes"),
-          where("id_users", "==", user.uid)
-        );
-        const cartesSnapshot = await getDocs(cartesQuery);
-        if (!cartesSnapshot.empty) {
-          const carteDoc = cartesSnapshot.docs[0]; // On suppose qu'il n'y a qu'un seul document par utilisateur
-          const newPlacesRestantes = carteDoc.data().places_restantes - 1;
-          await updateDoc(carteDoc.ref, {
+        // Mettre à jour la carte de l'élève pour diminuer le nombre de places restantes
+        const carteDocRef = doc(db, "cartes", selectedCarte.id);
+        const newPlacesRestantes = selectedCarte.places_restantes - 1;
+        await updateDoc(carteDocRef, { places_restantes: newPlacesRestantes });
+
+        // Mettre à jour les places restantes pour le cours
+        const coursDocRef = doc(db, "cours", selectedCours.id);
+        const coursDoc = await getDoc(coursDocRef);
+        if (coursDoc.exists()) {
+          const newPlacesRestantes = coursDoc.data().places_restantes - 1;
+          await updateDoc(coursDocRef, {
             places_restantes: newPlacesRestantes,
           });
         }
@@ -138,6 +171,7 @@ const CoursEleve: React.FC = () => {
         );
         setMyCours([...myCours, selectedCours]);
         setSelectedCours(null);
+        setSelectedCarte(null);
         setMessage("Inscription réussie");
       } else {
         setError("User not logged in");
@@ -169,36 +203,15 @@ const CoursEleve: React.FC = () => {
           {message}
         </div>
       )}
-      <h1 className="text-2xl mb-4">Mes Cours</h1>
-      {myCours.length > 0 ? (
-        <ul className="w-full max-w-3xl mx-auto mb-8">
-          {myCours.map((cours) => (
-            <li key={cours.id} className="border p-4 mb-2 rounded-lg">
-              <h2 className="text-xl font-bold">{cours.titre}</h2>
-              <p>Type: {cours.type}</p>
-              <p>Date: {cours.date_heure_debut}</p>
-              <p>
-                Durée: {cours.duree.heures}h {cours.duree.minutes}m
-              </p>
-              <p>Professeur: {cours.nom_professeur}</p>
-              <button
-                onClick={() => handleViewClick(cours)}
-                className="bg-blue-500 text-white p-2 rounded mt-2"
-              >
-                Visualiser
-              </button>
-            </li>
-          ))}
-        </ul>
-      ) : (
-        <p className="text-center mb-8">Aucun cours trouvé</p>
-      )}
 
       <h1 className="text-2xl mb-4">Cours Disponibles</h1>
       {availableCours.length > 0 ? (
         <ul className="w-full max-w-3xl mx-auto">
           {availableCours.map((cours) => (
-            <li key={cours.id} className="border p-4 mb-2 rounded-lg">
+            <li
+              key={cours.id}
+              className="bg-sand border-2 border-salmon p-4 mb-2 rounded-lg shadow-lg"
+            >
               <h2 className="text-xl font-bold">{cours.titre}</h2>
               <p>Type: {cours.type}</p>
               <p>Date: {cours.date_heure_debut}</p>
@@ -228,10 +241,27 @@ const CoursEleve: React.FC = () => {
       {selectedCours && (
         <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center">
           <div className="bg-white p-6 rounded-lg shadow-lg">
-            <h2 className="text-xl mb-4">Confirmer l'inscription</h2>
-            <p>
-              Voulez-vous vous inscrire à ce cours : {selectedCours.titre} ?
-            </p>
+            <h2 className="text-xl mb-4">Sélectionnez une carte</h2>
+            {availableCartes.length > 0 ? (
+              <ul>
+                {availableCartes.map((carte) => (
+                  <li key={carte.id} className="mb-2">
+                    <button
+                      onClick={() => setSelectedCarte(carte)}
+                      className={`p-2 rounded ${
+                        selectedCarte?.id === carte.id
+                          ? "bg-blue-500 text-white"
+                          : "bg-gray-200"
+                      }`}
+                    >
+                      {carte.titre} - Places restantes: {carte.places_restantes}
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p>Aucune carte disponible</p>
+            )}
             <div className="flex justify-end mt-4">
               <button
                 onClick={() => setSelectedCours(null)}
@@ -242,6 +272,7 @@ const CoursEleve: React.FC = () => {
               <button
                 onClick={handleConfirmInscription}
                 className="bg-green-500 text-white p-2 rounded"
+                disabled={!selectedCarte}
               >
                 Confirmer
               </button>

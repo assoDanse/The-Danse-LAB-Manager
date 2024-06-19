@@ -51,10 +51,10 @@ const CreateCours: React.FC = () => {
       return;
     }
 
-    if (!validatePrice(price)) {
-      setError("Prix invalide");
-      return;
-    }
+    // if (!validatePrice(price)) {
+    //   setError("Prix invalide");
+    //   return;
+    // }
 
     setErrors({});
     setMessage("");

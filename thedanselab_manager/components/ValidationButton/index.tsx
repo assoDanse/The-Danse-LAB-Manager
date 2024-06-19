@@ -7,7 +7,7 @@ function ValidationButton({ text }: ValidationButtonProps) {
   return (
     <div className="flex flex-wrap gap-2">
       <button
-        className="bg-dark-brown hover:bg-light-orange text-white font-bold py-2 px-4 rounded min-w-full"
+        className="bg-c5 hover:bg-c4 text-white font-bold py-2 px-4 rounded min-w-full"
         type="submit"
       >
         {text}
