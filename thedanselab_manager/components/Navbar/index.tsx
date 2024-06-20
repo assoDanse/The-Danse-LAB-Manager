@@ -183,7 +183,7 @@ function Navbar_() {
             </span>
           </div>
         )}
-        <Navbar.Link className="text-c3 ml-5" href={getHomeLink()}>
+        <Navbar.Link className="text-c3 md:ml-5" href={getHomeLink()}>
           Accueil
         </Navbar.Link>
         <Navbar.Link className="text-c3" href={getCoursesLink()}>

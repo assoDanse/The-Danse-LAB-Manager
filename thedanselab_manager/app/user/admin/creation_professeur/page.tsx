@@ -10,7 +10,10 @@ import FirstNameInput from "@/components/FirstNameInput";
 import DialogueBoxInput from "@/components/DialogueBoxinput";
 import { Label } from "flowbite-react";
 import { auth, db, storage } from "@/config/firebase-config"; // Assurez-vous que cette importation est correcte
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+} from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
@@ -38,7 +41,7 @@ const CreateUserForm: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (!name || !firstName || !email || !password || !photo) {
+    if (!name || !firstName || !email || !password) {
       setError("Veuillez remplir tous les champs.");
       return;
     }
@@ -49,7 +52,9 @@ const CreateUserForm: React.FC = () => {
     }
 
     if (!validatePassword(password)) {
-      setError("Le mot de passe doit contenir au moins 6 caractères, une majuscule et un chiffre");
+      setError(
+        "Le mot de passe doit contenir au moins 6 caractères, une majuscule et un chiffre"
+      );
       return;
     }
 
@@ -63,7 +68,9 @@ const CreateUserForm: React.FC = () => {
 
       if (admin) {
         adminEmail = admin.email || "";
-        const adminPasswordPrompt = prompt("Veuillez entrer votre mot de passe pour continuer:");
+        const adminPasswordPrompt = prompt(
+          "Veuillez entrer votre mot de passe pour continuer:"
+        );
         if (adminPasswordPrompt) {
           adminPassword = adminPasswordPrompt;
         } else {
@@ -72,7 +79,11 @@ const CreateUserForm: React.FC = () => {
         }
       }
 
-      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
       const user = userCredential.user;
 
       // Télécharger la photo de profil sur Firebase Storage
@@ -103,10 +114,12 @@ const CreateUserForm: React.FC = () => {
         await signInWithEmailAndPassword(auth, adminEmail, adminPassword);
       }
     } catch (error: any) {
-      if (error.code === 'auth/email-already-in-use') {
-        setError('Cet utilisateur existe déjà');
+      if (error.code === "auth/email-already-in-use") {
+        setError("Cet utilisateur existe déjà");
       } else {
-        setError(`Erreur lors de la création de l'utilisateur: ${error.message}`);
+        setError(
+          `Erreur lors de la création de l'utilisateur: ${error.message}`
+        );
       }
     }
   };
