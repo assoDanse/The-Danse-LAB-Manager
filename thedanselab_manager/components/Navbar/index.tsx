@@ -106,7 +106,7 @@ function Navbar_() {
 
   return (
     <Navbar
-      className="md:sticky top-0 p-4 w-full bg-c2 text-c3 z-20"
+      className="sticky top-0 p-4 w-full bg-c2 text-c3 z-50"
       fluid
       rounded
     >

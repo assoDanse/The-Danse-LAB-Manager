@@ -1,11 +1,14 @@
-import React from 'react';
+import React from "react";
 
 type DescriptionInputProps = {
   description: string;
   setDescription: (description: string) => void;
 };
 
-const DescriptionInput: React.FC<DescriptionInputProps> = ({ description, setDescription }) => {
+const DescriptionInput: React.FC<DescriptionInputProps> = ({
+  description,
+  setDescription,
+}) => {
   const maxLength = 1000; // Définition de la limite maximale de caractères
 
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -16,7 +19,7 @@ const DescriptionInput: React.FC<DescriptionInputProps> = ({ description, setDes
     // Vous pouvez ajouter ici une indication ou un message d'erreur si la limite est dépassée
   };
 
-  const remainingCharacters = maxLength - description.length;
+  const remainingCharacters = description.length;
 
   return (
     <div className="relative">

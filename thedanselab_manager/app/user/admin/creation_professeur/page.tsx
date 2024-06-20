@@ -16,6 +16,7 @@ import {
 } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import DescriptionInput from "@/components/DescriptionInput";
 
 const CreateUserForm: React.FC = () => {
   const [name, setName] = useState("");
@@ -131,7 +132,7 @@ const CreateUserForm: React.FC = () => {
   };
 
   return (
-    <div className="flex justify-center items-center h-screen w-full mx-auto">
+    <div className="flex justify-center items-center w-full mx-auto my-3">
       <div className="max-w-sm w-full p-8 bg-white rounded-lg shadow-md">
         <h1 className="text-center text-2xl mb-6">Créer un Professeur</h1>
         <form onSubmit={handleSubmit} className="flex flex-col gap-5">
@@ -150,7 +151,7 @@ const CreateUserForm: React.FC = () => {
             accept="image/*"
             onChange={handlePhotoChange}
           />
-          <DialogueBoxInput DialogueBox={bio} setDialogueBox={setBio} />
+          <DescriptionInput description={bio} setDescription={setBio} />
           {error && <p className="text-red-500">{error}</p>}
           {message && <p className="text-green-500">{message}</p>}
           <ValidationButton text="Créer un compte" />
