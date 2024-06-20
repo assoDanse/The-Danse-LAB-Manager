@@ -1,4 +1,4 @@
-"use client";
+"use client"
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { auth, db } from "@/config/firebase-config";
@@ -9,6 +9,8 @@ import {
   where,
   getDocs,
   Timestamp,
+  doc,
+  deleteDoc,
 } from "firebase/firestore";
 
 interface Cours {
@@ -91,6 +93,28 @@ const MesCours: React.FC = () => {
     setViewingCours(cours);
   };
 
+  const handleDesinscrireClick = async (coursId: string) => {
+    try {
+      const user = auth.currentUser;
+      if (user) {
+        const participationQuery = query(
+          collection(db, "participation"),
+          where("id_users", "==", user.uid),
+          where("id_cours", "==", coursId)
+        );
+        const participationSnapshot = await getDocs(participationQuery);
+        if (!participationSnapshot.empty) {
+          const participationDoc = participationSnapshot.docs[0];
+          await deleteDoc(doc(db, "participation", participationDoc.id));
+          setMyCours(myCours.filter((cours) => cours.id !== coursId));
+        }
+      }
+    } catch (err) {
+      console.error("Erreur lors de la désinscription au cours : ", err);
+      setError("Erreur lors de la désinscription au cours");
+    }
+  };
+
   if (loading) {
     return (
       <div className="flex justify-center items-center w-full">
@@ -124,9 +148,15 @@ const MesCours: React.FC = () => {
               <p>Professeur: {cours.nom_professeur}</p>
               <button
                 onClick={() => handleViewClick(cours)}
-                className="bg-blue-500 text-white p-2 rounded mt-2"
+                className="bg-blue-500 text-white p-2 rounded mt-2 mr-2"
               >
                 Visualiser
+              </button>
+              <button
+                onClick={() => handleDesinscrireClick(cours.id)}
+                className="bg-red-500 text-white p-2 rounded mt-2"
+              >
+                Se désinscrire
               </button>
             </li>
           ))}
