@@ -1,33 +1,23 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
 type ContactInfo = {
-  phoneNumber: string;
   email: string;
   facebook: string;
+  facebookLogo: string;
   instagram: string;
+  instagramLogo: string;
 };
 
 const Contact: React.FC = () => {
-  const [contactInfo, setContactInfo] = useState<ContactInfo | null>(null);
-
-  useEffect(() => {
-    const fetchContactInfo = async () => {
-      try {
-        const response = await fetch("/api/contact");
-        const data = await response.json();
-        setContactInfo(data);
-      } catch (error) {
-        console.error(
-          "Erreur lors de la récupération des informations de contact:",
-          error
-        );
-      }
-    };
-
-    fetchContactInfo();
-  }, []);
+  const [contactInfo] = useState<ContactInfo>({
+    email: "thedancelab.contact@gmail.com",
+    facebook: "https://www.facebook.com/profile.php?id=100093814275981",
+    facebookLogo: "https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg",
+    instagram: "https://www.instagram.com/thedancelab_lille/?hl=fr",
+    instagramLogo: "https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png",
+  });
 
   return (
     <div className="flex flex-col items-center justify-center w-full bg-gray-100">
@@ -36,23 +26,37 @@ const Contact: React.FC = () => {
         {contactInfo ? (
           <>
             <div className="mb-4">
-              <h3 className="text-xl font-semibold">Numéro de téléphone</h3>
-              <p className="text-gray-700">{contactInfo.phoneNumber}</p>
-            </div>
-            <div className="mb-4">
               <h3 className="text-xl font-semibold">Adresse e-mail</h3>
               <p className="text-gray-700">{contactInfo.email}</p>
             </div>
             <div className="mb-4">
               <h3 className="text-xl font-semibold">Facebook</h3>
-              <a href={contactInfo.facebook} className="text-blue-500" target="_blank" rel="noopener noreferrer">
-                {contactInfo.facebook}
+              <a
+                href={contactInfo.facebook}
+                className="text-blue-500"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <img
+                  src={contactInfo.facebookLogo}
+                  alt="Facebook"
+                  className="w-6 h-6 inline-block"
+                />
               </a>
             </div>
             <div className="mb-4">
               <h3 className="text-xl font-semibold">Instagram</h3>
-              <a href={contactInfo.instagram} className="text-pink-500" target="_blank" rel="noopener noreferrer">
-                {contactInfo.instagram}
+              <a
+                href={contactInfo.instagram}
+                className="text-pink-500"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <img
+                  src={contactInfo.instagramLogo}
+                  alt="Instagram"
+                  className="w-6 h-6 inline-block"
+                />
               </a>
             </div>
           </>
