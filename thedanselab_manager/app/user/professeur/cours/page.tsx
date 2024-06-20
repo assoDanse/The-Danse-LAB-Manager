@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { auth, db, storage } from "@/config/firebase-config";
+import { auth, db } from "@/config/firebase-config";
 import { onAuthStateChanged } from "firebase/auth";
 import {
   collection,
@@ -8,8 +8,6 @@ import {
   where,
   Timestamp,
   getDocs,
-  doc,
-  updateDoc,
 } from "firebase/firestore";
 
 interface Cours {
@@ -44,16 +42,22 @@ const CoursProfesseur: React.FC = () => {
             collection(db, "cours"),
             where("id_professeur", "==", user.uid)
           );
-          const coursSnapshot = await getDocs(collection(db, "cours"));
+          const coursSnapshot = await getDocs(coursQuery);
           const allCours = coursSnapshot.docs.map((doc) => ({
             id: doc.id,
             ...doc.data(),
             date_heure_debut: (doc.data().date_heure_debut as Timestamp)
               .toDate()
-              .toLocaleString(),
+              .toISOString(),
           })) as Cours[];
 
-          setCours(allCours);
+          const currentDateTime = new Date().toISOString();
+
+          const sortedCours = allCours
+            .filter(cours => cours.date_heure_debut > currentDateTime)
+            .sort((a, b) => new Date(a.date_heure_debut).getTime() - new Date(b.date_heure_debut).getTime());
+
+          setCours(sortedCours);
         } else {
           setError("Utilisateur non connecté");
         }
@@ -106,7 +110,7 @@ const CoursProfesseur: React.FC = () => {
             >
               <h2 className="text-xl font-bold">{cours.titre}</h2>
               <p>Type: {cours.type}</p>
-              <p>Date: {cours.date_heure_debut}</p>
+              <p>Date: {new Date(cours.date_heure_debut).toLocaleString()}</p>
               <p>
                 Durée: {cours.duree.heures}h {cours.duree.minutes}m
               </p>
@@ -140,7 +144,7 @@ const CoursProfesseur: React.FC = () => {
               <strong>Type:</strong> {viewingCours.type}
             </p>
             <p>
-              <strong>Date:</strong> {viewingCours.date_heure_debut}
+              <strong>Date:</strong> {new Date(viewingCours.date_heure_debut).toLocaleString()}
             </p>
             <p>
               <strong>Durée:</strong> {viewingCours.duree.heures}h{" "}
@@ -164,31 +168,4 @@ const CoursProfesseur: React.FC = () => {
   );
 };
 
-{
-  /* <div className="flex flex-wrap justify-center items-center">
-      {coursData.length > 0 ? (
-        coursData.map((cours, index) => (
-          <div key={index}>
-            <div onClick={() => handleOpenPopup(index)}>
-              <CardCoursProf
-                titre={cours.titre}
-                description={cours.description}
-                image={cours.image}
-                date={cours.date}
-                heure={cours.heure}
-                duree={cours.duree}
-                eleves={cours.eleves || []} // Passer une liste vide si les élèves n'existent pas
-                liens={cours.liens || []} // Passer une liste vide si les liens n'existent pas
-              />
-            </div>
-            <button onClick={() => handleDeleteCours(index)}>
-              Supprimer le cours
-            </button>
-          </div>
-        ))
-      ) : (
-        <p className="text-center font-bold">
-          Aucun cours disponible pour le moment.
-        </p> */
-}
 export default CoursProfesseur;

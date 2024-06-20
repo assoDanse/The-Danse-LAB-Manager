@@ -45,14 +45,20 @@ const MesCours: React.FC = () => {
           const allCours = coursSnapshot.docs.map(doc => ({
             id: doc.id,
             ...doc.data(),
-            date_heure_debut: (doc.data().date_heure_debut as Timestamp).toDate().toLocaleString(),
+            date_heure_debut: (doc.data().date_heure_debut as Timestamp).toDate().toISOString(),
           })) as Cours[];
 
-          const myCoursList = allCours.filter(cours => myCoursIds.includes(cours.id));
+          const currentDateTime = new Date().toISOString();
+
+          const sortedCours = allCours
+            .filter(cours => cours.date_heure_debut > currentDateTime)
+            .sort((a, b) => new Date(a.date_heure_debut).getTime() - new Date(b.date_heure_debut).getTime());
+
+          const myCoursList = sortedCours.filter(cours => myCoursIds.includes(cours.id));
 
           setMyCours(myCoursList);
         } else {
-          setError("User not logged in");
+          setError("Utilisateur non connecté");
           router.push("/auth/login");
         }
       } catch (err) {
@@ -67,7 +73,7 @@ const MesCours: React.FC = () => {
       if (user) {
         fetchCours();
       } else {
-        setError("User not logged in");
+        setError("Utilisateur non connecté");
         router.push("/auth/login");
       }
     });
@@ -96,7 +102,7 @@ const MesCours: React.FC = () => {
             <li key={cours.id} className="border p-4 mb-2 rounded-lg">
               <h2 className="text-xl font-bold">{cours.titre}</h2>
               <p>Type: {cours.type}</p>
-              <p>Date: {cours.date_heure_debut}</p>
+              <p>Date: {new Date(cours.date_heure_debut).toLocaleString()}</p>
               <p>Durée: {cours.duree.heures}h {cours.duree.minutes}m</p>
               <p>Professeur: {cours.nom_professeur}</p>
               <button
@@ -113,15 +119,15 @@ const MesCours: React.FC = () => {
       )}
 
       {viewingCours && (
-        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center">
-          <div className="bg-white p-6 rounded-lg shadow-lg max-w-lg w-full">
+        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center overflow-auto">
+          <div className="bg-white p-6 rounded-lg shadow-lg max-w-lg w-full max-h-full overflow-y-auto">
             <h2 className="text-2xl font-bold mb-4">{viewingCours.titre}</h2>
             {viewingCours.photo && (
               <img src={viewingCours.photo} alt={viewingCours.titre} className="mb-4 w-full" />
             )}
             <p className="mb-4">{viewingCours.description}</p>
             <p><strong>Type:</strong> {viewingCours.type}</p>
-            <p><strong>Date:</strong> {viewingCours.date_heure_debut}</p>
+            <p><strong>Date:</strong> {new Date(viewingCours.date_heure_debut).toLocaleString()}</p>
             <p><strong>Durée:</strong> {viewingCours.duree.heures}h {viewingCours.duree.minutes}m</p>
             <p><strong>Professeur:</strong> {viewingCours.nom_professeur}</p>
             <div className="flex justify-end mt-4">
