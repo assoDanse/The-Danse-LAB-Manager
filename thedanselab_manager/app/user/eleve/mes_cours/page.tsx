@@ -9,6 +9,8 @@ import {
   where,
   getDocs,
   Timestamp,
+  doc,
+  deleteDoc,
 } from "firebase/firestore";
 
 interface Cours {
@@ -101,6 +103,28 @@ const MesCours: React.FC = () => {
     setViewingCours(cours);
   };
 
+  const handleDesinscrireClick = async (coursId: string) => {
+    try {
+      const user = auth.currentUser;
+      if (user) {
+        const participationQuery = query(
+          collection(db, "participation"),
+          where("id_users", "==", user.uid),
+          where("id_cours", "==", coursId)
+        );
+        const participationSnapshot = await getDocs(participationQuery);
+        if (!participationSnapshot.empty) {
+          const participationDoc = participationSnapshot.docs[0];
+          await deleteDoc(doc(db, "participation", participationDoc.id));
+          setMyCours(myCours.filter((cours) => cours.id !== coursId));
+        }
+      }
+    } catch (err) {
+      console.error("Erreur lors de la désinscription au cours : ", err);
+      setError("Erreur lors de la désinscription au cours");
+    }
+  };
+
   if (loading) {
     return (
       <div className="flex justify-center items-center w-full">
@@ -134,9 +158,15 @@ const MesCours: React.FC = () => {
               <p>Professeur: {cours.nom_professeur}</p>
               <button
                 onClick={() => handleViewClick(cours)}
-                className="bg-blue-500 text-white p-2 rounded mt-2"
+                className="bg-blue-500 text-white p-2 rounded mt-2 mr-2"
               >
                 Visualiser
+              </button>
+              <button
+                onClick={() => handleDesinscrireClick(cours.id)}
+                className="bg-red-500 text-white p-2 rounded mt-2"
+              >
+                Se désinscrire
               </button>
             </li>
           ))}
@@ -146,7 +176,7 @@ const MesCours: React.FC = () => {
       )}
 
       {viewingCours && (
-        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center overflow-auto">
+        <div className="fixed z-20 top-24 start-0 end-0 bottom-0 bg-gray-600 bg-opacity-50 flex justify-center items-center overflow-auto p-5">
           <div className="bg-white p-6 rounded-lg shadow-lg max-w-lg w-full max-h-full overflow-y-auto">
             <h2 className="text-2xl font-bold mb-4">{viewingCours.titre}</h2>
             {viewingCours.photo && (

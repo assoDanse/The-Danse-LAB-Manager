@@ -1,11 +1,12 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import ProfesseurInput from "@/components/professeurInput";
 import TypeDeCoursInput from "@/components/TypeDeCoursInput";
 import TitleInput from "@/components/TitleInput";
 import DescriptionInput from "@/components/DescriptionInput";
 import DateInput from "@/components/dateInput";
+import { Label } from "flowbite-react";
 import DurationInput from "@/components/DurationInput";
 import { db, storage } from "@/config/firebase-config";
 import { collection, addDoc, Timestamp } from "firebase/firestore";
@@ -20,12 +21,16 @@ const CreateCours: React.FC = () => {
   const [courseType, setCourseType] = useState("");
   const [date, setDate] = useState("");
   const [duration, setDuration] = useState({ hours: 0, minutes: 0 });
-  const [periodicity, setPeriodicity] = useState<number>(1); // Ajout de la périodicité en nombre de semaines
+  const [periodicity, setPeriodicity] = useState<number>(1);
   const [photo, setPhoto] = useState<File | null>(null);
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [message, setMessage] = useState("");
-  const [isRecurrent, setIsRecurrent] = useState(false); // État pour gérer l'affichage de la périodicité
+  const [isRecurrent, setIsRecurrent] = useState(false);
   const router = useRouter();
+
+  useEffect(() => {
+    // This will run only on the client side
+  }, []);
 
   const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
@@ -79,7 +84,7 @@ const CreateCours: React.FC = () => {
         nom_professeur: professorName,
         id_professeur: professorId,
         photo: photoURL,
-        periodicite: isRecurrent ? periodicity : 1, // Ajout de la périodicité au document de cours
+        periodicite: isRecurrent ? periodicity : 1,
       });
 
       setMessage("Cours créé avec succès");
@@ -90,9 +95,9 @@ const CreateCours: React.FC = () => {
       setCourseType("");
       setDate("");
       setDuration({ hours: 0, minutes: 0 });
-      setPeriodicity(1); // Réinitialisation de la périodicité après création du cours
+      setPeriodicity(1);
       setPhoto(null);
-      setIsRecurrent(false); // Réinitialisation de la case à cocher
+      setIsRecurrent(false);
     } catch (error: any) {
       setErrors({
         general: `Erreur lors de la création du cours: ${error.message}`,
@@ -163,7 +168,7 @@ const CreateCours: React.FC = () => {
                 onChange={(e) => setPeriodicity(parseInt(e.target.value))}
                 className="border border-gray-300 rounded-md px-2 py-1"
                 min={1}
-                max={52}
+                max={44}
                 required
               />
               {errors.periodicity && (
@@ -171,16 +176,20 @@ const CreateCours: React.FC = () => {
               )}
             </div>
           )}
-          <div>
-            <label
-              htmlFor="photo"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Photo
-            </label>
-            <input type="file" id="photo" onChange={handlePhotoChange} />
-            {errors.photo && <p className="text-red-500">{errors.photo}</p>}
-          </div>
+
+          <Label
+            htmlFor="file-upload-helper-text"
+            value="Photo"
+            className="text-center"
+          />
+          <input
+            type="file"
+            id="photo"
+            accept="image/*"
+            onChange={handlePhotoChange}
+          />
+          {errors.photo && <p className="text-red-500">{errors.photo}</p>}
+
           {errors.general && <p className="text-red-500">{errors.general}</p>}
           {message && <p className="text-green-500">{message}</p>}
           <ValidationButton text="Créer un cours" />
@@ -191,29 +200,3 @@ const CreateCours: React.FC = () => {
 };
 
 export default CreateCours;
-
-{
-  /* <div className="flex justify-center items-center w-full">
-      <div className="max-w-sm w-full p-8 bg-white rounded-lg shadow-md my-2">
-        <h1 className="text-center text-2xl mb-6">Créer un cours</h1>
-        <form onSubmit={handleSubmit} className=" flex flex-col gap-5">
-          <TitleInput title={title} setTitle={setTitle} />
-          <DescriptionInput
-            description={description}
-            setDescription={setDescription}
-          />
-          <ProfesseurInput professor={professor} setProfessor={setProfessor} />
-          <TypeDeCoursInput
-            courseType={courseType}
-            setCourseType={setCourseType}
-          />
-          <PriceInput price={price} setPrice={setPrice} />
-          <DateInput date={date} setDate={setDate} />
-          <DurationInput duration={duration} setDuration={setDuration} />
-          <LinkListInput linkList={linkList} setLinkList={setLinkList} />
-          {error && <p className="text-red-500">{error}</p>}
-          {message && <p className="text-green-500">{message}</p>}
-          <ValidationButton text="Créer le cours" />
-        </form>
-      </div> */
-}

@@ -68,7 +68,7 @@ const TarifsAdmin: React.FC = () => {
   };
 
   const handleEdit = (id: string) => {
-    router.push(`/user/admin/edit_admin`);
+    router.push(`/user/admin/tarifs`); // a modifier
   };
 
   if (loading) {
