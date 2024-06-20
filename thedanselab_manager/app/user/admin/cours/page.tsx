@@ -1,4 +1,5 @@
 "use client";
+
 import React, { useEffect, useState } from "react";
 import { db, storage } from "@/config/firebase-config";
 import {
@@ -7,6 +8,7 @@ import {
   Timestamp,
   updateDoc,
   doc,
+  deleteDoc,
 } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
@@ -133,6 +135,17 @@ const PannelAdmin: React.FC = () => {
     }
   };
 
+  const handleDeleteClick = async (coursId: string) => {
+    try {
+      await deleteDoc(doc(db, "cours", coursId));
+      setCours(cours.filter((cours) => cours.id !== coursId));
+      setMessage("Cours supprimé avec succès");
+    } catch (error) {
+      setError("Erreur lors de la suppression du cours");
+      console.error(error);
+    }
+  };
+
   const formatDateToInputValue = (dateString: string) => {
     const date = new Date(dateString);
     if (isNaN(date.getTime())) {
@@ -185,9 +198,15 @@ const PannelAdmin: React.FC = () => {
               </button>
               <button
                 onClick={() => handleEditClick(cours)}
-                className="bg-yellow-500 text-white p-2 rounded mt-2"
+                className="bg-yellow-500 text-white p-2 rounded mt-2 mr-2"
               >
                 Modifier
+              </button>
+              <button
+                onClick={() => handleDeleteClick(cours.id)}
+                className="bg-red-500 text-white p-2 rounded mt-2"
+              >
+                Supprimer
               </button>
             </li>
           ))}
@@ -396,3 +415,4 @@ const PannelAdmin: React.FC = () => {
 };
 
 export default PannelAdmin;
+
