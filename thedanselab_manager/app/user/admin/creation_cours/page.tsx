@@ -6,6 +6,7 @@ import TypeDeCoursInput from "@/components/TypeDeCoursInput";
 import TitleInput from "@/components/TitleInput";
 import DescriptionInput from "@/components/DescriptionInput";
 import DateInput from "@/components/dateInput";
+import { Label } from "flowbite-react";
 import DurationInput from "@/components/DurationInput";
 import { db, storage } from "@/config/firebase-config";
 import { collection, addDoc, Timestamp } from "firebase/firestore";
@@ -171,16 +172,20 @@ const CreateCours: React.FC = () => {
               )}
             </div>
           )}
-          <div>
-            <label
-              htmlFor="photo"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Photo
-            </label>
-            <input type="file" id="photo" onChange={handlePhotoChange} />
-            {errors.photo && <p className="text-red-500">{errors.photo}</p>}
-          </div>
+
+          <Label
+            htmlFor="file-upload-helper-text"
+            value="Photo"
+            className="text-center"
+          />
+          <input
+            type="file"
+            id="photo"
+            accept="image/*"
+            onChange={handlePhotoChange}
+          />
+          {errors.photo && <p className="text-red-500">{errors.photo}</p>}
+
           {errors.general && <p className="text-red-500">{errors.general}</p>}
           {message && <p className="text-green-500">{message}</p>}
           <ValidationButton text="Créer un cours" />
