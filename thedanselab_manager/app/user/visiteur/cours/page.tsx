@@ -1,45 +1,169 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import CardCoursVisiteur from "@/components/CardCoursVisiteur";
+import { collection, getDocs } from "firebase/firestore";
+import { getDownloadURL, ref } from "firebase/storage";
+import { db, storage } from "@/config/firebase-config";
 
-const CoursVisiteur: React.FC = () => {
-  const [coursData, setCoursData] = useState([]);
+interface Cours {
+  id: string;
+  titre: string;
+  description: string;
+  type: string;
+  nom_professeur: string;
+  date_heure_debut: string;
+  duree: {
+    heures: number;
+    minutes: number;
+  };
+  photo: string;
+}
+
+const CoursEleve: React.FC = () => {
+  const [availableCours, setAvailableCours] = useState<Cours[]>([]);
+  const [viewingCours, setViewingCours] = useState<Cours | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchCoursData = async () => {
+    const fetchCours = async () => {
+      setLoading(true);
+      setError(null);
+
       try {
-        const response = await fetch("/api/cours");
-        const data = await response.json();
-        setCoursData(data);
-      } catch (error) {
-        console.error("Erreur lors de la récupération des données des cours:", error);
+        const coursSnapshot = await getDocs(collection(db, "cours"));
+        const allCours = await Promise.all(
+          coursSnapshot.docs.map(async (doc) => {
+            const data = doc.data();
+            let photoURL = "";
+            try {
+              photoURL = await getDownloadURL(
+                ref(storage, `photos/${data.photo}`)
+              );
+            } catch (err) {
+              console.error(
+                `Erreur lors de la récupération de la photo: ${data.photo}`,
+                err
+              );
+            }
+            return {
+              id: doc.id,
+              ...data,
+              date_heure_debut: (data.date_heure_debut as Timestamp)
+                .toDate()
+                .toLocaleString(),
+              photo: photoURL,
+            } as Cours;
+          })
+        );
+        setAvailableCours(allCours);
+      } catch (err) {
+        setError("Erreur lors de la récupération des cours : " + err.message);
+        console.error(err);
+      } finally {
+        setLoading(false);
       }
     };
 
-    fetchCoursData();
+    fetchCours();
   }, []);
 
+  const handleViewClick = (cours: Cours) => {
+    setViewingCours(cours);
+  };
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center w-full">
+        Chargement...
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex justify-center items-center w-full">{error}</div>
+    );
+  }
+
   return (
-    <div className="flex flex-wrap justify-center items-center">
-      {coursData.length > 0 ? (
-        coursData.map((cours, index) => (
-          <CardCoursVisiteur
-            key={index}
-            titre={cours.titre}
-            description={cours.description}
-            image={cours.image}
-            prix={cours.prix}
-            dateDebut={cours.dateDebut}
-            duree={cours.duree}
-          />
-        ))
+    <div className="flex flex-col items-center w-full p-3">
+      <h1 className="text-2xl m-4 font-bold">Cours Disponibles</h1>
+      {availableCours.length > 0 ? (
+        <ul className="md:grid md:grid-cols-2 md:gap-4 w-full max-w-3xl mx-auto text-center">
+          {availableCours.map((cours) => (
+            <li
+              key={cours.id}
+              className="bg-c0 border border-c4 p-4 mb-2 rounded-lg shadow-lg"
+            >
+              <h2 className="text-xl font-bold">{cours.titre}</h2>
+              <p>Type: {cours.type}</p>
+              <p>Date: {cours.date_heure_debut}</p>
+              <p>
+                Durée: {cours.duree.heures}h {cours.duree.minutes}m
+              </p>
+              <p>Professeur: {cours.nom_professeur}</p>
+              {cours.photo ? (
+                <img
+                  src={cours.photo}
+                  alt={cours.titre}
+                  className="mb-4 w-full"
+                />
+              ) : (
+                <p className="mb-4">Aucune photo disponible</p>
+              )}
+              <button
+                onClick={() => handleViewClick(cours)}
+                className="bg-blue-500 text-white p-2 rounded mt-2"
+              >
+                Visualiser
+              </button>
+            </li>
+          ))}
+        </ul>
       ) : (
-        <p style={{ textAlign: "center", fontWeight: "bold" }}>
-          Aucun cours disponible pour le moment.
-        </p>
+        <p className="text-center">Aucun cours disponible</p>
+      )}
+
+      {viewingCours && (
+        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center">
+          <div className="bg-white p-6 rounded-lg shadow-lg max-w-lg w-full">
+            <h2 className="text-2xl font-bold mb-4">{viewingCours.titre}</h2>
+            {viewingCours.photo ? (
+              <img
+                src={viewingCours.photo}
+                alt={viewingCours.titre}
+                className="mb-4 w-full"
+              />
+            ) : (
+              <p className="mb-4">Aucune photo disponible</p>
+            )}
+            <p className="mb-4">{viewingCours.description}</p>
+            <p>
+              <strong>Type:</strong> {viewingCours.type}
+            </p>
+            <p>
+              <strong>Date:</strong> {viewingCours.date_heure_debut}
+            </p>
+            <p>
+              <strong>Durée:</strong> {viewingCours.duree.heures}h{" "}
+              {viewingCours.duree.minutes}m
+            </p>
+            <p>
+              <strong>Professeur:</strong> {viewingCours.nom_professeur}
+            </p>
+            <div className="flex justify-end mt-4">
+              <button
+                onClick={() => setViewingCours(null)}
+                className="bg-blue-500 text-white p-2 rounded"
+              >
+                Fermer
+              </button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );
 };
 
-export default CoursVisiteur;
+export default CoursEleve;

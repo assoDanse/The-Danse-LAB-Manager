@@ -14,7 +14,7 @@ export function SidebarProfesseur() {
   };
 
   return (
-    <div className="flex">
+    <div className="flex max-md:z-10">
       {/* Sidebar for larger screens */}
       <div className="max-md:hidden md:flex">
         <Sidebar

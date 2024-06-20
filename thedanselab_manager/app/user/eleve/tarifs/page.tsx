@@ -46,7 +46,9 @@ const TarifsEleve: React.FC = () => {
   }, []);
 
   const handlePay = async (tarif: Tarif) => {
-    const confirmed = window.confirm(`Êtes-vous sûr de vouloir payer pour ce tarif : ${tarif.titre} ?`);
+    const confirmed = window.confirm(
+      `Êtes-vous sûr de vouloir payer pour ce tarif : ${tarif.titre} ?`
+    );
     if (confirmed) {
       try {
         const user = auth.currentUser;
@@ -66,7 +68,10 @@ const TarifsEleve: React.FC = () => {
           setMessage(null);
         }, 3000);
       } catch (err) {
-        console.error("Erreur lors du paiement et de la création de la carte", err);
+        console.error(
+          "Erreur lors du paiement et de la création de la carte",
+          err
+        );
         setError("Erreur lors du paiement et de la création de la carte");
         setTimeout(() => {
           setError(null);
@@ -76,21 +81,34 @@ const TarifsEleve: React.FC = () => {
   };
 
   if (loading) {
-    return <div className="flex justify-center items-center w-full">Chargement...</div>;
+    return (
+      <div className="flex justify-center items-center w-full">
+        Chargement...
+      </div>
+    );
   }
 
   if (error) {
-    return <div className="flex justify-center items-center w-full">{error}</div>;
+    return (
+      <div className="flex justify-center items-center w-full">{error}</div>
+    );
   }
 
   return (
-    <div className="flex flex-col items-center w-full">
-      <h1 className="text-2xl mb-4">Gestion des Tarifs</h1>
-      {message && <div className="bg-green-100 text-green-800 p-4 rounded-lg mb-4">{message}</div>}
+    <div className="flex flex-col items-center w-full p-3">
+      {message && (
+        <div className="bg-green-100 text-green-800 p-4 rounded-lg mb-4">
+          {message}
+        </div>
+      )}
+      <h1 className="text-2xl m-4 font-bold">Tarifs</h1>
       {tarifs.length > 0 ? (
-        <ul className="w-full max-w-3xl mx-auto">
+        <ul className="md:grid md:grid-cols-2 md:gap-4 w-full max-w-3xl mx-auto">
           {tarifs.map((tarif) => (
-            <li key={tarif.id} className="border p-4 mb-2 rounded-lg">
+            <li
+              key={tarif.id}
+              className="bg-c0 border border-c4 p-4 mb-2 rounded-lg shadow-lg"
+            >
               <h2 className="text-xl font-bold">{tarif.titre}</h2>
               <img
                 src={tarif.image}
@@ -105,7 +123,7 @@ const TarifsEleve: React.FC = () => {
                 onClick={() => handlePay(tarif)}
                 className="bg-green-500 text-white p-2 rounded mt-2"
               >
-                Payer
+                Acheter
               </button>
             </li>
           ))}

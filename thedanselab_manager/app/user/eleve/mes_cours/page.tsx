@@ -3,7 +3,13 @@ import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { auth, db } from "@/config/firebase-config";
 import { onAuthStateChanged } from "firebase/auth";
-import { collection, query, where, getDocs, Timestamp } from "firebase/firestore";
+import {
+  collection,
+  query,
+  where,
+  getDocs,
+  Timestamp,
+} from "firebase/firestore";
 
 interface Cours {
   id: string;
@@ -39,16 +45,22 @@ const MesCours: React.FC = () => {
             where("id_users", "==", user.uid)
           );
           const participationSnapshot = await getDocs(participationQuery);
-          const myCoursIds = participationSnapshot.docs.map(doc => doc.data().id_cours);
+          const myCoursIds = participationSnapshot.docs.map(
+            (doc) => doc.data().id_cours
+          );
 
           const coursSnapshot = await getDocs(collection(db, "cours"));
-          const allCours = coursSnapshot.docs.map(doc => ({
+          const allCours = coursSnapshot.docs.map((doc) => ({
             id: doc.id,
             ...doc.data(),
-            date_heure_debut: (doc.data().date_heure_debut as Timestamp).toDate().toLocaleString(),
+            date_heure_debut: (doc.data().date_heure_debut as Timestamp)
+              .toDate()
+              .toLocaleString(),
           })) as Cours[];
 
-          const myCoursList = allCours.filter(cours => myCoursIds.includes(cours.id));
+          const myCoursList = allCours.filter((cours) =>
+            myCoursIds.includes(cours.id)
+          );
 
           setMyCours(myCoursList);
         } else {
@@ -80,24 +92,35 @@ const MesCours: React.FC = () => {
   };
 
   if (loading) {
-    return <div className="flex justify-center items-center w-full">Chargement...</div>;
+    return (
+      <div className="flex justify-center items-center w-full">
+        Chargement...
+      </div>
+    );
   }
 
   if (error) {
-    return <div className="flex justify-center items-center w-full">{error}</div>;
+    return (
+      <div className="flex justify-center items-center w-full">{error}</div>
+    );
   }
 
   return (
-    <div className="flex flex-col items-center w-full mt-4">
-      <h1 className="text-2xl mb-4">Mes Cours</h1>
+    <div className="flex flex-col items-center w-full p-3">
+      <h1 className="text-2xl m-4 font-bold">Mes Cours</h1>
       {myCours.length > 0 ? (
-        <ul className="w-full max-w-3xl mx-auto mb-8">
+        <ul className="md:grid md:grid-cols-2 md:gap-4 w-full max-w-3xl mx-auto text-center">
           {myCours.map((cours) => (
-            <li key={cours.id} className="border p-4 mb-2 rounded-lg">
+            <li
+              key={cours.id}
+              className="bg-c0 border border-c4 p-4 mb-2 rounded-lg shadow-lg"
+            >
               <h2 className="text-xl font-bold">{cours.titre}</h2>
               <p>Type: {cours.type}</p>
               <p>Date: {cours.date_heure_debut}</p>
-              <p>Durée: {cours.duree.heures}h {cours.duree.minutes}m</p>
+              <p>
+                Durée: {cours.duree.heures}h {cours.duree.minutes}m
+              </p>
               <p>Professeur: {cours.nom_professeur}</p>
               <button
                 onClick={() => handleViewClick(cours)}
@@ -117,13 +140,26 @@ const MesCours: React.FC = () => {
           <div className="bg-white p-6 rounded-lg shadow-lg max-w-lg w-full">
             <h2 className="text-2xl font-bold mb-4">{viewingCours.titre}</h2>
             {viewingCours.photo && (
-              <img src={viewingCours.photo} alt={viewingCours.titre} className="mb-4 w-full" />
+              <img
+                src={viewingCours.photo}
+                alt={viewingCours.titre}
+                className="mb-4 w-full"
+              />
             )}
             <p className="mb-4">{viewingCours.description}</p>
-            <p><strong>Type:</strong> {viewingCours.type}</p>
-            <p><strong>Date:</strong> {viewingCours.date_heure_debut}</p>
-            <p><strong>Durée:</strong> {viewingCours.duree.heures}h {viewingCours.duree.minutes}m</p>
-            <p><strong>Professeur:</strong> {viewingCours.nom_professeur}</p>
+            <p>
+              <strong>Type:</strong> {viewingCours.type}
+            </p>
+            <p>
+              <strong>Date:</strong> {viewingCours.date_heure_debut}
+            </p>
+            <p>
+              <strong>Durée:</strong> {viewingCours.duree.heures}h{" "}
+              {viewingCours.duree.minutes}m
+            </p>
+            <p>
+              <strong>Professeur:</strong> {viewingCours.nom_professeur}
+            </p>
             <div className="flex justify-end mt-4">
               <button
                 onClick={() => setViewingCours(null)}
