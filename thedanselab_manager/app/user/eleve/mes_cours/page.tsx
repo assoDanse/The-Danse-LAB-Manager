@@ -94,24 +94,29 @@ const MesCours: React.FC = () => {
   };
 
   const handleDesinscrireClick = async (coursId: string) => {
-    try {
-      const user = auth.currentUser;
-      if (user) {
-        const participationQuery = query(
-          collection(db, "participation"),
-          where("id_users", "==", user.uid),
-          where("id_cours", "==", coursId)
-        );
-        const participationSnapshot = await getDocs(participationQuery);
-        if (!participationSnapshot.empty) {
-          const participationDoc = participationSnapshot.docs[0];
-          await deleteDoc(doc(db, "participation", participationDoc.id));
-          setMyCours(myCours.filter((cours) => cours.id !== coursId));
+    const confirmed = window.confirm(
+      "Êtes-vous sûr de vouloir vous désinscrire de ce cours ?"
+    );
+    if (confirmed) {
+      try {
+        const user = auth.currentUser;
+        if (user) {
+          const participationQuery = query(
+            collection(db, "participation"),
+            where("id_users", "==", user.uid),
+            where("id_cours", "==", coursId)
+          );
+          const participationSnapshot = await getDocs(participationQuery);
+          if (!participationSnapshot.empty) {
+            const participationDoc = participationSnapshot.docs[0];
+            await deleteDoc(doc(db, "participation", participationDoc.id));
+            setMyCours(myCours.filter((cours) => cours.id !== coursId));
+          }
         }
+      } catch (err) {
+        console.error("Erreur lors de la désinscription au cours : ", err);
+        setError("Erreur lors de la désinscription au cours");
       }
-    } catch (err) {
-      console.error("Erreur lors de la désinscription au cours : ", err);
-      setError("Erreur lors de la désinscription au cours");
     }
   };
 

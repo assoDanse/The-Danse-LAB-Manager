@@ -1,5 +1,6 @@
 "use client";
 
+
 import React, { useEffect, useState } from "react";
 import { db, storage } from "@/config/firebase-config";
 import {
@@ -136,6 +137,9 @@ const PannelAdmin: React.FC = () => {
   };
 
   const handleDeleteClick = async (coursId: string) => {
+    const confirmDelete = confirm("Êtes-vous sûr de vouloir supprimer ce cours ?");
+    if (!confirmDelete) return;
+
     try {
       await deleteDoc(doc(db, "cours", coursId));
       setCours(cours.filter((cours) => cours.id !== coursId));
