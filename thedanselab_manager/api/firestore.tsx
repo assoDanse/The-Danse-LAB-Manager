@@ -1,8 +1,13 @@
-import { sendPasswordResetEmail } from "firebase/auth"
+import { doc, updateDoc } from "firebase/firestore";
+import { db } from "@/config/firebase-config";
+import { FirebaseError } from "firebase/app";
 
-export const firestoreUpdateDocument = async (email: string) => {
+
+export const firestoreUpdateDocument = async (collectionName: string, documentID: string, data: any) => {
     try {
-        await sendPasswordResetEmail(auth, email);
+        const documentRef = doc(db, collectionName, documentID);
+
+        await updateDoc(documentRef, data);
         return { data: true};
     } catch (error) {
         const firebaseError = error as FirebaseError;
