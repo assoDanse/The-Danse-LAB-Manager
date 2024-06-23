@@ -203,20 +203,20 @@ const CoursEleve: React.FC = () => {
   }
 
   return (
-    <div className="flex flex-col items-center w-full mt-4">
+    <div className="flex flex-col items-center w-full p-3">
       {message && (
         <div className="bg-green-100 text-green-800 p-4 rounded-lg mb-4">
           {message}
         </div>
       )}
 
-      <h1 className="text-2xl mb-4">Cours Disponibles</h1>
+      <h1 className="text-2xl m-4 font-bold">Cours Disponibles</h1>
       {availableCours.length > 0 ? (
-        <ul className="w-full max-w-3xl mx-auto">
+        <ul className="md:grid md:grid-cols-2 md:gap-4 w-full max-w-3xl mx-auto text-center">
           {availableCours.map((cours) => (
             <li
               key={cours.id}
-              className="bg-sand border-2 border-salmon p-4 mb-2 rounded-lg shadow-lg"
+              className="bg-c0 border border-c4 p-4 mb-2 rounded-lg shadow-lg"
             >
               <h2 className="text-xl font-bold">{cours.titre}</h2>
               <p>Type: {cours.type}</p>
@@ -288,8 +288,8 @@ const CoursEleve: React.FC = () => {
       )}
 
       {viewingCours && (
-        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center">
-          <div className="bg-white p-6 rounded-lg shadow-lg max-w-lg w-full">
+        <div className="fixed z-20 top-24 start-0 end-0 bottom-0 bg-gray-600 bg-opacity-50 flex justify-center items-center overflow-auto p-5">
+          <div className="bg-white p-6 rounded-lg shadow-lg max-w-lg w-full max-h-full overflow-y-auto">
             <h2 className="text-2xl font-bold mb-4">{viewingCours.titre}</h2>
             {viewingCours.photo && (
               <img

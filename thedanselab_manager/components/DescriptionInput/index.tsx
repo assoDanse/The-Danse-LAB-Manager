@@ -1,19 +1,40 @@
-import React from 'react';
+import React from "react";
 
 type DescriptionInputProps = {
   description: string;
   setDescription: (description: string) => void;
 };
 
-const DescriptionInput: React.FC<DescriptionInputProps> = ({ description, setDescription }) => {
+const DescriptionInput: React.FC<DescriptionInputProps> = ({
+  description,
+  setDescription,
+}) => {
+  const maxLength = 1000; // Définition de la limite maximale de caractères
+
+  const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const value = e.target.value;
+    if (value.length <= maxLength) {
+      setDescription(value);
+    }
+    // Vous pouvez ajouter ici une indication ou un message d'erreur si la limite est dépassée
+  };
+
+  const remainingCharacters = description.length;
+
   return (
-    <textarea
-      value={description}
-      onChange={(e) => setDescription(e.target.value)}
-      placeholder="Description"
-      className=" border-gray-300 rounded"
-      rows={4}
-    />
+    <div className="relative">
+      <textarea
+        value={description}
+        onChange={handleChange}
+        placeholder="Description"
+        className="border border-gray-300 rounded px-3 py-2 w-full"
+        rows={4}
+        maxLength={maxLength}
+      />
+      <div className="absolute bottom-2 right-2 text-sm text-gray-500">
+        {remainingCharacters} /1000
+      </div>
+    </div>
   );
 };
 

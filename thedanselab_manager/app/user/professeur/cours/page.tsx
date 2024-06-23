@@ -129,7 +129,7 @@ const CoursProfesseur: React.FC = () => {
       )}
 
       {viewingCours && (
-        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center overflow-auto">
+        <div className="fixed z-20 top-24 start-0 end-0 bottom-0 bg-gray-600 bg-opacity-50 flex justify-center items-center overflow-auto p-5">
           <div className="bg-white p-6 rounded-lg shadow-lg max-w-lg w-full max-h-full overflow-y-auto">
             <h2 className="text-2xl font-bold mb-4">{viewingCours.titre}</h2>
             {viewingCours.photo && (

@@ -1,7 +1,6 @@
-"use client"
+"use client";
 import React from "react";
 import CourseTable from "@/components/CourseTable";
-
 
 const Liste_Cours: React.FC = () => {
   return (

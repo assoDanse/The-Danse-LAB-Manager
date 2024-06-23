@@ -21,7 +21,7 @@ export function SidebarAdmin() {
   };
 
   return (
-    <div className="flex">
+    <div className="flex max-md:z-10">
       {/* Sidebar for larger screens */}
       <div className="max-md:hidden md:flex">
         <Sidebar aria-label="Default sidebar example">
@@ -53,7 +53,7 @@ export function SidebarAdmin() {
                   href="/user/admin/list_professeur"
                   icon={HiUserAdd}
                 >
-                  List des professeurs
+                  Liste des professeurs
                 </Sidebar.Item>
                 <Sidebar.Item
                   href="/user/admin/modifier_prof"
@@ -106,10 +106,20 @@ export function SidebarAdmin() {
               </Sidebar.Item>
 
               <Sidebar.Item
+                href="/user/admin/transaction"
+                icon={HiCurrencyDollar}
+              >
+                Transaction
+              </Sidebar.Item>
+
+              <Sidebar.Item
                 href="/user/admin/modifier_contact"
                 icon={HiCurrencyDollar}
               >
-                Modifier les contact
+                Modifier contact
+              </Sidebar.Item>
+              <Sidebar.Item href="/user/admin/creation_admin" icon={HiUserAdd}>
+                Création admin
               </Sidebar.Item>
             </Sidebar.ItemGroup>
           </Sidebar.Items>
@@ -198,11 +208,23 @@ export function SidebarAdmin() {
               >
                 {isExpanded && "Comptabilité"}
               </Sidebar.Item>
+
+              <Sidebar.Item
+                href="/user/admin/transaction"
+                icon={HiCurrencyDollar}
+              >
+                {isExpanded && "Transaction"}
+              </Sidebar.Item>
+
               <Sidebar.Item
                 href="/user/admin/modifier_contact"
                 icon={HiCurrencyDollar}
               >
-                {isExpanded && "Modifier les contact"}
+                {isExpanded && "Modifier contact"}
+              </Sidebar.Item>
+
+              <Sidebar.Item href="/user/admin/creation_admin" icon={HiUserAdd}>
+                {isExpanded && "Création admin"}
               </Sidebar.Item>
             </Sidebar.ItemGroup>
           </Sidebar.Items>

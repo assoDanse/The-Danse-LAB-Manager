@@ -1,4 +1,5 @@
 "use client";
+
 import React, { useEffect, useState } from "react";
 import { db, storage } from "@/config/firebase-config";
 import {
@@ -7,6 +8,7 @@ import {
   Timestamp,
   updateDoc,
   doc,
+  deleteDoc,
 } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
@@ -133,6 +135,17 @@ const PannelAdmin: React.FC = () => {
     }
   };
 
+  const handleDeleteClick = async (coursId: string) => {
+    try {
+      await deleteDoc(doc(db, "cours", coursId));
+      setCours(cours.filter((cours) => cours.id !== coursId));
+      setMessage("Cours supprimé avec succès");
+    } catch (error) {
+      setError("Erreur lors de la suppression du cours");
+      console.error(error);
+    }
+  };
+
   const formatDateToInputValue = (dateString: string) => {
     const date = new Date(dateString);
     if (isNaN(date.getTime())) {
@@ -185,9 +198,15 @@ const PannelAdmin: React.FC = () => {
               </button>
               <button
                 onClick={() => handleEditClick(cours)}
-                className="bg-yellow-500 text-white p-2 rounded mt-2"
+                className="bg-yellow-500 text-white p-2 rounded mt-2 mr-2"
               >
                 Modifier
+              </button>
+              <button
+                onClick={() => handleDeleteClick(cours.id)}
+                className="bg-red-500 text-white p-2 rounded mt-2"
+              >
+                Supprimer
               </button>
             </li>
           ))}
@@ -197,7 +216,7 @@ const PannelAdmin: React.FC = () => {
       )}
 
       {viewingCours && (
-        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center overflow-auto">
+        <div className="fixed z-20 top-24 start-0 end-0 bottom-0 bg-gray-600 bg-opacity-50 flex justify-center items-center overflow-auto p-5">
           <div className="bg-white p-6 rounded-lg shadow-lg max-w-lg w-full max-h-full overflow-y-auto">
             <h2 className="text-2xl font-bold mb-4">{viewingCours.titre}</h2>
             {viewingCours.photo && (
@@ -234,7 +253,7 @@ const PannelAdmin: React.FC = () => {
       )}
 
       {editingCours && (
-        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center overflow-auto">
+        <div className="fixed z-20 top-24 start-0 end-0 bottom-0 bg-gray-600 bg-opacity-50 flex justify-center items-center overflow-auto p-5">
           <div className="bg-white p-6 rounded-lg shadow-lg max-w-lg w-full max-h-full overflow-y-auto">
             <h2 className="text-2xl font-bold mb-4">Modifier le Cours</h2>
             <form onSubmit={handleEditSubmit} className="space-y-4">

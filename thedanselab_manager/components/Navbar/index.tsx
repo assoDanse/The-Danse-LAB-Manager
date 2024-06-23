@@ -105,7 +105,11 @@ function Navbar_() {
   };
 
   return (
-    <Navbar className="md:sticky top-0 p-4 w-full bg-c2 text-c3" fluid rounded>
+    <Navbar
+      className="sticky top-0 p-4 w-full bg-c2 text-c3 z-50"
+      fluid
+      rounded
+    >
       <Navbar.Brand href="https://thedancelab.fr/">
         <Image src={Logo} width={75} height={75} alt="Logo" />
         <span className="self-center whitespace-nowrap text-xl font-semibold dark:text-c3 ml-4">
@@ -183,7 +187,7 @@ function Navbar_() {
             </span>
           </div>
         )}
-        <Navbar.Link className="text-c3 ml-5" href={getHomeLink()}>
+        <Navbar.Link className="text-c3 md:ml-5" href={getHomeLink()}>
           Accueil
         </Navbar.Link>
         <Navbar.Link className="text-c3" href={getCoursesLink()}>

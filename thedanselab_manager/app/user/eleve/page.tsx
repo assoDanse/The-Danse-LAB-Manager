@@ -4,7 +4,15 @@ import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { auth, db } from "@/config/firebase-config"; // Assurez-vous que cette importation est correcte
 import { onAuthStateChanged } from "firebase/auth";
-import { query, where, collection, getDocs, doc, getDoc, Timestamp } from "firebase/firestore";
+import {
+  query,
+  where,
+  collection,
+  getDocs,
+  doc,
+  getDoc,
+  Timestamp,
+} from "firebase/firestore";
 
 interface Cours {
   id: string;
@@ -27,7 +35,10 @@ const PanelEleve: React.FC = () => {
 
   useEffect(() => {
     const fetchPlaceRestante = async (userId: string) => {
-      const carteQuery = query(collection(db, "cartes"), where("id_users", "==", userId));
+      const carteQuery = query(
+        collection(db, "cartes"),
+        where("id_users", "==", userId)
+      );
       const querySnapshot = await getDocs(carteQuery);
       if (!querySnapshot.empty) {
         const carteData = querySnapshot.docs[0].data();
@@ -43,7 +54,9 @@ const PanelEleve: React.FC = () => {
         where("id_users", "==", userId)
       );
       const participationSnapshot = await getDocs(participationQuery);
-      const myCoursIds = participationSnapshot.docs.map(doc => doc.data().id_cours);
+      const myCoursIds = participationSnapshot.docs.map(
+        (doc) => doc.data().id_cours
+      );
 
       const coursPromises = myCoursIds.map(async (coursId: string) => {
         const coursDoc = await getDoc(doc(db, "cours", coursId));
@@ -54,10 +67,12 @@ const PanelEleve: React.FC = () => {
             id: coursDoc.id,
             titre: coursData.titre,
             type: coursData.type,
-            date_heure_debut: (coursData.date_heure_debut as Timestamp).toDate().toLocaleString(),
+            date_heure_debut: (coursData.date_heure_debut as Timestamp)
+              .toDate()
+              .toLocaleString(),
             duree: {
               heures: coursData.duree.heures,
-              minutes: coursData.duree.minutes
+              minutes: coursData.duree.minutes,
             },
             nom_professeur: coursData.nom_professeur,
           } as Cours;
@@ -68,7 +83,7 @@ const PanelEleve: React.FC = () => {
       });
 
       const cours = await Promise.all(coursPromises);
-      setMyCours(cours.filter(c => c !== null) as Cours[]);
+      setMyCours(cours.filter((c) => c !== null) as Cours[]);
     };
 
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
@@ -92,25 +107,41 @@ const PanelEleve: React.FC = () => {
   }, [router]);
 
   if (loading) {
-    return <div className="flex justify-center items-center w-full h-screen">Chargement...</div>;
+    return (
+      <div className="flex justify-center items-center w-full h-screen">
+        Chargement...
+      </div>
+    );
   }
 
   if (error) {
-    return <div className="flex justify-center items-center w-full h-screen">{error}</div>;
+    return (
+      <div className="flex justify-center items-center w-full h-screen">
+        {error}
+      </div>
+    );
   }
 
   return (
-    <div className="flex flex-col items-center h-screen w-full p-4">
-      <p className="text-gray-600 mb-4">Crédits disponibles : {placeRestante !== null ? placeRestante : "Chargement..."}</p>
-      <h1 className="text-2xl mb-4">Mes Cours</h1>
+    <div className="flex flex-col items-center w-full p-3">
+      <p className="text-gray-600 mb-4">
+        Crédits disponibles :{" "}
+        {placeRestante !== null ? placeRestante : "Chargement..."}
+      </p>
+      <h1 className="text-2xl m-4 font-bold">Mes Cours</h1>
       {myCours.length > 0 ? (
-        <ul className="w-full max-w-3xl mx-auto">
+        <ul className="md:grid md:grid-cols-2 md:gap-4 w-full max-w-3xl mx-auto text-center">
           {myCours.map((cours) => (
-            <li key={cours.id} className="border p-4 mb-2 rounded-lg">
+            <li
+              key={cours.id}
+              className="bg-c0 border border-c4 p-4 mb-2 rounded-lg shadow-lg"
+            >
               <h2 className="text-xl font-bold">{cours.titre}</h2>
               <p>Type: {cours.type}</p>
               <p>Date: {cours.date_heure_debut}</p>
-              <p>Durée: {cours.duree.heures}h {cours.duree.minutes}m</p>
+              <p>
+                Durée: {cours.duree.heures}h {cours.duree.minutes}m
+              </p>
               <p>Professeur: {cours.nom_professeur}</p>
             </li>
           ))}
