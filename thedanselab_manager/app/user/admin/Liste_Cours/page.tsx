@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import CourseTable from "@/components/CourseTable";
+import CourseTable from "@/components/CoursesTable";
 
 const liste_cours: React.FC = () => {
   return (
