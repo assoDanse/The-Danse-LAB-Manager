@@ -14,16 +14,17 @@ function Navbar_() {
   const [userFirstName, setUserFirstName] = useState<string | null>(null);
   const [userStatus, setUserStatus] = useState<string | null>(null);
   const [photoURL, setPhotoURL] = useState<string | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
   const router = useRouter();
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      setLoading(true);
       if (user) {
         try {
           const userDoc = await getDoc(doc(db, "users", user.uid));
           if (userDoc.exists()) {
             const userData = userDoc.data();
-            console.log("User data retrieved:", userData);
             setUserName(userData.name);
             setUserFirstName(userData.firstName);
             setUserStatus(userData.status);
@@ -43,6 +44,7 @@ function Navbar_() {
         setUserStatus(null);
         setPhotoURL(null);
       }
+      setLoading(false);
     });
 
     return () => unsubscribe();
@@ -92,6 +94,7 @@ function Navbar_() {
       return "/user/visiteur/tarifs";
     }
   };
+
   const getContactLink = () => {
     if (userStatus === "admin") {
       return "/user/admin/contact";
@@ -105,11 +108,7 @@ function Navbar_() {
   };
 
   return (
-    <Navbar
-      className="sticky top-0 p-4 w-full bg-c2 text-c3 z-50"
-      fluid
-      rounded
-    >
+    <Navbar className="sticky top-0 p-4 w-full bg-c2 text-c3 z-50" fluid rounded>
       <Navbar.Brand href="https://thedancelab.fr/">
         <Image src={Logo} width={75} height={75} alt="Logo" />
         <span className="self-center whitespace-nowrap text-xl font-semibold dark:text-c3 ml-4">
@@ -120,7 +119,9 @@ function Navbar_() {
         <Navbar.Toggle />
       </div>
       <div className="hidden md:flex md:order-3 items-center ml-auto">
-        {userName && userFirstName && (
+        {loading ? (
+          <span className="text-gray-400">Chargement...</span>
+        ) : userName && userFirstName ? (
           <>
             {userStatus === "professeur" && photoURL && (
               <Image
@@ -154,24 +155,23 @@ function Navbar_() {
             >
               <Button className="bg-c5">Profil</Button>
             </Popover>
+            <Button
+              className="ml-4 bg-c6 hover:bg-red-700 text-white"
+              onClick={handleLogout}
+            >
+              Se déconnecter
+            </Button>
           </>
-        )}
-        {userName && userFirstName && (
-          <Button
-            className="ml-4 bg-c6 hover:bg-red-700 text-white"
-            onClick={handleLogout}
-          >
-            Se déconnecter
-          </Button>
-        )}
-        {!userName && !userFirstName && (
+        ) : (
           <Button className="ml-4 bg-c5" href="/auth/login">
             Se connecter
           </Button>
         )}
       </div>
       <Navbar.Collapse className="md:flex md:justify-center md:order-2 w-full text-center">
-        {userName && userFirstName && (
+        {loading ? (
+          <span className="text-gray-400">Chargement...</span>
+        ) : userName && userFirstName ? (
           <div className="flex flex-col items-center justify-center md:hidden mb-4">
             {userStatus === "professeur" && photoURL && (
               <Image
@@ -186,7 +186,7 @@ function Navbar_() {
               {userFirstName} {userName}
             </span>
           </div>
-        )}
+        ) : null}
         <Navbar.Link className="text-c3 md:ml-5" href={getHomeLink()}>
           Accueil
         </Navbar.Link>
@@ -199,12 +199,12 @@ function Navbar_() {
         <Navbar.Link className="text-white-egg" href={getContactLink()}>
           Contact
         </Navbar.Link>
-        {!userName && !userFirstName && (
+        {!loading && !userName && !userFirstName && (
           <Button className="md:hidden mt-4 bg-c5" href="/auth/login">
             Se connecter
           </Button>
         )}
-        {userName && userFirstName && (
+        {!loading && userName && userFirstName && (
           <Button
             className="mt-4 bg-c6 hover:bg-red-700 text-white md:hidden"
             onClick={handleLogout}
