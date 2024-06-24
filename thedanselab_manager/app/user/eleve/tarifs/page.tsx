@@ -4,7 +4,6 @@ import React, { useEffect, useState } from "react";
 import { collection, getDocs, addDoc, doc, setDoc } from "firebase/firestore";
 import { db, auth } from "@/config/firebase-config";
 import { useRouter } from "next/navigation";
-import axios from 'axios';
 
 interface Tarif {
   id: string;
@@ -13,6 +12,7 @@ interface Tarif {
   image: string;
   prix: number;
   credit: number;
+  lienPaiement: string; // Ajoutez ce champ pour le lien de paiement
 }
 
 const TarifsEleve: React.FC = () => {
@@ -57,60 +57,25 @@ const TarifsEleve: React.FC = () => {
           return;
         }
 
-        // URL de base du formulaire de paiement HelloAsso
-        const helloAssoUrl = `https://www.helloasso-sandbox.com/associations/the-dance-lab/adhesions/tarif`;
+        // Rediriger vers le lien de paiement spécifique du tarif
+        window.location.href = tarif.lienPaiement;
 
-        // Construire l'URL avec les paramètres
-        const paymentUrl = `${helloAssoUrl}?amount=${tarif.prix}&description=${encodeURIComponent(tarif.titre)}`;
+        // Ajoutez immédiatement une carte après avoir redirigé l'utilisateur
+        await addDoc(collection(db, "cartes"), {
+          titre: tarif.titre,
+          prix: tarif.prix,
+          id_users: user.uid,
+          places_restantes: tarif.credit,
+          type_carte: tarif.credit, // ou tout autre type que vous souhaitez enregistrer
+        });
 
-        // Rediriger vers HelloAsso
-        window.location.href = paymentUrl;
-
-        // Simuler la réception d'une réponse de paiement
-        // Vous devrez implémenter une réelle réception de réponse si HelloAsso offre cette fonctionnalité.
-        // Par exemple, utiliser une webhooks pour recevoir la confirmation de paiement
-        setTimeout(async () => {
-          try {
-            // Enregistrer le document de paiement
-            await setDoc(doc(db, "paiements", "id_transaction_unique"), {
-              type: 'HelloAsso',
-              montant: tarif.prix,
-              date_paiement: new Date(),
-              id_carte: null, // À remplir si nécessaire
-              id_transaction: "id_transaction_unique",
-              id_users: user.uid,
-            });
-
-            // Créer une nouvelle carte
-            await addDoc(collection(db, "cartes"), {
-              titre: tarif.titre,
-              prix: tarif.prix,
-              id_users: user.uid,
-              places_restantes: tarif.credit,
-              type_carte: tarif.credit, // ou tout autre type que vous souhaitez enregistrer
-            });
-
-            setMessage("Paiement réussi et carte créée avec succès");
-            setTimeout(() => {
-              setMessage(null);
-            }, 3000);
-          } catch (err) {
-            console.error(
-              "Erreur lors du paiement et de la création de la carte",
-              err
-            );
-            setError("Erreur lors du paiement et de la création de la carte");
-            setTimeout(() => {
-              setError(null);
-            }, 3000);
-          }
-        }, 5000); // Attendre 5 secondes pour simuler la réception de la confirmation de paiement
+        setMessage("Carte créée avec succès après le paiement");
+        setTimeout(() => {
+          setMessage(null);
+        }, 3000);
       } catch (err) {
-        console.error(
-          "Erreur lors de la redirection vers HelloAsso",
-          err
-        );
-        setError("Erreur lors de la redirection vers HelloAsso");
+        console.error("Erreur lors de la création de la carte", err);
+        setError("Erreur lors de la création de la carte");
         setTimeout(() => {
           setError(null);
         }, 3000);
