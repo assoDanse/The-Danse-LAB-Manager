@@ -1,7 +1,6 @@
-// components/ProfessorTable.tsx
 "use client";
 import React, { useEffect, useState } from "react";
-import { collection, query, where, getDocs } from "firebase/firestore";
+import { collection, query, where, getDocs, deleteDoc, doc } from "firebase/firestore";
 import { db } from "@/config/firebase-config";
 import TableSkeleton from "../TableSkeleton";
 
@@ -43,6 +42,19 @@ const ProfessorTable: React.FC = () => {
     fetchProfessors();
   }, []);
 
+  const handleDelete = async (id: string) => {
+    const confirmed = window.confirm("Êtes-vous sûr de vouloir supprimer ce professeur ?");
+    if (confirmed) {
+      try {
+        await deleteDoc(doc(db, "users", id));
+        setProfessors(professors.filter((professor) => professor.id !== id));
+      } catch (err) {
+        console.error("Erreur lors de la suppression du professeur", err);
+        setError("Erreur lors de la suppression du professeur");
+      }
+    }
+  };
+
   if (loading) {
     return <TableSkeleton />;
   }
@@ -52,24 +64,35 @@ const ProfessorTable: React.FC = () => {
   }
 
   return (
-    <table className="min-w-full bg-white border border-gray-200">
-      <thead>
-        <tr>
-          <th className="py-2 px-4 border-b text-center">Nom</th>
-          <th className="py-2 px-4 border-b text-center">Prénom</th>
-          <th className="py-2 px-4 border-b text-center">Email</th>
-        </tr>
-      </thead>
-      <tbody>
-        {professors.map((professor) => (
-          <tr key={professor.id}>
-            <td className="py-2 px-4 border-b text-center">{professor.name}</td>
-            <td className="py-2 px-4 border-b text-center">{professor.firstName}</td>
-            <td className="py-2 px-4 border-b text-center">{professor.email}</td>
+    <div className="max-h-screen overflow-y-auto">
+      <table className="min-w-full bg-white border border-gray-200">
+        <thead>
+          <tr>
+            <th className="py-2 px-4 border-b text-center">Nom</th>
+            <th className="py-2 px-4 border-b text-center">Prénom</th>
+            <th className="py-2 px-4 border-b text-center">Email</th>
+            <th className="py-2 px-4 border-b text-center">Actions</th>
           </tr>
-        ))}
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          {professors.map((professor) => (
+            <tr key={professor.id}>
+              <td className="py-2 px-4 border-b text-center">{professor.name}</td>
+              <td className="py-2 px-4 border-b text-center">{professor.firstName}</td>
+              <td className="py-2 px-4 border-b text-center">{professor.email}</td>
+              <td className="py-2 px-4 border-b text-center">
+                <button
+                  onClick={() => handleDelete(professor.id)}
+                  className="bg-red-500 text-white p-2 rounded"
+                >
+                  Supprimer
+                </button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
   );
 };
 
