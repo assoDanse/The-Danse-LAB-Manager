@@ -72,13 +72,19 @@ const CoursEleve: React.FC = () => {
             ...doc.data(),
             date_heure_debut: (doc.data().date_heure_debut as Timestamp)
               .toDate()
-              .toLocaleString(),
+              .toISOString(),
           })) as Cours[];
 
-          const myCoursList = allCours.filter((cours) =>
+          const currentDateTime = new Date().toISOString();
+
+          const sortedCours = allCours
+            .filter((cours) => cours.date_heure_debut > currentDateTime)
+            .sort((a, b) => new Date(a.date_heure_debut).getTime() - new Date(b.date_heure_debut).getTime());
+
+          const myCoursList = sortedCours.filter((cours) =>
             myCoursIds.includes(cours.id)
           );
-          const availableCoursList = allCours.filter(
+          const availableCoursList = sortedCours.filter(
             (cours) => !myCoursIds.includes(cours.id)
           );
 
@@ -214,7 +220,7 @@ const CoursEleve: React.FC = () => {
             >
               <h2 className="text-xl font-bold">{cours.titre}</h2>
               <p>Type: {cours.type}</p>
-              <p>Date: {cours.date_heure_debut}</p>
+              <p>Date: {new Date(cours.date_heure_debut).toLocaleString()}</p>
               <p>
                 Durée: {cours.duree.heures}h {cours.duree.minutes}m
               </p>
@@ -297,7 +303,7 @@ const CoursEleve: React.FC = () => {
               <strong>Type:</strong> {viewingCours.type}
             </p>
             <p>
-              <strong>Date:</strong> {viewingCours.date_heure_debut}
+              <strong>Date:</strong> {new Date(viewingCours.date_heure_debut).toLocaleString()}
             </p>
             <p>
               <strong>Durée:</strong> {viewingCours.duree.heures}h{" "}
@@ -320,46 +326,5 @@ const CoursEleve: React.FC = () => {
     </div>
   );
 };
-
-// { <div className="flex flex-wrap justify-center items-center w-full">
-//       {courses.length === 0 ? (
-//         <p className="text-center text-gray-600 font-semibold">Aucun cours disponible pour le moment.</p>
-//       ) : (
-//         courses.map((course, index) => (
-//           <div key={index} onClick={() => handleCourseClick(course)} className="w-full md:w-1/2 lg:w-1/3 xl:w-1/4 p-2">
-//             <CardcoursVisiteur
-//               titre={course.titre}
-//               description={course.description}
-//               image={course.image}
-//               prix={course.prix}
-//               date={new Date(course.date)}
-//               heure={course.heure}
-//               duree={course.duree}
-//             />
-//           </div>
-//         ))
-//       )}
-
-//       {showPopup && (
-//         <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex justify-center items-center">
-//           <div className="bg-white p-8 rounded-lg">
-//             <h2 className="text-2xl font-semibold mb-4">{selectedCourse.titre}</h2>
-//             <p>{/* Contenu du popup avec les détails du cours }</p>
-//             <div className="mt-4 flex justify-between">
-//               <button onClick={handleClosePopup} className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center">
-//                 Annuler
-//               </button>
-//               <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded inline-flex items-center">
-//                 Utiliser les crédits
-//               </button>
-//               <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded inline-flex items-center">
-//                 Payer avec Halloasso
-//               </button>
-//             </div>
-//           </div>
-//         </div>
-//       )}
-//     </div>
-//   ); }
 
 export default CoursEleve;

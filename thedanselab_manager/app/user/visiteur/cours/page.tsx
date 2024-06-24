@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { collection, getDocs } from "firebase/firestore";
+import { collection, getDocs, Timestamp } from "firebase/firestore";
 import { getDownloadURL, ref } from "firebase/storage";
 import { db, storage } from "@/config/firebase-config";
 
@@ -50,12 +50,23 @@ const CoursEleve: React.FC = () => {
               ...data,
               date_heure_debut: (data.date_heure_debut as Timestamp)
                 .toDate()
-                .toLocaleString(),
+                .toISOString(),
               photo: photoURL,
             } as Cours;
           })
         );
-        setAvailableCours(allCours);
+
+        const currentDateTime = new Date().toISOString();
+
+        const sortedCours = allCours
+          .filter((cours) => cours.date_heure_debut > currentDateTime)
+          .sort(
+            (a, b) =>
+              new Date(a.date_heure_debut).getTime() -
+              new Date(b.date_heure_debut).getTime()
+          );
+
+        setAvailableCours(sortedCours);
       } catch (err) {
         setError("Erreur lors de la récupération des cours : " + err.message);
         console.error(err);
@@ -97,7 +108,7 @@ const CoursEleve: React.FC = () => {
             >
               <h2 className="text-xl font-bold">{cours.titre}</h2>
               <p>Type: {cours.type}</p>
-              <p>Date: {cours.date_heure_debut}</p>
+              <p>Date: {new Date(cours.date_heure_debut).toLocaleString()}</p>
               <p>
                 Durée: {cours.duree.heures}h {cours.duree.minutes}m
               </p>
@@ -142,7 +153,8 @@ const CoursEleve: React.FC = () => {
               <strong>Type:</strong> {viewingCours.type}
             </p>
             <p>
-              <strong>Date:</strong> {viewingCours.date_heure_debut}
+              <strong>Date:</strong>{" "}
+              {new Date(viewingCours.date_heure_debut).toLocaleString()}
             </p>
             <p>
               <strong>Durée:</strong> {viewingCours.duree.heures}h{" "}
