@@ -4,30 +4,25 @@ import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Label, Select } from "flowbite-react";
 import NameInput from "@/components/NameInput";
-import EmailInput from "@/components/EmailInput";
-import PasswordInput from "@/components/PasswordInput";
 import ValidationButton from "@/components/ValidationButton";
 import FirstNameInput from "@/components/FirstNameInput";
-import DialogueBoxInput from "@/components/DialogueBoxinput";
+import DialogueBoxInput from "@/components/DialogueBoxInput";
 import { auth, db, storage } from "@/config/firebase-config";
 import {
   doc,
-  getDoc,
+  getDocs,
   updateDoc,
   deleteDoc,
   collection,
-  getDocs,
 } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import { updateEmail, updatePassword, deleteUser } from "firebase/auth";
+import { deleteUser } from "firebase/auth";
 
-const modifier_prof: React.FC = () => {
+const ModifierProf: React.FC = () => {
   const [professors, setProfessors] = useState<any[]>([]);
   const [selectedProfessorId, setSelectedProfessorId] = useState("");
   const [name, setName] = useState("");
   const [firstName, setFirstName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const [photo, setPhoto] = useState<File | null>(null);
   const [bio, setBio] = useState("");
   const [error, setError] = useState("");
@@ -43,7 +38,7 @@ const modifier_prof: React.FC = () => {
             id: doc.id,
             ...doc.data(),
           }))
-          .filter((prof) => prof.status === "professor");
+          .filter((prof) => prof.status === "professeur");
         setProfessors(professorList);
       } catch (error) {
         console.error("Erreur lors de la récupération des professeurs:", error);
@@ -60,7 +55,6 @@ const modifier_prof: React.FC = () => {
     if (selectedProfessor) {
       setName(selectedProfessor.name);
       setFirstName(selectedProfessor.firstName);
-      setEmail(selectedProfessor.email);
       setBio(selectedProfessor.bio);
     }
   }, [selectedProfessorId, professors]);
@@ -68,7 +62,7 @@ const modifier_prof: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (!name || !firstName || !email) {
+    if (!name || !firstName) {
       setError("Veuillez remplir tous les champs.");
       return;
     }
@@ -80,7 +74,6 @@ const modifier_prof: React.FC = () => {
       const updates: any = {
         name: name,
         firstName: firstName,
-        email: email,
         bio: bio,
       };
 
@@ -97,18 +90,7 @@ const modifier_prof: React.FC = () => {
       const docRef = doc(db, "users", selectedProfessorId);
       await updateDoc(docRef, updates);
 
-      const user = auth.currentUser;
-
-      if (user) {
-        if (email !== user.email) {
-          await updateEmail(user, email);
-        }
-        if (password) {
-          await updatePassword(user, password);
-        }
-      }
-
-      setMessage(`Informations mises à jour pour ${email}`);
+      setMessage(`Informations mises à jour pour ${firstName} ${name}`);
     } catch (error: any) {
       setError(
         `Erreur lors de la mise à jour des informations: ${error.message}`
@@ -132,6 +114,14 @@ const modifier_prof: React.FC = () => {
     setMessage("");
 
     try {
+      const selectedProfessor = professors.find(
+        (prof) => prof.id === selectedProfessorId
+      );
+      if (!selectedProfessor || selectedProfessor.status !== "professeur") {
+        setError("L'utilisateur sélectionné n'est pas un professeur.");
+        return;
+      }
+
       // Supprimer l'utilisateur de Firestore
       const docRef = doc(db, "users", selectedProfessorId);
       await deleteDoc(docRef);
@@ -149,8 +139,6 @@ const modifier_prof: React.FC = () => {
       setSelectedProfessorId("");
       setName("");
       setFirstName("");
-      setEmail("");
-      setPassword("");
       setPhoto(null);
       setBio("");
 
@@ -185,10 +173,7 @@ const modifier_prof: React.FC = () => {
             </Select>
           </div>
           <NameInput name={name} setName={setName} />
-          <FirstNameInput FirstName={firstName} setFirstName={setFirstName} />
-          <EmailInput email={email} setEmail={setEmail} />
-          <PasswordInput password={password} setPassword={setPassword} />{" "}
-          {/* Facultatif */}
+          <FirstNameInput firstName={firstName} setFirstName={setFirstName} />
           <Label
             htmlFor="file-upload-helper-text"
             value="Photo"
@@ -217,4 +202,4 @@ const modifier_prof: React.FC = () => {
   );
 };
 
-export default modifier_prof;
+export default ModifierProf;
