@@ -12,6 +12,8 @@ interface CreationTarifProps {
   setPrix: (prix: number) => void;
   credit: number;
   setCredit: (credit: number) => void;
+  lienPaiement: string;
+  setLienPaiement: (lienPaiement: string) => void;
   handleSubmit: () => void;
 }
 
@@ -26,6 +28,8 @@ const CreationTarif: React.FC<CreationTarifProps> = ({
   setPrix,
   credit,
   setCredit,
+  lienPaiement,
+  setLienPaiement,
   handleSubmit,
 }) => {
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -37,8 +41,9 @@ const CreationTarif: React.FC<CreationTarifProps> = ({
   return (
     <div className="max-w-sm w-full p-8 bg-white rounded-lg shadow-md ">
       <h1 className="text-center text-2xl mb-6">Créer un tarif</h1>
-      <form className="flex flex-col gap-5">
-        <div className="">
+      <form className="flex flex-col gap-5" onSubmit={(e) => { e.preventDefault(); handleSubmit(); }}>
+        <div>
+          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="titre">Titre</label>
           <input
             id="titre"
             type="text"
@@ -48,7 +53,8 @@ const CreationTarif: React.FC<CreationTarifProps> = ({
             className="w-full px-3 py-2 border rounded"
           />
         </div>
-        <div className="">
+        <div>
+          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="description">Description</label>
           <textarea
             id="description"
             value={description}
@@ -57,7 +63,8 @@ const CreationTarif: React.FC<CreationTarifProps> = ({
             placeholder="Description"
           />
         </div>
-        <div className="">
+        <div>
+          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="image">Image</label>
           <input
             id="image"
             type="file"
@@ -66,7 +73,8 @@ const CreationTarif: React.FC<CreationTarifProps> = ({
             placeholder="Image"
           />
         </div>
-        <div className="">
+        <div>
+          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="prix">Prix</label>
           <input
             id="prix"
             type="number"
@@ -76,14 +84,26 @@ const CreationTarif: React.FC<CreationTarifProps> = ({
             placeholder="Prix"
           />
         </div>
-        <div className="">
+        <div>
+          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="credit">Crédit</label>
           <input
             id="credit"
             type="number"
             value={credit}
             onChange={(e) => setCredit(Number(e.target.value))}
             className="w-full px-3 py-2 border rounded"
-            placeholder="Credit"
+            placeholder="Crédit"
+          />
+        </div>
+        <div>
+          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="lienPaiement">Lien de Paiement</label>
+          <input
+            id="lienPaiement"
+            type="text"
+            value={lienPaiement}
+            onChange={(e) => setLienPaiement(e.target.value)}
+            className="w-full px-3 py-2 border rounded"
+            placeholder="Lien de Paiement"
           />
         </div>
         <ValidationButton text="Créer un Tarif" />

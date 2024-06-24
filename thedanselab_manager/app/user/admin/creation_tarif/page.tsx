@@ -3,10 +3,8 @@
 import React, { useState } from "react";
 import { addDoc, collection } from "firebase/firestore";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import { db } from "@/config/firebase-config";
+import { db, auth } from "@/config/firebase-config";
 import CreationTarif from "@/components/CreationTarif";
-import SidebarAdmin from "@/components/SidebarAdmin";
-import { auth } from "@/config/firebase-config";
 
 const storage = getStorage();
 
@@ -14,8 +12,9 @@ const CreateTarifPage: React.FC = () => {
   const [titre, setTitre] = useState("");
   const [description, setDescription] = useState("");
   const [image, setImage] = useState<File | null>(null);
-  const [prix, setPrix] = useState<number>();
-  const [credit, setCredit] = useState<number>();
+  const [prix, setPrix] = useState<number>(0);
+  const [credit, setCredit] = useState<number>(0);
+  const [lienPaiement, setLienPaiement] = useState<string>("");
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
@@ -40,6 +39,7 @@ const CreateTarifPage: React.FC = () => {
         image: imageUrl,
         prix,
         credit,
+        lienPaiement,
       });
 
       setMessage("Tarif créé avec succès");
@@ -48,6 +48,7 @@ const CreateTarifPage: React.FC = () => {
       setImage(null);
       setPrix(0);
       setCredit(0);
+      setLienPaiement("");
     } catch (err) {
       setError("Erreur lors de la création du tarif");
       console.error(err);
@@ -77,6 +78,8 @@ const CreateTarifPage: React.FC = () => {
         setPrix={setPrix}
         credit={credit}
         setCredit={setCredit}
+        lienPaiement={lienPaiement}
+        setLienPaiement={setLienPaiement}
         handleSubmit={handleSubmit}
       />
     </div>
