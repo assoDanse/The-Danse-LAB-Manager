@@ -116,7 +116,7 @@ const CreateEleve: React.FC = () => {
         <h1 className="text-center text-2xl mb-6">Créer un compte élève</h1>
         <form onSubmit={handleSubmit} className="flex flex-col gap-5">
           <NameInput name={name} setName={setName} />
-          <FirstNameInput FirstName={firstName} setFirstName={setFirstName} />
+          <FirstNameInput firstName={firstName} setFirstName={setFirstName} />
           <EmailInput email={email} setEmail={setEmail} />
           <PasswordInput password={password} setPassword={setPassword} />
           {error && <p className="text-red-500">{error}</p>}

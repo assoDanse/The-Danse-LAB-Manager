@@ -86,7 +86,7 @@ const Creation_Admin: React.FC = () => {
         name: name,
         firstName: firstName,
         email: email,
-        status: "admin", // Définir le statut par défaut à "eleve"
+        status: "admin", // Définir le statut par défaut à "admin"
       });
 
       setMessage(`Utilisateur créé : ${user.email}`);
@@ -94,6 +94,11 @@ const Creation_Admin: React.FC = () => {
       setFirstName("");
       setEmail("");
       setPassword("");
+
+      // Reconnecter l'administrateur
+      if (admin && adminEmail && adminPassword) {
+        await signInWithEmailAndPassword(auth, adminEmail, adminPassword);
+      }
     } catch (error: any) {
       if (error.code === "auth/email-already-in-use") {
         setError("Cet utilisateur existe déjà");
@@ -111,7 +116,7 @@ const Creation_Admin: React.FC = () => {
         <h1 className="text-center text-2xl mb-6">Créer un compte admin</h1>
         <form onSubmit={handleSubmit} className="flex flex-col gap-5">
           <NameInput name={name} setName={setName} />
-          <FirstNameInput FirstName={firstName} setFirstName={setFirstName} />
+          <FirstNameInput firstName={firstName} setFirstName={setFirstName} />
           <EmailInput email={email} setEmail={setEmail} />
           <PasswordInput password={password} setPassword={setPassword} />
           {error && <p className="text-red-500">{error}</p>}
