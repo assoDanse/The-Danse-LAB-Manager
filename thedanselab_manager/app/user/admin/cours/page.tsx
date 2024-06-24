@@ -1,4 +1,4 @@
-"use client";
+"use client"
 
 import React, { useEffect, useState } from "react";
 import { db, storage } from "@/config/firebase-config";
@@ -11,6 +11,7 @@ import {
   deleteDoc,
 } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import BoutonSupression from "@/components/BoutonSupression"; 
 
 interface Cours {
   id: string;
@@ -177,7 +178,7 @@ const PannelAdmin: React.FC = () => {
       )}
       <h1 className="text-2xl m-4 font-bold">Tous les Cours</h1>
       {cours.length > 0 ? (
-        <ul className="md:grid md:grid-cols-2 md:gap-4 w-full max-w-3xl mx-auto text-center">
+        <ul className="md:grid md:grid-cols-2 md:gap-4 w-full max-w-3xl mx-auto text-center ">
           {cours.map((cours) => (
             <li
               key={cours.id}
@@ -202,12 +203,10 @@ const PannelAdmin: React.FC = () => {
               >
                 Modifier
               </button>
-              <button
-                onClick={() => handleDeleteClick(cours.id)}
-                className="bg-red-500 text-white p-2 rounded mt-2"
-              >
-                Supprimer
-              </button>
+              <BoutonSupression
+                onDelete={() => handleDeleteClick(cours.id)}
+
+              />
             </li>
           ))}
         </ul>
@@ -415,3 +414,4 @@ const PannelAdmin: React.FC = () => {
 };
 
 export default PannelAdmin;
+
