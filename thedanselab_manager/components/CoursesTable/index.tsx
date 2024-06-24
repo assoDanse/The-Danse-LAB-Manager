@@ -1,9 +1,9 @@
-// components/CoursesTable.tsx
 "use client";
 import React, { useEffect, useState } from "react";
-import { collection, query, getDocs } from "firebase/firestore";
+import { collection, query, getDocs, deleteDoc, doc } from "firebase/firestore";
 import { db } from "@/config/firebase-config";
 import TableSkeleton from "../TableSkeleton";
+import BoutonSuppression from "../BoutonSupression";
 
 interface Cours {
   id: string;
@@ -33,8 +33,8 @@ const CoursesTable: React.FC = () => {
       setError(null);
 
       try {
-        const q =query(collection(db, "cours"));
-        const querySnapshot =  await getDocs(q);
+        const q = query(collection(db, "cours"));
+        const querySnapshot = await getDocs(q);
         const coursesList: Cours[] = querySnapshot.docs.map((doc) => ({
           id: doc.id,
           date_heure_debut: doc.data().date_heure_debut.toDate(),  // Convertir le timestamp en Date
@@ -60,6 +60,17 @@ const CoursesTable: React.FC = () => {
     fetchCourses();
   }, []);
 
+  const handleDeleteCourse = async (courseId: string) => {
+    try {
+      await deleteDoc(doc(db, "cours", courseId));
+      setCourses(courses.filter(course => course.id !== courseId));
+      // Vous pouvez ajouter un message de succès si nécessaire
+    } catch (error) {
+      setError("Erreur lors de la suppression du cours");
+      console.error(error);
+    }
+  };
+
   if (loading) {
     return <TableSkeleton />;
   }
@@ -78,6 +89,7 @@ const CoursesTable: React.FC = () => {
           <th className="py-2 px-4 border-b text-center">Durée</th>
           <th className="py-2 px-4 border-b text-center">Professeur</th>
           <th className="py-2 px-4 border-b text-center">Places Restantes</th>
+          <th className="py-2 px-4 border-b text-center">Actions</th> {/* Nouvelle colonne pour les actions */}
         </tr>
       </thead>
       <tbody>
@@ -91,6 +103,9 @@ const CoursesTable: React.FC = () => {
             </td>
             <td className="py-2 px-4 border-b text-center">{course.nom_professeur}</td>
             <td className="py-2 px-4 border-b text-center">{course.places_restantes}</td>
+            <td className="py-2 px-4 border-b text-center">
+              <BoutonSuppression onDelete={() => handleDeleteCourse(course.id)} />
+            </td>
           </tr>
         ))}
       </tbody>
