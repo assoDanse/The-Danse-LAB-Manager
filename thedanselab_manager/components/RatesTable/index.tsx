@@ -1,9 +1,9 @@
-// components/RatesTable.tsx
-"use client";
+"use client"
 import React, { useEffect, useState } from "react";
-import { collection, query, getDocs } from "firebase/firestore";
+import { collection, query, getDocs, deleteDoc, doc } from "firebase/firestore";
 import { db } from "@/config/firebase-config";
 import TableSkeleton from "../TableSkeleton";
+import BoutonSuppression from "../BoutonSupression";
 
 interface Rates {
   id: string;
@@ -26,7 +26,7 @@ const RatesTable: React.FC = () => {
       setError(null);
 
       try {
-        const q=query(collection(db, "tarifs"));
+        const q = query(collection(db, "tarifs"));
         const querySnapshot = await getDocs(q);
         const ratesList: Rates[] = querySnapshot.docs.map((doc) => ({
           id: doc.id,
@@ -49,6 +49,17 @@ const RatesTable: React.FC = () => {
     fetchRates();
   }, []);
 
+  const handleDeleteRate = async (rateId: string) => {
+    try {
+      await deleteDoc(doc(db, "tarifs", rateId));
+      setRates(rates.filter(rate => rate.id !== rateId));
+      // Vous pouvez ajouter un message de succès si nécessaire
+    } catch (error) {
+      setError("Erreur lors de la suppression du tarif");
+      console.error(error);
+    }
+  };
+
   if (loading) {
     return <TableSkeleton />;
   }
@@ -65,6 +76,7 @@ const RatesTable: React.FC = () => {
           <th className="py-2 px-4 border-b text-center">Description</th>
           <th className="py-2 px-4 border-b text-center">Prix</th>
           <th className="py-2 px-4 border-b text-center">Lien de Paiement</th>
+          <th className="py-2 px-4 border-b text-center">Actions</th> {/* Nouvelle colonne pour les actions */}
         </tr>
       </thead>
       <tbody>
@@ -77,6 +89,9 @@ const RatesTable: React.FC = () => {
               <a href={rate.lienPaiement} target="_blank" rel="noopener noreferrer">
                 Payer
               </a>
+            </td>
+            <td className="py-2 px-4 border-b text-center">
+              <BoutonSuppression onDelete={() => handleDeleteRate(rate.id)} />
             </td>
           </tr>
         ))}
