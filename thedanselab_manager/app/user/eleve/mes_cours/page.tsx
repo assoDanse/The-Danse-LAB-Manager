@@ -1,4 +1,4 @@
-"use client";
+"use client"
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { auth, db } from "@/config/firebase-config";
@@ -12,6 +12,7 @@ import {
   doc,
   deleteDoc,
 } from "firebase/firestore";
+import BoutonSuppression from "@/components/BoutonSupression";
 
 interface Cours {
   id: string;
@@ -146,18 +147,17 @@ const MesCours: React.FC = () => {
                 Durée: {cours.duree.heures}h {cours.duree.minutes}m
               </p>
               <p>Professeur: {cours.nom_professeur}</p>
-              <button
-                onClick={() => handleViewClick(cours)}
-                className="bg-blue-500 text-white p-2 rounded mt-2 mr-2"
-              >
-                Visualiser
-              </button>
-              <button
-                onClick={() => handleDesinscrireClick(cours.id)}
-                className="bg-red-500 text-white p-2 rounded mt-2"
-              >
-                Se désinscrire
-              </button>
+              <div className="flex justify-center mt-4">
+                <button
+                  onClick={() => handleViewClick(cours)}
+                  className="bg-blue-500 text-white p-2 rounded mr-2"
+                >
+                  Visualiser
+                </button>
+                <BoutonSuppression onDelete={() => handleDesinscrireClick(cours.id)}>
+                  Se désinscrire
+                </BoutonSuppression>
+              </div>
             </li>
           ))}
         </ul>

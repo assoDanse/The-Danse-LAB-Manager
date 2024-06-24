@@ -1,5 +1,4 @@
 "use client"
-
 import React, { useEffect, useState } from "react";
 import { db, storage } from "@/config/firebase-config";
 import {
@@ -11,7 +10,7 @@ import {
   deleteDoc,
 } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import BoutonSupression from "@/components/BoutonSupression"; 
+import BoutonSuppression from "@/components/BoutonSupression";
 
 interface Cours {
   id: string;
@@ -182,7 +181,7 @@ const PannelAdmin: React.FC = () => {
           {cours.map((cours) => (
             <li
               key={cours.id}
-              className="bg-c0 border border-c4 p-4 mb-2 rounded-lg shadow-lg"
+              className="bg-c0 border border-c4 p-4 mb-2 rounded-lg shadow-lg relative"
             >
               <h2 className="text-xl font-bold">{cours.titre}</h2>
               <p>Type: {cours.type}</p>
@@ -191,22 +190,23 @@ const PannelAdmin: React.FC = () => {
                 Durée: {cours.duree.heures}h {cours.duree.minutes}m
               </p>
               <p>Professeur: {cours.nom_professeur}</p>
-              <button
-                onClick={() => handleViewClick(cours)}
-                className="bg-c8 text-white p-2 rounded mt-2 mr-2"
-              >
-                Visualiser
-              </button>
-              <button
-                onClick={() => handleEditClick(cours)}
-                className="bg-yellow-500 text-white p-2 rounded mt-2 mr-2"
-              >
-                Modifier
-              </button>
-              <BoutonSupression
-                onDelete={() => handleDeleteClick(cours.id)}
-
-              />
+              <div className="flex justify-end mt-4 space-x-2">
+                <button
+                  onClick={() => handleViewClick(cours)}
+                  className="bg-c8 text-white p-2 rounded"
+                >
+                  Visualiser
+                </button>
+                <button
+                  onClick={() => handleEditClick(cours)}
+                  className="bg-yellow-500 text-white p-2 rounded"
+                >
+                  Modifier
+                </button>
+                <BoutonSuppression
+                  onDelete={() => handleDeleteClick(cours.id)}
+                />
+              </div>
             </li>
           ))}
         </ul>
@@ -255,7 +255,10 @@ const PannelAdmin: React.FC = () => {
         <div className="fixed z-20 top-24 start-0 end-0 bottom-0 bg-gray-600 bg-opacity-50 flex justify-center items-center overflow-auto p-5">
           <div className="bg-white p-6 rounded-lg shadow-lg max-w-lg w-full max-h-full overflow-y-auto">
             <h2 className="text-2xl font-bold mb-4">Modifier le Cours</h2>
-            <form onSubmit={handleEditSubmit} className="space-y-4">
+            <form
+              onSubmit={handleEditSubmit}
+              className="space-y-4"
+            >
               <div>
                 <label
                   htmlFor="titre"
@@ -414,4 +417,3 @@ const PannelAdmin: React.FC = () => {
 };
 
 export default PannelAdmin;
-

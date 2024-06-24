@@ -2,7 +2,7 @@
 import React from "react";
 import CourseTable from "@/components/CourseTable";
 
-const Liste_Cours: React.FC = () => {
+const liste_cours: React.FC = () => {
   return (
     <div className="flex justify-center items-center w-full p-8">
       <div className="max-w-5xl w-full">
@@ -13,4 +13,4 @@ const Liste_Cours: React.FC = () => {
   );
 };
 
-export default Liste_Cours;
+export default liste_cours;

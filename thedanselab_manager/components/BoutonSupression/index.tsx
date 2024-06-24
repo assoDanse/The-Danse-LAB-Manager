@@ -1,12 +1,13 @@
+import React, { useState } from "react";
 import { Button, Modal } from "flowbite-react";
-import { useState } from "react";
 import { HiOutlineExclamationCircle } from "react-icons/hi";
 
 interface BoutonSuppressionProps {
   onDelete: () => void;
+  children?: React.ReactNode; // Assurez-vous que children est déclaré ici
 }
 
-const BoutonSuppression: React.FC<BoutonSuppressionProps> = ({ onDelete }) => {
+const BoutonSuppression: React.FC<BoutonSuppressionProps> = ({ onDelete, children }) => {
   const [openModal, setOpenModal] = useState(false);
 
   const handleDelete = () => {
@@ -16,8 +17,8 @@ const BoutonSuppression: React.FC<BoutonSuppressionProps> = ({ onDelete }) => {
 
   return (
     <>
-      <Button className=" place-content-center mt-2 mr-2" color="failure" onClick={() => setOpenModal(true)}>
-        Supprimer
+      <Button color="failure" onClick={() => setOpenModal(true)}>
+        {children || "Supprimer"} {/* Affiche "Supprimer" si children n'est pas fourni */}
       </Button>
       <Modal show={openModal} size="md" onClose={() => setOpenModal(false)} popup>
         <Modal.Header />
