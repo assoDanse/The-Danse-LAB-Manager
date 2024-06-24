@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import React, { useEffect, useState } from "react";
 import { collection, query, getDocs, deleteDoc, doc } from "firebase/firestore";
 import { db } from "@/config/firebase-config";
@@ -69,34 +69,36 @@ const RatesTable: React.FC = () => {
   }
 
   return (
-    <table className="min-w-full bg-white border border-gray-200">
-      <thead>
-        <tr>
-          <th className="py-2 px-4 border-b text-center">Titre</th>
-          <th className="py-2 px-4 border-b text-center">Description</th>
-          <th className="py-2 px-4 border-b text-center">Prix</th>
-          <th className="py-2 px-4 border-b text-center">Lien de Paiement</th>
-          <th className="py-2 px-4 border-b text-center">Actions</th> {/* Nouvelle colonne pour les actions */}
-        </tr>
-      </thead>
-      <tbody>
-        {rates.map((rate) => (
-          <tr key={rate.id}>
-            <td className="py-2 px-4 border-b text-center">{rate.titre}</td>
-            <td className="py-2 px-4 border-b text-center">{rate.description}</td>
-            <td className="py-2 px-4 border-b text-center">{rate.prix} €</td>
-            <td className="py-2 px-4 border-b text-center">
-              <a href={rate.lienPaiement} target="_blank" rel="noopener noreferrer">
-                Payer
-              </a>
-            </td>
-            <td className="py-2 px-4 border-b text-center">
-              <BoutonSuppression onDelete={() => handleDeleteRate(rate.id)} />
-            </td>
+    <div className="overflow-x-auto">
+      <table className="min-w-full bg-white border border-gray-200">
+        <thead>
+          <tr>
+            <th className="py-2 px-4 border-b text-center">Titre</th>
+            <th className="py-2 px-4 border-b text-center">Description</th>
+            <th className="py-2 px-4 border-b text-center">Prix</th>
+            <th className="py-2 px-4 border-b text-center">Lien de Paiement</th>
+            <th className="py-2 px-4 border-b text-center">Actions</th> {/* Nouvelle colonne pour les actions */}
           </tr>
-        ))}
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          {rates.map((rate) => (
+            <tr key={rate.id}>
+              <td className="py-2 px-4 border-b text-center">{rate.titre}</td>
+              <td className="py-2 px-4 border-b text-center">{rate.description}</td>
+              <td className="py-2 px-4 border-b text-center">{rate.prix} €</td>
+              <td className="py-2 px-4 border-b text-center">
+                <a href={rate.lienPaiement} target="_blank" rel="noopener noreferrer">
+                  Payer
+                </a>
+              </td>
+              <td className="py-2 px-4 border-b text-center">
+                <BoutonSuppression onDelete={() => handleDeleteRate(rate.id)} />
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
   );
 };
 

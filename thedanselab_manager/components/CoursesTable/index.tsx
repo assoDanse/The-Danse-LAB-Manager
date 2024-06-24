@@ -80,36 +80,38 @@ const CoursesTable: React.FC = () => {
   }
 
   return (
-    <table className="min-w-full bg-white border border-gray-200">
-      <thead>
-        <tr>
-          <th className="py-2 px-4 border-b text-center">Titre</th>
-          <th className="py-2 px-4 border-b text-center">Type</th>
-          <th className="py-2 px-4 border-b text-center">Date et Heure</th>
-          <th className="py-2 px-4 border-b text-center">Durée</th>
-          <th className="py-2 px-4 border-b text-center">Professeur</th>
-          <th className="py-2 px-4 border-b text-center">Places Restantes</th>
-          <th className="py-2 px-4 border-b text-center">Actions</th> {/* Nouvelle colonne pour les actions */}
-        </tr>
-      </thead>
-      <tbody>
-        {courses.map((course) => (
-          <tr key={course.id}>
-            <td className="py-2 px-4 border-b text-center">{course.titre}</td>
-            <td className="py-2 px-4 border-b text-center">{course.type}</td>
-            <td className="py-2 px-4 border-b text-center">{course.date_heure_debut.toLocaleString()}</td>
-            <td className="py-2 px-4 border-b text-center">
-              {course.duree.heures}h {course.duree.minutes}m
-            </td>
-            <td className="py-2 px-4 border-b text-center">{course.nom_professeur}</td>
-            <td className="py-2 px-4 border-b text-center">{course.places_restantes}</td>
-            <td className="py-2 px-4 border-b text-center">
-              <BoutonSuppression onDelete={() => handleDeleteCourse(course.id)} />
-            </td>
+    <div className="overflow-x-auto">
+      <table className="min-w-full bg-white border border-gray-200">
+        <thead>
+          <tr>
+            <th className="py-2 px-4 border-b text-center">Titre</th>
+            <th className="py-2 px-4 border-b text-center">Type</th>
+            <th className="py-2 px-4 border-b text-center">Date et Heure</th>
+            <th className="py-2 px-4 border-b text-center">Durée</th>
+            <th className="py-2 px-4 border-b text-center">Professeur</th>
+            <th className="py-2 px-4 border-b text-center">Places Restantes</th>
+            <th className="py-2 px-4 border-b text-center">Actions</th> {/* Nouvelle colonne pour les actions */}
           </tr>
-        ))}
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          {courses.map((course) => (
+            <tr key={course.id}>
+              <td className="py-2 px-4 border-b text-center">{course.titre}</td>
+              <td className="py-2 px-4 border-b text-center">{course.type}</td>
+              <td className="py-2 px-4 border-b text-center">{course.date_heure_debut.toLocaleString()}</td>
+              <td className="py-2 px-4 border-b text-center">
+                {course.duree.heures}h {course.duree.minutes}m
+              </td>
+              <td className="py-2 px-4 border-b text-center">{course.nom_professeur}</td>
+              <td className="py-2 px-4 border-b text-center">{course.places_restantes}</td>
+              <td className="py-2 px-4 border-b text-center">
+                <BoutonSuppression onDelete={() => handleDeleteCourse(course.id)} />
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
   );
 };
 
