@@ -194,3 +194,7 @@ Installation module export format excel pour comptabilité
 ```bash
 npm install @types/xlsx --save-dev
 ```
+installation module pour edit profil
+```bash
+npm install next-auth
+````
