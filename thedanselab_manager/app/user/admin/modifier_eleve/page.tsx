@@ -3,26 +3,21 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Label, Select } from "flowbite-react";
-import EmailInput from "@/components/EmailInput";
-import PasswordInput from "@/components/PasswordInput";
+import NameInput from "@/components/NameInput";
+import FirstNameInput from "@/components/FirstNameInput";
+import DialogueBoxInput from "@/components/DialogueBoxInput";
 import ValidationButton from "@/components/ValidationButton";
-import { auth, db } from "@/config/firebase-config"; // Assurez-vous que cette importation est correcte
-import {
-  collection,
-  getDocs,
-  doc,
-  updateDoc,
-  deleteDoc,
-} from "firebase/firestore";
-import { updateEmail, updatePassword, deleteUser } from "firebase/auth";
+import { auth, db } from "@/config/firebase-config";
+import { collection, getDocs, doc, updateDoc, deleteDoc } from "firebase/firestore";
 
-const modifier_eleve: React.FC = () => {
+const ModifierEleve: React.FC = () => {
   const [eleves, setEleves] = useState<any[]>([]);
   const [selectedEleveId, setSelectedEleveId] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState(""); // Facultatif : seulement si vous changez le mot de passe
+  const [name, setName] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [bio, setBio] = useState("");
   const [error, setError] = useState("");
-  const [message, setMessage] = useState(""); // Pour afficher les messages de succès
+  const [message, setMessage] = useState("");
   const router = useRouter();
 
   useEffect(() => {
@@ -47,15 +42,16 @@ const modifier_eleve: React.FC = () => {
   useEffect(() => {
     const selectedEleve = eleves.find((eleve) => eleve.id === selectedEleveId);
     if (selectedEleve) {
-      setEmail(selectedEleve.email);
-      setPassword("");
+      setName(selectedEleve.name);
+      setFirstName(selectedEleve.firstName);
+      setBio(selectedEleve.bio);
     }
   }, [selectedEleveId, eleves]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (!email) {
+    if (!name || !firstName) {
       setError("Veuillez remplir tous les champs.");
       return;
     }
@@ -64,27 +60,18 @@ const modifier_eleve: React.FC = () => {
     setMessage("");
 
     try {
-      const docRef = doc(db, "users", selectedEleveId);
+      const updates: any = {
+        name: name,
+        firstName: firstName,
+        bio: bio,
+      };
 
-      const updates: any = { email };
+      const docRef = doc(db, "users", selectedEleveId);
       await updateDoc(docRef, updates);
 
-      const user = auth.currentUser;
-
-      if (user) {
-        if (email !== user.email) {
-          await updateEmail(user, email);
-        }
-        if (password) {
-          await updatePassword(user, password);
-        }
-      }
-
-      setMessage(`Informations mises à jour pour ${email}`);
+      setMessage(`Informations mises à jour pour ${firstName} ${name}`);
     } catch (error: any) {
-      setError(
-        `Erreur lors de la mise à jour des informations: ${error.message}`
-      );
+      setError(`Erreur lors de la mise à jour des informations: ${error.message}`);
     }
   };
 
@@ -102,17 +89,12 @@ const modifier_eleve: React.FC = () => {
       const docRef = doc(db, "users", selectedEleveId);
       await deleteDoc(docRef);
 
-      // Supprimer l'utilisateur de Firebase Authentication
-      const user = auth.currentUser;
-      if (user) {
-        await deleteUser(user);
-      }
-
       // Mettre à jour l'état pour retirer l'élève supprimé de la liste
       setEleves(eleves.filter((eleve) => eleve.id !== selectedEleveId));
       setSelectedEleveId("");
-      setEmail("");
-      setPassword("");
+      setName("");
+      setFirstName("");
+      setBio("");
 
       setMessage("Élève supprimé avec succès.");
     } catch (error: any) {
@@ -141,15 +123,15 @@ const modifier_eleve: React.FC = () => {
               ))}
             </Select>
           </div>
-          <EmailInput email={email} setEmail={setEmail} />
-          <PasswordInput password={password} setPassword={setPassword} />{" "}
-          {/* Facultatif */}
+          <NameInput name={name} setName={setName} />
+          <FirstNameInput firstName={firstName} setFirstName={setFirstName} />
+          <DialogueBoxInput DialogueBox={bio} setDialogueBox={setBio} />
           {error && <p className="text-red-500">{error}</p>}
           {message && <p className="text-green-500">{message}</p>}
           <ValidationButton text="Mettre à jour" />
           <button
             type="button"
-            className="bg-c6 hover:bg-c7 text-white font-bold py-2 px-4 rounded min-w-full"
+            className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded min-w-full"
             onClick={handleDelete}
           >
             Supprimer élève
@@ -160,4 +142,4 @@ const modifier_eleve: React.FC = () => {
   );
 };
 
-export default modifier_eleve;
+export default ModifierEleve;

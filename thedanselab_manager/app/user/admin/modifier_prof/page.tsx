@@ -16,7 +16,6 @@ import {
   collection,
 } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import { deleteUser } from "firebase/auth";
 
 const ModifierProf: React.FC = () => {
   const [professors, setProfessors] = useState<any[]>([]);
@@ -114,23 +113,9 @@ const ModifierProf: React.FC = () => {
     setMessage("");
 
     try {
-      const selectedProfessor = professors.find(
-        (prof) => prof.id === selectedProfessorId
-      );
-      if (!selectedProfessor || selectedProfessor.status !== "professeur") {
-        setError("L'utilisateur sélectionné n'est pas un professeur.");
-        return;
-      }
-
       // Supprimer l'utilisateur de Firestore
       const docRef = doc(db, "users", selectedProfessorId);
       await deleteDoc(docRef);
-
-      // Supprimer l'utilisateur de Firebase Authentication
-      const user = auth.currentUser;
-      if (user) {
-        await deleteUser(user);
-      }
 
       // Mettre à jour l'état pour retirer le professeur supprimé de la liste
       setProfessors(

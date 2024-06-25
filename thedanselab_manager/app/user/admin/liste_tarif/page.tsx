@@ -1,5 +1,5 @@
 // pages/rates.tsx
-"use client"
+"use client";
 import React from "react";
 import RatesTable from "@/components/RatesTable";
 
