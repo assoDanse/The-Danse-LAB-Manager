@@ -170,7 +170,7 @@ function Navbar_() {
       </div>
       <Navbar.Collapse className="md:flex md:justify-center md:order-2 w-full text-center">
         {loading ? (
-          <span className="text-gray-400">Chargement...</span>
+          <span className="text-gray-400"></span>
         ) : userName && userFirstName ? (
           <div className="flex flex-col items-center justify-center md:hidden mb-4">
             {userStatus === "professeur" && photoURL && (
