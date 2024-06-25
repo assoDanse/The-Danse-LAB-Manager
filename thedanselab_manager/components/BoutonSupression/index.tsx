@@ -7,7 +7,10 @@ interface BoutonSuppressionProps {
   children?: React.ReactNode; // Assurez-vous que children est déclaré ici
 }
 
-const BoutonSuppression: React.FC<BoutonSuppressionProps> = ({ onDelete, children }) => {
+const BoutonSuppression: React.FC<BoutonSuppressionProps> = ({
+  onDelete,
+  children,
+}) => {
   const [openModal, setOpenModal] = useState(false);
 
   const handleDelete = () => {
@@ -17,10 +20,16 @@ const BoutonSuppression: React.FC<BoutonSuppressionProps> = ({ onDelete, childre
 
   return (
     <>
-      <Button color="failure" onClick={() => setOpenModal(true)}>
-        {children || "Supprimer"} {/* Affiche "Supprimer" si children n'est pas fourni */}
+      <Button className="bg-c7" onClick={() => setOpenModal(true)}>
+        {children || "Supprimer"}{" "}
+        {/* Affiche "Supprimer" si children n'est pas fourni */}
       </Button>
-      <Modal show={openModal} size="md" onClose={() => setOpenModal(false)} popup>
+      <Modal
+        show={openModal}
+        size="md"
+        onClose={() => setOpenModal(false)}
+        popup
+      >
         <Modal.Header />
         <Modal.Body>
           <div className="text-center">
@@ -29,7 +38,7 @@ const BoutonSuppression: React.FC<BoutonSuppressionProps> = ({ onDelete, childre
               Êtes-vous sûr de vouloir le supprimer ?
             </h3>
             <div className="flex justify-center gap-4">
-              <Button color="failure" onClick={handleDelete}>
+              <Button className="bg-c7" onClick={handleDelete}>
                 Oui, je suis sûr
               </Button>
               <Button color="gray" onClick={() => setOpenModal(false)}>
