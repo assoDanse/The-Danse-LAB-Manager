@@ -62,7 +62,7 @@ const modifier_contact: React.FC = () => {
   };
 
   return (
-    <div className="flex justify-center items-center w-full">
+    <div className="flex justify-center items-center w-full p-2">
       <div className="w-full max-w-md p-8 bg-white rounded shadow-md">
         <h2 className="text-3xl font-bold mb-6 text-center">
           Modifier les informations de contact

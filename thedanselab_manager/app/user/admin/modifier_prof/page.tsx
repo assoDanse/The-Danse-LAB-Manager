@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { Label, Select } from "flowbite-react";
+import { Label, Select, FileInput } from "flowbite-react";
 import NameInput from "@/components/NameInput";
 import ValidationButton from "@/components/ValidationButton";
 import FirstNameInput from "@/components/FirstNameInput";
@@ -134,7 +134,7 @@ const ModifierProf: React.FC = () => {
   };
 
   return (
-    <div className="flex justify-center items-center w-full">
+    <div className="flex justify-center items-center w-full p-2">
       <div className="max-w-md w-full p-8 bg-white rounded-lg shadow-md">
         <h1 className="text-center text-2xl mb-6">Modifier un Professeur</h1>
         <form onSubmit={handleSubmit} className="flex flex-col gap-5">
@@ -159,17 +159,17 @@ const ModifierProf: React.FC = () => {
           </div>
           <NameInput name={name} setName={setName} />
           <FirstNameInput firstName={firstName} setFirstName={setFirstName} />
-          <Label
-            htmlFor="file-upload-helper-text"
-            value="Photo"
-            className="text-center"
-          />
-          <input
-            type="file"
-            id="file-upload-helper-text"
-            accept="image/*"
-            onChange={handlePhotoChange}
-          />
+          <div id="fileUpload" className="max-w-md">
+            <div className="mb-2 block">
+              <Label htmlFor="file" value="Photo" />
+            </div>
+            <FileInput
+              id="file"
+              onChange={handlePhotoChange}
+              accept="image/*"
+              helperText="A profile picture is useful to confirm your are logged into your account"
+            />
+          </div>
           <DialogueBoxInput DialogueBox={bio} setDialogueBox={setBio} />
           {error && <p className="text-red-500">{error}</p>}
           {message && <p className="text-green-500">{message}</p>}

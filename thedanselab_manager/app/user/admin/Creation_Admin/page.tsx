@@ -111,7 +111,7 @@ const Creation_Admin: React.FC = () => {
   };
 
   return (
-    <div className="flex justify-center items-center w-full">
+    <div className="flex justify-center items-center w-full p-2">
       <div className="max-w-sm w-full p-8 bg-white rounded-lg shadow-md">
         <h1 className="text-center text-2xl mb-6">Créer un compte admin</h1>
         <form onSubmit={handleSubmit} className="flex flex-col gap-5">

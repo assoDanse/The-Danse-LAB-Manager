@@ -56,7 +56,7 @@ const CreateTarifPage: React.FC = () => {
   };
 
   return (
-    <div className="flex justify-center items-center w-full">
+    <div className="flex justify-center items-center w-full p-2">
       {message && (
         <div className="bg-green-100 text-green-800 p-4 rounded-lg mb-4">
           {message}
