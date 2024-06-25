@@ -1,9 +1,9 @@
-
 "use client";
 import React, { useEffect, useState } from "react";
 import { collection, query, where, getDocs, deleteDoc, doc } from "firebase/firestore";
 import { db } from "@/config/firebase-config";
 import TableSkeleton from "../TableSkeleton";
+import BoutonSupression from "@/components/BoutonSupression";
 
 interface Student {
   id: string;
@@ -46,15 +46,12 @@ const StudentTable: React.FC = () => {
   }, []);
 
   const handleDelete = async (id: string) => {
-    const confirmed = window.confirm("Êtes-vous sûr de vouloir supprimer cet élève ?");
-    if (confirmed) {
-      try {
-        await deleteDoc(doc(db, "users", id));
-        setStudents(students.filter((student) => student.id !== id));
-      } catch (err) {
-        console.error("Erreur lors de la suppression de l'élève", err);
-        setError("Erreur lors de la suppression de l'élève");
-      }
+    try {
+      await deleteDoc(doc(db, "users", id));
+      setStudents(students.filter((student) => student.id !== id));
+    } catch (err) {
+      console.error("Erreur lors de la suppression de l'élève", err);
+      setError("Erreur lors de la suppression de l'élève");
     }
   };
 
@@ -86,12 +83,7 @@ const StudentTable: React.FC = () => {
               <td className="py-2 px-4 border-b text-center">{student.email}</td>
               <td className="py-2 px-4 border-b text-center">{student.credits}</td>
               <td className="py-2 px-4 border-b text-center">
-                <button
-                  onClick={() => handleDelete(student.id)}
-                  className="bg-red-500 text-white p-2 rounded"
-                >
-                  Supprimer
-                </button>
+                <BoutonSupression onDelete={() => handleDelete(student.id)} />
               </td>
             </tr>
           ))}

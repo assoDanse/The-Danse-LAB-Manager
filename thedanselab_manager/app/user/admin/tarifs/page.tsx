@@ -5,6 +5,7 @@ import { collection, getDocs, deleteDoc, doc } from "firebase/firestore";
 import { db } from "@/config/firebase-config";
 import SidebarAdmin from "@/components/SidebarAdmin";
 import { useRouter } from "next/navigation";
+import BoutonSuppression from "@/components/BoutonSupression";
 
 interface Tarif {
   id: string;
@@ -68,7 +69,7 @@ const TarifsAdmin: React.FC = () => {
   };
 
   const handleEdit = (id: string) => {
-    router.push(`/user/admin/tarifs`); // a modifier
+    router.push(`/user/admin/tarifs/${id}`); 
   };
 
   if (loading) {
@@ -116,12 +117,8 @@ const TarifsAdmin: React.FC = () => {
               >
                 Modifier
               </button>
-              <button
-                onClick={() => handleDelete(tarif.id)}
-                className="bg-c7 text-white p-2 rounded mt-2 ml-2"
-              >
-                Supprimer
-              </button>
+
+              <BoutonSuppression onDelete={() => handleDelete(tarif.id)}  />
             </li>
           ))}
         </ul>

@@ -1,6 +1,4 @@
 "use client";
-
-
 import React, { useEffect, useState } from "react";
 import { db, storage } from "@/config/firebase-config";
 import {
@@ -12,6 +10,7 @@ import {
   deleteDoc,
 } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import BoutonSuppression from "@/components/BoutonSupression";
 
 interface Cours {
   id: string;
@@ -137,7 +136,9 @@ const PannelAdmin: React.FC = () => {
   };
 
   const handleDeleteClick = async (coursId: string) => {
-    const confirmDelete = confirm("Êtes-vous sûr de vouloir supprimer ce cours ?");
+    const confirmDelete = confirm(
+      "Êtes-vous sûr de vouloir supprimer ce cours ?"
+    );
     if (!confirmDelete) return;
 
     try {
@@ -181,11 +182,11 @@ const PannelAdmin: React.FC = () => {
       )}
       <h1 className="text-2xl m-4 font-bold">Tous les Cours</h1>
       {cours.length > 0 ? (
-        <ul className="md:grid md:grid-cols-2 md:gap-4 w-full max-w-3xl mx-auto text-center">
+        <ul className="md:grid md:grid-cols-2 md:gap-4 w-full max-w-3xl mx-auto text-center ">
           {cours.map((cours) => (
             <li
               key={cours.id}
-              className="bg-c0 border border-c4 p-4 mb-2 rounded-lg shadow-lg"
+              className="bg-c0 border border-c4 p-4 mb-2 rounded-lg shadow-lg relative"
             >
               <h2 className="text-xl font-bold">{cours.titre}</h2>
               <p>Type: {cours.type}</p>
@@ -194,24 +195,23 @@ const PannelAdmin: React.FC = () => {
                 Durée: {cours.duree.heures}h {cours.duree.minutes}m
               </p>
               <p>Professeur: {cours.nom_professeur}</p>
-              <button
-                onClick={() => handleViewClick(cours)}
-                className="bg-c8 text-white p-2 rounded mt-2 mr-2"
-              >
-                Visualiser
-              </button>
-              <button
-                onClick={() => handleEditClick(cours)}
-                className="bg-yellow-500 text-white p-2 rounded mt-2 mr-2"
-              >
-                Modifier
-              </button>
-              <button
-                onClick={() => handleDeleteClick(cours.id)}
-                className="bg-red-500 text-white p-2 rounded mt-2"
-              >
-                Supprimer
-              </button>
+              <div className="flex justify-end mt-4 space-x-2">
+                <button
+                  onClick={() => handleViewClick(cours)}
+                  className="bg-c8 text-white p-2 rounded"
+                >
+                  Visualiser
+                </button>
+                <button
+                  onClick={() => handleEditClick(cours)}
+                  className="bg-yellow-500 text-white p-2 rounded"
+                >
+                  Modifier
+                </button>
+                <BoutonSuppression
+                  onDelete={() => handleDeleteClick(cours.id)}
+                />
+              </div>
             </li>
           ))}
         </ul>
