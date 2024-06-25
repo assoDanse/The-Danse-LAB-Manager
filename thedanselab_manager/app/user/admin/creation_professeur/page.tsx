@@ -137,20 +137,23 @@ const CreateUserForm: React.FC = () => {
 
   const customStyles = {
     content: {
-      top: '50%',
-      left: '50%',
-      right: 'auto',
-      bottom: 'auto',
-      marginRight: '-50%',
-      transform: 'translate(-50%, -50%)',
-      width: '300px', // Ajustez la largeur de la modale
-      padding: '20px', // Ajustez le padding pour rendre l'apparence plus compacte
+      top: "50%",
+      left: "50%",
+      right: "auto",
+      bottom: "auto",
+      marginRight: "-50%",
+      transform: "translate(-50%, -50%)",
+      width: "300px", // Ajustez la largeur de la modale
+      padding: "20px", // Ajustez le padding pour rendre l'apparence plus compacte
     },
   };
 
   return (
-    <div className="flex justify-center items-center w-full mx-auto my-3">
-      <div className="max-w-sm w-full p-8 bg-white rounded-lg shadow-md">
+    <div
+      id="creationprof"
+      className="flex justify-center items-center w-full p-2"
+    >
+      <div className="max-w-fit w-full p-8 bg-white rounded-lg shadow-md">
         <h1 className="text-center text-2xl mb-6">Créer un Professeur</h1>
         <form onSubmit={handleSubmit} className="flex flex-col gap-5">
           <NameInput name={name} setName={setName} />
@@ -181,7 +184,9 @@ const CreateUserForm: React.FC = () => {
         contentLabel="Validation Administrateur"
         ariaHideApp={false} // Ajoutez ceci pour éviter les avertissements si vous n'avez pas configuré react-modal pour cacher l'application principale
       >
-        <h2 className="text-xl mb-4">Valider avec mot de passe administrateur</h2>
+        <h2 className="text-xl mb-4">
+          Valider avec mot de passe administrateur
+        </h2>
         <input
           type="password"
           placeholder="Mot de passe administrateur"
