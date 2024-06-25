@@ -66,7 +66,7 @@ const TarifsEleve: React.FC = () => {
           prix: tarif.prix,
           id_users: user.uid,
           places_restantes: tarif.credit,
-          type_carte: tarif.credit, // ou tout autre type que vous souhaitez enregistrer
+          credit: tarif.credit, // ou tout autre type que vous souhaitez enregistrer
         });
 
         setMessage("Carte créée avec succès après le paiement");
