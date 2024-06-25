@@ -1,12 +1,11 @@
 "use client";
+
 import React, { useState } from "react";
 import DateRangeInput from "@/components/DateRangeInput"; 
 import formatDate from "@/components/formatDate";
 import ValidationButton from "@/components/ValidationButton";
 import ProfesseurInput from "@/components/professeurInput";
-import TypeDeCoursInput from "@/components/TypeDeCoursInput";
-
-
+import CoursInput from "@/components/CoursInput"; 
 
 interface Transaction {
   id: string;
@@ -16,7 +15,8 @@ interface Transaction {
   amount: number;
   professorId: string;
   professorName: string;
-  typeDeCours: string;
+  courseId: string;
+  courseTitle: string;
 }
 
 const transactionPage: React.FC = () => {
@@ -29,10 +29,10 @@ const transactionPage: React.FC = () => {
     amount: 0,
     professorId: "",
     professorName: "",
-    typeDeCours: "",
+    courseId: "",
+    courseTitle: "",
   });
 
-  
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setNewTransaction({ ...newTransaction, [name]: value });
@@ -46,11 +46,14 @@ const transactionPage: React.FC = () => {
     setNewTransaction({ ...newTransaction, professorName });
   };
 
-  const setTypeDeCours = (typeDeCours: string) => {
-    setNewTransaction({ ...newTransaction, typeDeCours });
+  const setCourseId = (courseId: string) => {
+    setNewTransaction({ ...newTransaction, courseId });
   };
 
-  
+  const setCourseTitle = (courseTitle: string) => {
+    setNewTransaction({ ...newTransaction, courseTitle });
+  };
+
   const handleAddTransaction = () => {
     if (
       !newTransaction.title ||
@@ -80,7 +83,8 @@ const transactionPage: React.FC = () => {
       amount: 0,
       professorId: "",
       professorName: "",
-      typeDeCours: "",
+      courseId: "",
+      courseTitle: "",
     });
   };
 
@@ -164,14 +168,15 @@ const transactionPage: React.FC = () => {
             />
           </div>
           <div className="col-span-1 md:col-span-2">
-            <TypeDeCoursInput
-              typeDeCours={newTransaction.typeDeCours}
-              setTypeDeCours={setTypeDeCours}
+            <CoursInput
+              courseId={newTransaction.courseId}
+              setCourseId={setCourseId}
+              setCourseTitle={setCourseTitle}
             />
           </div>
         </div>
         <div className="mt-4">
-          <ValidationButton text="Ajouter une transaction" />
+          <ValidationButton text="Ajouter une transaction" onClick={handleAddTransaction} />
         </div>
       </div>
     </div>
