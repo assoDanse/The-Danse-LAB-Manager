@@ -1,40 +1,59 @@
-// Importations nécessaires
 "use client";
+
 import React, { useState } from "react";
-import DateRangeInput from "@/components/DateRangeInput"; // Assurez-vous que le chemin vers vos composants est correct
+import DateRangeInput from "@/components/DateRangeInput"; 
 import formatDate from "@/components/formatDate";
 import ValidationButton from "@/components/ValidationButton";
+import ProfesseurInput from "@/components/professeurInput";
+import CoursInput from "@/components/CoursInput"; 
 
-// Interface pour définir la structure d'une transaction
 interface Transaction {
   id: string;
   title: string;
   date: string;
   description: string;
   amount: number;
-  professor: string;
-  course: string;
+  professorId: string;
+  professorName: string;
+  courseId: string;
+  courseTitle: string;
 }
 
 const transactionPage: React.FC = () => {
-  // État local pour gérer la nouvelle transaction
+
   const [newTransaction, setNewTransaction] = useState<Transaction>({
     id: "",
     title: "",
     date: "",
     description: "",
     amount: 0,
-    professor: "",
-    course: "",
+    professorId: "",
+    professorName: "",
+    courseId: "",
+    courseTitle: "",
   });
 
-  // Gestionnaire de changement pour les champs du formulaire
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setNewTransaction({ ...newTransaction, [name]: value });
   };
 
-  // Gestionnaire pour ajouter une nouvelle transaction
+  const setProfessorId = (professorId: string) => {
+    setNewTransaction({ ...newTransaction, professorId });
+  };
+
+  const setProfessorName = (professorName: string) => {
+    setNewTransaction({ ...newTransaction, professorName });
+  };
+
+  const setCourseId = (courseId: string) => {
+    setNewTransaction({ ...newTransaction, courseId });
+  };
+
+  const setCourseTitle = (courseTitle: string) => {
+    setNewTransaction({ ...newTransaction, courseTitle });
+  };
+
   const handleAddTransaction = () => {
     if (
       !newTransaction.title ||
@@ -56,18 +75,16 @@ const transactionPage: React.FC = () => {
     };
     console.log("Transaction à ajouter :", transactionToAdd);
 
-    // Ici, vous pourriez appeler une fonction ou envoyer cette transaction à un autre composant.
-    // Par exemple, utiliser une fonction onAddTransaction(transactionToAdd);
-
-    // Réinitialisation des champs après l'ajout de la transaction
     setNewTransaction({
       id: "",
       title: "",
       date: "",
       description: "",
       amount: 0,
-      professor: "",
-      course: "",
+      professorId: "",
+      professorName: "",
+      courseId: "",
+      courseTitle: "",
     });
   };
 
@@ -92,7 +109,7 @@ const transactionPage: React.FC = () => {
               name="title"
               value={newTransaction.title}
               onChange={handleInputChange}
-              className="  block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              className="block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
             />
           </div>
           <div>
@@ -108,7 +125,7 @@ const transactionPage: React.FC = () => {
               name="date"
               value={newTransaction.date}
               onChange={handleInputChange}
-              className="  block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              className="block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
             />
           </div>
           <div>
@@ -124,7 +141,7 @@ const transactionPage: React.FC = () => {
               name="description"
               value={newTransaction.description}
               onChange={handleInputChange}
-              className="  block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              className="block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
             />
           </div>
           <div>
@@ -140,45 +157,26 @@ const transactionPage: React.FC = () => {
               name="amount"
               value={newTransaction.amount}
               onChange={handleInputChange}
-              className="  block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              className="block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
             />
           </div>
-          <div>
-            <label
-              htmlFor="professor"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Professeur
-            </label>
-            <input
-              type="text"
-              id="professor"
-              name="professor"
-              value={newTransaction.professor}
-              onChange={handleInputChange}
-              className="  block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+          <div className="col-span-1 md:col-span-2">
+            <ProfesseurInput
+              professorId={newTransaction.professorId}
+              setProfessorId={setProfessorId}
+              setProfessorName={setProfessorName}
             />
           </div>
-          <div>
-            <label
-              htmlFor="course"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Cours
-            </label>
-            <input
-              type="text"
-              id="course"
-              name="course"
-              value={newTransaction.course}
-              onChange={handleInputChange}
-              className="  block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+          <div className="col-span-1 md:col-span-2">
+            <CoursInput
+              courseId={newTransaction.courseId}
+              setCourseId={setCourseId}
+              setCourseTitle={setCourseTitle}
             />
           </div>
         </div>
         <div className="mt-4">
-          {" "}
-          <ValidationButton text="Ajouter une transaction" />
+          <ValidationButton text="Ajouter une transaction" onClick={handleAddTransaction} />
         </div>
       </div>
     </div>
