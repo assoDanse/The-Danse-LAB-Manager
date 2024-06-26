@@ -4,6 +4,7 @@ import TableSkeleton from "../TableSkeleton";
 import { useRouter } from "next/navigation";
 import { collection, getDocs, deleteDoc, doc } from "firebase/firestore";
 import { db } from "@/config/firebase-config";
+import BoutonSuppression from "../BoutonSupression";
 
 interface Course {
   id: string;
@@ -54,18 +55,15 @@ const CourseTable: React.FC = () => {
   }, []);
 
   const handleDelete = async (id: string) => {
-    const confirmed = window.confirm("Êtes-vous sûr de vouloir supprimer ce cours ?");
-    if (confirmed) {
-      try {
-        await deleteDoc(doc(db, "cours", id));
-        setCourses((prevCourses) => prevCourses?.filter((course) => course.id !== id) || null);
-      } catch (err) {
-        console.error("Erreur lors de la suppression du cours", err);
-        setError("Erreur lors de la suppression du cours");
-        setTimeout(() => {
-          setError(null);
-        }, 3000);
-      }
+    try {
+      await deleteDoc(doc(db, "cours", id));
+      setCourses(
+        (prevCourses) =>
+          prevCourses?.filter((course) => course.id !== id) || null
+      );
+    } catch (err) {
+      console.error("Erreur lors de la suppression du professeur", err);
+      setError("Erreur lors de la suppression du professeur");
     }
   };
 
@@ -78,11 +76,13 @@ const CourseTable: React.FC = () => {
   }
 
   if (error) {
-    return <div className="flex justify-center items-center w-full">{error}</div>;
+    return (
+      <div className="flex justify-center items-center w-full">{error}</div>
+    );
   }
 
   return (
-    <div className="overflow-x-auto">
+    <div id="TableProf" className="overflow-x-auto">
       <table className="min-w-full bg-white rounded-lg shadow-md">
         <thead>
           <tr>
@@ -93,34 +93,30 @@ const CourseTable: React.FC = () => {
           </tr>
         </thead>
         <tbody>
-          {courses && courses.map((course) => {
-            const courseDate = new Date(course.date_heure_debut.seconds * 1000);
-            return (
-              <tr key={course.id}>
-                <td className="py-2 px-4 border-b text-center">{course.titre}</td>
-                <td className="py-2 px-4 border-b text-center">
-                  {courseDate.toLocaleString()}
-                </td>
-                <td className="py-2 px-4 border-b text-center">
-                  {course.duree.heures} heures {course.duree.minutes} minutes
-                </td>
-                <td className="py-2 px-4 border-b text-center">
-                  <button
-                    onClick={() => handleEdit(course.id)}
-                    className="bg-blue-500 text-white py-1 px-3 rounded mr-2"
-                  >
-                    Modifier
-                  </button>
-                  <button
-                    onClick={() => handleDelete(course.id)}
-                    className="bg-red-500 text-white py-1 px-3 rounded"
-                  >
-                    Supprimer
-                  </button>
-                </td>
-              </tr>
-            );
-          })}
+          {courses &&
+            courses.map((course) => {
+              const courseDate = new Date(
+                course.date_heure_debut.seconds * 1000
+              );
+              return (
+                <tr key={course.id}>
+                  <td className="py-2 px-4 border-b text-center ">
+                    {course.titre}
+                  </td>
+                  <td className="py-2 px-4 border-b text-center">
+                    {courseDate.toLocaleString()}
+                  </td>
+                  <td className="py-2 px-4 border-b text-center">
+                    {course.duree.heures} heures {course.duree.minutes} minutes
+                  </td>
+                  <td className="py-2 px-4 border-b text-center">
+                    <BoutonSuppression
+                      onDelete={() => handleDelete(course.id)}
+                    />
+                  </td>
+                </tr>
+              );
+            })}
         </tbody>
       </table>
     </div>
