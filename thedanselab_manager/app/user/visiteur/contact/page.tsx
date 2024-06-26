@@ -29,7 +29,7 @@ const Contact: React.FC = () => {
           <>
             <div className="mb-4">
               <h3 className="text-xl font-semibold">Adresse e-mail</h3>
-              <p className="text-gray-700">{contactInfo.email}</p>
+              <p className="text-gray-700"><span className="email"><a href="thedancelab.contact@gmail.com">{contactInfo.email}</a></span></p>
             </div>
             <div className="mb-4">
               <h3 className="text-xl font-semibold">Facebook</h3>
