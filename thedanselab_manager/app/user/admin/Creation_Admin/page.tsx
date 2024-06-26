@@ -115,14 +115,14 @@ const CreateEleve: React.FC = () => {
 
   const customStyles = {
     content: {
-      top: '50%',
-      left: '50%',
-      right: 'auto',
-      bottom: 'auto',
-      marginRight: '-50%',
-      transform: 'translate(-50%, -50%)',
-      width: '300px', // Ajustez la largeur de la modale
-      padding: '20px', // Ajustez le padding pour rendre l'apparence plus compacte
+      top: "50%",
+      left: "50%",
+      right: "auto",
+      bottom: "auto",
+      marginRight: "-50%",
+      transform: "translate(-50%, -50%)",
+      width: "300px", // Ajustez la largeur de la modale
+      padding: "20px", // Ajustez le padding pour rendre l'apparence plus compacte
     },
   };
 
@@ -130,7 +130,7 @@ const CreateEleve: React.FC = () => {
     <AdminProtectedRoute>
       <div className="flex justify-center items-center w-full">
         <div className="max-w-sm w-full p-8 bg-white rounded-lg shadow-md">
-          <h1 className="text-center text-2xl mb-6">Créer un compte élève</h1>
+          <h1 className="text-center text-2xl mb-6">Créer un compte admin</h1>
           <form onSubmit={handleSubmit} className="flex flex-col gap-5">
             <NameInput name={name} setName={setName} />
             <FirstNameInput firstName={firstName} setFirstName={setFirstName} />
@@ -148,7 +148,9 @@ const CreateEleve: React.FC = () => {
           contentLabel="Validation Administrateur"
           ariaHideApp={false} // Ajoutez ceci pour éviter les avertissements si vous n'avez pas configuré react-modal pour cacher l'application principale
         >
-          <h2 className="text-xl mb-4">Valider avec mot de passe administrateur</h2>
+          <h2 className="text-xl mb-4">
+            Valider avec mot de passe administrateur
+          </h2>
           <input
             type="password"
             placeholder="Mot de passe administrateur"
