@@ -182,7 +182,7 @@ const PannelAdmin: React.FC = () => {
             {message}
           </div>
         )}
-        <h1 className="text-2xl m-4 font-bold">Tous les Cours</h1>
+        <h1 className="text-2xl m-4 font-bold">Gestion des Cours</h1>
         {cours.length > 0 ? (
           <ul className="md:grid md:grid-cols-2 md:gap-4 w-full max-w-3xl mx-auto text-center ">
             {cours.map((cours) => (
@@ -197,16 +197,16 @@ const PannelAdmin: React.FC = () => {
                   Durée: {cours.duree.heures}h {cours.duree.minutes}m
                 </p>
                 <p>Professeur: {cours.nom_professeur}</p>
-                <div className="flex justify-end mt-4 space-x-2">
+                <div className="flex justify-center mt-4 space-x-2">
                   <button
                     onClick={() => handleViewClick(cours)}
-                    className="bg-c8 text-white p-2 rounded"
+                    className="bg-c8 text-white p-2 rounded-lg"
                   >
                     Visualiser
                   </button>
                   <button
                     onClick={() => handleEditClick(cours)}
-                    className="bg-yellow-500 text-white p-2 rounded"
+                    className="bg-yellow-500 text-white p-2 rounded-lg "
                   >
                     Modifier
                   </button>

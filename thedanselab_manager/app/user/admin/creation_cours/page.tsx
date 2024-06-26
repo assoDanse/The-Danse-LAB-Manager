@@ -6,7 +6,7 @@ import TypeDeCoursInput from "@/components/TypeDeCoursInput";
 import TitleInput from "@/components/TitleInput";
 import DescriptionInput from "@/components/DescriptionInput";
 import DateInput from "@/components/dateInput";
-import { Label } from "flowbite-react";
+import { Label, FileInput, Checkbox, TextInput } from "flowbite-react";
 import DurationInput from "@/components/DurationInput";
 import { db, storage } from "@/config/firebase-config";
 import { collection, addDoc, Timestamp } from "firebase/firestore";
@@ -108,8 +108,8 @@ const CreateCours: React.FC = () => {
 
   return (
     <AdminProtectedRoute>
-      <div className="flex justify-center items-center w-full">
-        <div className="max-w-sm w-full p-8 bg-white rounded-lg shadow-md my-2">
+      <div className="flex justify-center items-center w-full p-2">
+        <div className="max-w-fit w-full p-8 bg-white rounded-lg shadow-md ">
           <h1 className="text-center text-2xl mb-6">Créer un cours</h1>
           <form onSubmit={handleSubmit} className="flex flex-col gap-5">
             <TitleInput title={title} setTitle={setTitle} />
@@ -139,36 +139,28 @@ const CreateCours: React.FC = () => {
             <DateInput date={date} setDate={setDate} />
             {errors.date && <p className="text-red-500">{errors.date}</p>}
             <DurationInput duration={duration} setDuration={setDuration} />
-            {errors.duration && <p className="text-red-500">{errors.duration}</p>}
+            {errors.duration && (
+              <p className="text-red-500">{errors.duration}</p>
+            )}
             <div className="flex items-center gap-2">
-              <input
-                type="checkbox"
-                id="recurrent"
-                checked={isRecurrent}
-                onChange={(e) => setIsRecurrent(e.target.checked)}
-                className="border-gray-300 rounded"
-              />
-              <label
-                htmlFor="recurrent"
-                className="text-sm font-medium text-gray-700"
-              >
-                Ajouter une récurrence
-              </label>
+              <div className="flex items-center gap-2">
+                <Checkbox
+                  id="recurrence"
+                  checked={isRecurrent}
+                  onChange={(e) => setIsRecurrent(e.target.checked)}
+                />
+                <Label htmlFor="recurrent">Ajouter une récurrence</Label>
+              </div>
             </div>
             {isRecurrent && (
-              <div className="flex items-center gap-2">
-                <label
-                  htmlFor="periodicity"
-                  className="text-sm font-medium text-gray-700"
-                >
-                  Périodicité (en semaines)
-                </label>
-                <input
+              <div className="flex items-center">
+                <Label htmlFor="periodicity">Périodicité (en semaines) </Label>
+                <TextInput
                   type="number"
                   id="periodicity"
                   value={periodicity}
                   onChange={(e) => setPeriodicity(parseInt(e.target.value))}
-                  className="border border-gray-300 rounded-md px-2 py-1"
+                  // className="border border-gray-300 rounded-md px-2 py-1"
                   min={1}
                   max={44}
                   required
@@ -178,18 +170,14 @@ const CreateCours: React.FC = () => {
                 )}
               </div>
             )}
-
-            <Label
-              htmlFor="file-upload-helper-text"
-              value="Photo"
-              className="text-center"
-            />
-            <input
-              type="file"
-              id="photo"
-              accept="image/*"
-              onChange={handlePhotoChange}
-            />
+            <div id="fileUpload" className="max-w-md">
+              <Label htmlFor="file" value="Photo" />
+              <FileInput
+                id="file"
+                onChange={handlePhotoChange}
+                accept="image/*"
+              />
+            </div>
             {errors.photo && <p className="text-red-500">{errors.photo}</p>}
 
             {errors.general && <p className="text-red-500">{errors.general}</p>}

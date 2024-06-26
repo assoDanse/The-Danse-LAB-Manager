@@ -9,7 +9,7 @@ import PasswordInput from "@/components/PasswordInput";
 import ValidationButton from "@/components/ValidationButton";
 import FirstNameInput from "@/components/FirstNameInput";
 import DescriptionInput from "@/components/DescriptionInput";
-import { Label } from "flowbite-react";
+import { Label, FileInput, Checkbox, TextInput } from "flowbite-react";
 import { auth, db, storage } from "@/config/firebase-config";
 import {
   createUserWithEmailAndPassword,
@@ -162,17 +162,16 @@ const CreateUserForm: React.FC = () => {
             <FirstNameInput firstName={firstName} setFirstName={setFirstName} />
             <EmailInput email={email} setEmail={setEmail} />
             <PasswordInput password={password} setPassword={setPassword} />
-            <Label
-              htmlFor="file-upload-helper-text"
-              value="Photo"
-              className="text-center"
-            />
-            <input
-              type="file"
-              id="file-upload-helper-text"
-              accept="image/*"
-              onChange={handlePhotoChange}
-            />
+            <div id="fileUpload" className="max-w-md">
+              <div className="mb-2 block">
+                <Label htmlFor="file" value="Photo" />
+              </div>
+              <FileInput
+                id="file"
+                onChange={handlePhotoChange}
+                helperText="A profile picture is useful to confirm your are logged into your account"
+              />
+            </div>
             <DescriptionInput description={bio} setDescription={setBio} />
             {error && <p className="text-red-500">{error}</p>}
             {message && <p className="text-green-500">{message}</p>}

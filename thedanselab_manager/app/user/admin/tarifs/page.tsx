@@ -106,21 +106,22 @@ const TarifsAdmin: React.FC = () => {
                 <h2 className="text-xl font-bold">{tarif.titre}</h2>
                 <img
                   src={tarif.image}
-                  alt={tarif.titre}
+                  // alt={tarif.titre}
                   className="mb-4 w-full"
                   style={{ width: "150px", height: "auto" }}
                 />
                 <p>{tarif.description}</p>
                 <p>Prix: {tarif.prix} €</p>
                 <p>Crédit: {tarif.credit}</p>
-                <button
-                  onClick={() => handleEdit(tarif.id)}
-                  className="bg-c8 text-white p-2 rounded mt-2"
-                >
-                  Modifier
-                </button>
-
-                <BoutonSuppression onDelete={() => handleDelete(tarif.id)} />
+                {/* <button
+                onClick={() => handleEdit(tarif.id)}
+                className="bg-c8 text-white p-2 rounded mt-2"
+              >
+                Modifier
+              </button> */}
+                <div className="flex justify-center">
+                  <BoutonSuppression onDelete={() => handleDelete(tarif.id)} />
+                </div>
               </li>
             ))}
           </ul>

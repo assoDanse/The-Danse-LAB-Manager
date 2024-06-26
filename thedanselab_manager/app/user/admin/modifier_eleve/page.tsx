@@ -8,7 +8,13 @@ import FirstNameInput from "@/components/FirstNameInput";
 import DialogueBoxInput from "@/components/DialogueBoxInput";
 import ValidationButton from "@/components/ValidationButton";
 import { auth, db } from "@/config/firebase-config";
-import { collection, getDocs, doc, updateDoc, deleteDoc } from "firebase/firestore";
+import {
+  collection,
+  getDocs,
+  doc,
+  updateDoc,
+  deleteDoc,
+} from "firebase/firestore";
 import AdminProtectedRoute from "@/components/AdminProtectedRoute";
 
 const ModifierEleve: React.FC = () => {
@@ -72,7 +78,9 @@ const ModifierEleve: React.FC = () => {
 
       setMessage(`Informations mises à jour pour ${firstName} ${name}`);
     } catch (error: any) {
-      setError(`Erreur lors de la mise à jour des informations: ${error.message}`);
+      setError(
+        `Erreur lors de la mise à jour des informations: ${error.message}`
+      );
     }
   };
 
@@ -105,9 +113,11 @@ const ModifierEleve: React.FC = () => {
 
   return (
     <AdminProtectedRoute>
-      <div className="flex justify-center items-center w-full">
+      <div className="flex justify-center items-center w-full p-2">
         <div className="max-w-md w-full p-8 bg-white rounded-lg shadow-md">
-          <h1 className="text-center text-2xl mb-6">Modifier un compte élève</h1>
+          <h1 className="text-center text-2xl mb-6">
+            Modifier un compte élève
+          </h1>
           <form onSubmit={handleSubmit} className="flex flex-col gap-5">
             <div>
               <Label htmlFor="eleve-select" value="Sélectionnez un élève" />

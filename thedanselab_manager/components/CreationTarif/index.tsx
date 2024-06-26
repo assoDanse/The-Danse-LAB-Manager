@@ -41,9 +41,15 @@ const CreationTarif: React.FC<CreationTarifProps> = ({
   return (
     <div className="max-w-sm w-full p-8 bg-white rounded-lg shadow-md ">
       <h1 className="text-center text-2xl mb-6">Créer un tarif</h1>
-      <form className="flex flex-col gap-5" onSubmit={(e) => { e.preventDefault(); handleSubmit(); }}>
+      <form
+        className="flex flex-col gap-5"
+        onSubmit={(e) => {
+          e.preventDefault();
+          handleSubmit();
+        }}
+      >
         <div>
-          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="titre">Titre</label>
+          {/* <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="titre">Titre</label> */}
           <input
             id="titre"
             type="text"
@@ -54,7 +60,12 @@ const CreationTarif: React.FC<CreationTarifProps> = ({
           />
         </div>
         <div>
-          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="description">Description</label>
+          {/* <label
+            className="block text-gray-700 text-sm font-bold mb-2"
+            htmlFor="description"
+          >
+            Description
+          </label> */}
           <textarea
             id="description"
             value={description}
@@ -64,7 +75,9 @@ const CreationTarif: React.FC<CreationTarifProps> = ({
           />
         </div>
         <div>
-          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="image">Image</label>
+          <label className="block text-gray-700 text-sm  mb-2" htmlFor="image">
+            Image
+          </label>
           <input
             id="image"
             type="file"
@@ -74,7 +87,9 @@ const CreationTarif: React.FC<CreationTarifProps> = ({
           />
         </div>
         <div>
-          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="prix">Prix</label>
+          <label className="block text-gray-700 text-sm  mb-2" htmlFor="prix">
+            Prix
+          </label>
           <input
             id="prix"
             type="number"
@@ -85,7 +100,9 @@ const CreationTarif: React.FC<CreationTarifProps> = ({
           />
         </div>
         <div>
-          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="credit">Crédit</label>
+          <label className="block text-gray-700 text-sm  mb-2" htmlFor="credit">
+            Crédit
+          </label>
           <input
             id="credit"
             type="number"
@@ -96,7 +113,12 @@ const CreationTarif: React.FC<CreationTarifProps> = ({
           />
         </div>
         <div>
-          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="lienPaiement">Lien de Paiement</label>
+          {/* <label
+            className="block text-gray-700 text-sm font-bold mb-2"
+            htmlFor="lienPaiement"
+          >
+            Lien de Paiement
+          </label> */}
           <input
             id="lienPaiement"
             type="text"

@@ -1,5 +1,6 @@
 // DateInput.tsx
 import React, { ChangeEvent } from "react";
+import { Label, Select, Datepicker } from "flowbite-react";
 
 interface DateInputProps {
   date: string;
@@ -13,16 +14,15 @@ const DateInput: React.FC<DateInputProps> = ({ date, setDate }) => {
 
   return (
     <div>
-      <label htmlFor="date" className="block text-sm font-medium text-gray-700">
-        Date et Heure de Début
-      </label>
-      <input
+      <Label htmlFor="date">Date et Heure de Début</Label>
+      <Datepicker onChange={handleDateChange} />
+      {/* <input
         type="datetime-local"
         id="date"
         value={date}
         onChange={handleDateChange}
         className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-      />
+      /> */}
     </div>
   );
 };
