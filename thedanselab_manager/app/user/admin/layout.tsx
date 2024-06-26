@@ -6,7 +6,7 @@ export default function AdminLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <div id="adminContent" className="flex flex-grow w-full">
+    <div id="adminContent" className="sm:flex sm:flex-grow w-full">
       <SidebarAdmin />
       {children}
     </div>

@@ -42,10 +42,10 @@ export function SidebarProfesseur() {
         <Sidebar
           aria-label="Default sidebar example"
           className={`${
-            isExpanded ? "w-64" : "w-20"
+            isExpanded ? "w-48" : "w-20"
           } transition-width duration-300`}
         >
-          <button className="p-2 focus:outline-none" onClick={toggleSidebar}>
+          <button className="p-1.5 focus:outline-none" onClick={toggleSidebar}>
             <FaBars className="text-xl" />
           </button>
           <Sidebar.Items>

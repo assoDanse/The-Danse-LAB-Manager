@@ -108,7 +108,7 @@ function Navbar_() {
   };
 
   return (
-    <Navbar className="sticky top-0 p-4 w-full bg-c2 text-c3 z-50" fluid rounded>
+    <Navbar className="sticky top-0 p-4 w-full bg-c2 text-c3 z-50" fluid>
       <Navbar.Brand href="https://thedancelab.fr/">
         <Image src={Logo} width={75} height={75} alt="Logo" />
         <span className="self-center whitespace-nowrap text-xl font-semibold dark:text-c3 ml-4">
@@ -120,7 +120,7 @@ function Navbar_() {
       </div>
       <div className="hidden md:flex md:order-3 items-center ml-auto">
         {loading ? (
-          <span className="text-gray-400">Chargement...</span>
+          <span className="text-gray-400">Chargement</span>
         ) : userName && userFirstName ? (
           <>
             {userStatus === "professeur" && photoURL && (
