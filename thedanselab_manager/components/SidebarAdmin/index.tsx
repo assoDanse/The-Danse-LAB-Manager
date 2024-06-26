@@ -23,7 +23,7 @@ export function SidebarAdmin() {
   return (
     <div className="flex max-md:z-10">
       {/* Sidebar for larger screens */}
-      <div className="max-md:hidden md:flex">
+      <div className="max-sm:hidden sm:flex">
         <Sidebar aria-label="Default sidebar example">
           <Sidebar.Items>
             <Sidebar.ItemGroup>
@@ -127,7 +127,7 @@ export function SidebarAdmin() {
       </div>
 
       {/* Sidebar for smaller screens */}
-      <div className="flex md:hidden w-full transition-width duration-300 font-semibold">
+      <div className="flex sm:hidden w-full transition-width duration-300 font-semibold">
         <Navbar id="sidebar" className="bg-c4 p-4 w-full" fluid>
           <Navbar.Brand>
             <span className="self-center whitespace-nowrap text-xl font-semibold dark:text-white">
