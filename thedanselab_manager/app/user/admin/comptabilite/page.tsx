@@ -13,7 +13,7 @@ import {
 import { db } from "@/config/firebase-config";
 import DateRangeInput from "@/components/DateRangeInput";
 import formatDate from "@/components/formatDate";
-import DateInput from "@/components/dateInput";
+import DateInput from "@/components/DateInput";
 import { Label, Select, FileInput, Checkbox, TextInput } from "flowbite-react";
 import AdminProtectedRoute from "@/components/AdminProtectedRoute"; // Importez le composant de protection
 
@@ -167,8 +167,11 @@ const ComptabilitePage: React.FC = () => {
             <option value="professeurs">Professeurs</option>
           </Select>
         </div>
-        <DateInput date={startDate} setDate={setStartDate} />
-        <DateInput date={endDate} setDate={setEndDate} />
+        <div>
+          <DateInput date={startDate} setDate={setStartDate} />
+          <DateInput date={endDate} setDate={setEndDate} />
+        </div>
+        
         {/* <DateRangeInput
           startDate={startDate}
           setStartDate={setStartDate}

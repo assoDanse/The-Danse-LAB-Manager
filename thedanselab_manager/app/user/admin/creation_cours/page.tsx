@@ -1,11 +1,11 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import ProfesseurInput from "@/components/professeurInput";
+import ProfesseurInput from "@/components/ProfesseurInput";
 import TypeDeCoursInput from "@/components/TypeDeCoursInput";
 import TitleInput from "@/components/TitleInput";
 import DescriptionInput from "@/components/DescriptionInput";
-import DateInput from "@/components/dateInput";
+import DateInput from "@/components/DateInput";
 import { Label, FileInput, Checkbox, TextInput } from "flowbite-react";
 import DurationInput from "@/components/DurationInput";
 import { db, storage } from "@/config/firebase-config";
