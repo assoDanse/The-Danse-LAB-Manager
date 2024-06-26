@@ -194,7 +194,7 @@ Installation module export format excel pour comptabilité
 ```bash
 npm install @types/xlsx --save-dev
 ```
-installation module pour modal
+installation module pour edit profil
 ```bash
-npm install react-modal
+npm install next-auth
 ````
