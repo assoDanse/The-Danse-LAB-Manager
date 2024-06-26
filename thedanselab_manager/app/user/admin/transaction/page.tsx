@@ -1,21 +1,18 @@
 "use client";
 
 import React, { useState } from "react";
-import DateRangeInput from "@/components/DateRangeInput";
-import formatDate from "@/components/formatDate";
-import ValidationButton from "@/components/ValidationButton";
-import ProfesseurInput from "@/components/professeurInput";
+import { collection, addDoc, Timestamp } from "firebase/firestore";
+import { db } from "@/config/firebase-config";
+import ProfesseurInput from "@/components/ProfesseurInput";
 import CoursInput from "@/components/CoursInput";
-import DateInput from "@/components/dateInput";
+import DateInput from "@/components/DateInput";
+import DescriptionInput from "@/components/DescriptionInput";
+import ValidationButton from "@/components/ValidationButton";
+import AdminProtectedRoute from "@/components/AdminProtectedRoute";
 import {
   Label,
-  FileInput,
-  Checkbox,
   TextInput,
-  Datepicker,
 } from "flowbite-react";
-import DescriptionInput from "@/components/DescriptionInput";
-import AdminProtectedRoute from "@/components/AdminProtectedRoute";
 
 interface Transaction {
   id: string;
@@ -29,7 +26,7 @@ interface Transaction {
   courseTitle: string;
 }
 
-const transactionPage: React.FC = () => {
+const TransactionPage: React.FC = () => {
   const [newTransaction, setNewTransaction] = useState<Transaction>({
     id: "",
     title: "",
@@ -42,6 +39,9 @@ const transactionPage: React.FC = () => {
     courseTitle: "",
   });
   const [description, setDescription] = useState("");
+  const [message, setMessage] = useState("");
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setNewTransaction({ ...newTransaction, [name]: value });
@@ -63,38 +63,51 @@ const transactionPage: React.FC = () => {
     setNewTransaction({ ...newTransaction, courseTitle });
   };
 
-  const handleAddTransaction = () => {
-    if (
-      !newTransaction.title ||
-      !newTransaction.date ||
-      newTransaction.amount === 0 ||
-      isNaN(newTransaction.amount)
-    ) {
-      alert(
-        "Veuillez remplir tous les champs obligatoires et assurez-vous que le montant est un nombre valide."
-      );
+  const handleAddTransaction = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    let formErrors: { [key: string]: string } = {};
+    if (!newTransaction.title) formErrors.title = "Le titre est requis.";
+    if (!newTransaction.date) formErrors.date = "La date est requise.";
+    if (!newTransaction.amount) formErrors.amount = "Le montant est requis.";
+    if (!newTransaction.professorId)
+      formErrors.professor = "Le professeur est requis.";
+    if (!newTransaction.courseId) formErrors.course = "Le cours est requis.";
+
+    if (Object.keys(formErrors).length > 0) {
+      setErrors(formErrors);
       return;
     }
 
-    const transactionAmount = parseFloat(newTransaction.amount.toString());
-    const transactionToAdd: Transaction = {
-      ...newTransaction,
-      id: Date.now().toString(),
-      amount: transactionAmount,
-    };
-    console.log("Transaction à ajouter :", transactionToAdd);
+    setErrors({});
+    setMessage("");
 
-    setNewTransaction({
-      id: "",
-      title: "",
-      date: "",
-      description: "",
-      amount: 0,
-      professorId: "",
-      professorName: "",
-      courseId: "",
-      courseTitle: "",
-    });
+    try {
+      const transactionData = {
+        ...newTransaction,
+        date: Timestamp.fromDate(new Date(newTransaction.date)),
+      };
+
+      await addDoc(collection(db, "transactions"), transactionData);
+
+      setMessage("Transaction créée avec succès");
+      setNewTransaction({
+        id: "",
+        title: "",
+        date: "",
+        description: "",
+        amount: 0,
+        professorId: "",
+        professorName: "",
+        courseId: "",
+        courseTitle: "",
+      });
+      setDescription("");
+    } catch (error: any) {
+      setErrors({
+        general: `Erreur lors de la création de la transaction: ${error.message}`,
+      });
+    }
   };
 
   return (
@@ -104,7 +117,7 @@ const transactionPage: React.FC = () => {
           <h1 className="text-3xl font-bold mb-8 text-center">
             Page de Transactions
           </h1>
-          <form className="flex flex-col gap-5">
+          <form className="flex flex-col gap-5" onSubmit={handleAddTransaction}>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <Label htmlFor="title">Titre</Label>
@@ -116,30 +129,19 @@ const transactionPage: React.FC = () => {
                   onChange={handleInputChange}
                   className="block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                 />
+                {errors.title && <p className="text-red-500">{errors.title}</p>}
               </div>
-              <Datepicker
-                type="datetime-local"
-                id="date"
-                name="date"
-                value={newTransaction.date}
-                onChange={handleInputChange}
+              <DateInput
+                date={newTransaction.date}
+                setDate={(date) =>
+                  setNewTransaction({ ...newTransaction, date })
+                }
               />
+              {errors.date && <p className="text-red-500">{errors.date}</p>}
               <DescriptionInput
                 description={description}
                 setDescription={setDescription}
               />
-              {/* <div>
-            
-            <Label htmlFor="description">Description</Label>
-            <input
-              type="text"
-              id="description"
-              name="description"
-              value={newTransaction.description}
-              onChange={handleInputChange}
-              className="block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-            />
-          </div> */}
               <div>
                 <Label htmlFor="amount">Montant (€)</Label>
                 <TextInput
@@ -152,6 +154,7 @@ const transactionPage: React.FC = () => {
                   max={2000}
                   required
                 />
+                {errors.amount && <p className="text-red-500">{errors.amount}</p>}
               </div>
               <div className="col-span-1 md:col-span-2">
                 <ProfesseurInput
@@ -159,6 +162,9 @@ const transactionPage: React.FC = () => {
                   setProfessorId={setProfessorId}
                   setProfessorName={setProfessorName}
                 />
+                {errors.professor && (
+                  <p className="text-red-500">{errors.professor}</p>
+                )}
               </div>
               <div className="col-span-1 md:col-span-2">
                 <CoursInput
@@ -166,16 +172,19 @@ const transactionPage: React.FC = () => {
                   setCourseId={setCourseId}
                   setCourseTitle={setCourseTitle}
                 />
+                {errors.course && <p className="text-red-500">{errors.course}</p>}
               </div>
             </div>
             <div className="mt-4">
               <ValidationButton text="Ajouter une transaction" />
             </div>
           </form>
+          {errors.general && <p className="text-red-500">{errors.general}</p>}
+          {message && <p className="text-green-500">{message}</p>}
         </div>
       </div>
     </AdminProtectedRoute>
   );
 };
 
-export default transactionPage;
+export default TransactionPage;
