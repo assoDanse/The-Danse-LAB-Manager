@@ -45,13 +45,13 @@ export function SidebarAdmin() {
               <Sidebar.Collapse icon={HiUserGroup} label="Professeur">
                 <Sidebar.Item
                   href="/user/admin/creation_professeur"
-                  icon={HiUserGroup}
+                  icon={HiUserAdd}
                 >
                   Créer un professeur
                 </Sidebar.Item>
                 <Sidebar.Item
                   href="/user/admin/list_professeur"
-                  icon={HiUserAdd}
+                  icon={HiUserGroup}
                 >
                   Liste des professeurs
                 </Sidebar.Item>
@@ -86,7 +86,7 @@ export function SidebarAdmin() {
               <Sidebar.Collapse icon={HiCreditCard} label="Tarif">
                 <Sidebar.Item
                   href="/user/admin/creation_tarif"
-                  icon={HiCreditCard}
+                  icon={HiPlusCircle}
                 >
                   Créer un tarif
                 </Sidebar.Item>
@@ -112,12 +112,12 @@ export function SidebarAdmin() {
                 Transaction
               </Sidebar.Item>
 
-              <Sidebar.Item
+              {/* <Sidebar.Item
                 href="/user/admin/modifier_contact"
                 icon={HiCurrencyDollar}
               >
                 Modifier contact
-              </Sidebar.Item>
+              </Sidebar.Item> */}
               <Sidebar.Item href="/user/admin/creation_admin" icon={HiUserAdd}>
                 Création admin
               </Sidebar.Item>
@@ -157,15 +157,21 @@ export function SidebarAdmin() {
               <Sidebar.Collapse icon={HiUserGroup} label="Professeur">
                 <Sidebar.Item
                   href="/user/admin/creation_professeur"
-                  icon={HiUserGroup}
+                  icon={HiUserAdd}
                 >
                   {isExpanded && "Créer un professeur"}
                 </Sidebar.Item>
                 <Sidebar.Item
                   href="/user/admin/list_professeur"
-                  icon={HiUserAdd}
+                  icon={HiUserGroup}
                 >
                   {isExpanded && "Liste des professeurs"}
+                </Sidebar.Item>
+                <Sidebar.Item
+                  href="/user/admin/modifier_prof"
+                  icon={FaUserEdit}
+                >
+                  {isExpanded && "Modifier professeur"}
                 </Sidebar.Item>
               </Sidebar.Collapse>
 
@@ -190,7 +196,7 @@ export function SidebarAdmin() {
               <Sidebar.Collapse icon={HiCreditCard} label="Tarif">
                 <Sidebar.Item
                   href="/user/admin/creation_tarif"
-                  icon={HiCreditCard}
+                  icon={HiPlusCircle}
                 >
                   {isExpanded && "Créer un tarif"}
                 </Sidebar.Item>
@@ -216,12 +222,12 @@ export function SidebarAdmin() {
                 {isExpanded && "Transaction"}
               </Sidebar.Item>
 
-              <Sidebar.Item
+              {/* <Sidebar.Item
                 href="/user/admin/modifier_contact"
                 icon={HiCurrencyDollar}
               >
                 {isExpanded && "Modifier contact"}
-              </Sidebar.Item>
+              </Sidebar.Item> */}
 
               <Sidebar.Item href="/user/admin/creation_admin" icon={HiUserAdd}>
                 {isExpanded && "Création admin"}
