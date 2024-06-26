@@ -107,7 +107,7 @@ const CreateCours: React.FC = () => {
 
   return (
     <div className="flex justify-center items-center w-full p-2">
-      <div className="max-w-sm w-full p-8 bg-white rounded-lg shadow-md ">
+      <div className="max-w-fit w-full p-8 bg-white rounded-lg shadow-md ">
         <h1 className="text-center text-2xl mb-6">Créer un cours</h1>
         <form onSubmit={handleSubmit} className="flex flex-col gap-5">
           <TitleInput title={title} setTitle={setTitle} />
@@ -167,14 +167,11 @@ const CreateCours: React.FC = () => {
             </div>
           )}
           <div id="fileUpload" className="max-w-md">
-            <div className="mb-2 block">
-              <Label htmlFor="file" value="Photo" />
-            </div>
+            <Label htmlFor="file" value="Photo" />
             <FileInput
               id="file"
               onChange={handlePhotoChange}
               accept="image/*"
-              helperText="A profile picture is useful to confirm your are logged into your account"
             />
           </div>
           {errors.photo && <p className="text-red-500">{errors.photo}</p>}

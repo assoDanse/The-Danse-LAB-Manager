@@ -41,9 +41,6 @@ const transactionPage: React.FC = () => {
     courseTitle: "",
   });
   const [description, setDescription] = useState("");
-
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setNewTransaction({ ...newTransaction, [name]: value });
@@ -105,7 +102,7 @@ const transactionPage: React.FC = () => {
         <h1 className="text-3xl font-bold mb-8 text-center">
           Page de Transactions
         </h1>
-        <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+        <form className="flex flex-col gap-5">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <Label htmlFor="title">Titre</Label>
