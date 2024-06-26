@@ -1,139 +1,219 @@
-"use client"
-import React, { useState } from 'react';
+// app/user/admin/comptabilite/page.tsx
+"use client";
+
+import React, { useEffect, useState } from "react";
+import { collection, getDocs, query, where, doc, getDoc } from "firebase/firestore";
+import { db } from "@/config/firebase-config";
 import DateRangeInput from '@/components/DateRangeInput';
 import formatDate from '@/components/formatDate';
-import exportToExcel from '@/components/exportToExcel';
+import AdminProtectedRoute from "@/components/AdminProtectedRoute"; // Importez le composant de protection
 
-interface Transaction {
+interface Course {
   id: string;
-  title: string;
-  date: string;
-  description: string;
-  amount: number;
-  professor: string;
-  course: string;
+  titre: string;
+  date_heure_debut: Date;
+  id_professeur: string;
+}
+
+interface Participation {
+  id_cours: string;
+  id_carte: string;
+}
+
+interface Carte {
+  id: string;
+  prix: number;
+  credit: number;
+}
+
+interface Professeur {
+  id: string;
+  name: string;
+  firstName: string;
 }
 
 const ComptabilitePage: React.FC = () => {
-  // Données fictives pour les tests
-  const initialTransactions: Transaction[] = [
-    { id: '1', title: 'Cours de danse', date: '2024-06-01T10:00:00', description: 'Cours de danse pour enfants', amount: 50, professor: 'Prof A', course: 'Danse' },
-    { id: '2', title: 'Cours de yoga', date: '2024-06-05T14:00:00', description: 'Cours de yoga pour adultes', amount: 75, professor: 'Prof B', course: 'Yoga' },
-    { id: '3', title: 'Cours de peinture', date: '2024-06-10T16:00:00', description: 'Cours de peinture pour adolescents', amount: 60, professor: 'Prof A', course: 'Peinture' },
-    { id: '4', title: 'electrecité', date: '2024-06-10T16:00:00', description: 'cout electrecité', amount: -60, professor: '', course: 'autre' },
-  ];
-
-  const [transactions, setTransactions] = useState<Transaction[]>(initialTransactions);
+  const [courses, setCourses] = useState<Course[]>([]);
+  const [filteredCourses, setFilteredCourses] = useState<Course[]>([]);
   const [startDate, setStartDate] = useState<string>('');
   const [endDate, setEndDate] = useState<string>('');
-  const [groupBy, setGroupBy] = useState<string>('');
+  const [amounts, setAmounts] = useState<{ [key: string]: number }>({});
+  const [professeurs, setProfesseurs] = useState<Professeur[]>([]);
+  const [selectedOption, setSelectedOption] = useState<string>('cours'); // Ajout de l'option de sélection
 
-  const [newTransaction, setNewTransaction] = useState<Transaction>({
-    id: '',
-    title: '',
-    date: '',
-    description: '',
-    amount: 0,
-    professor: '',
-    course: '',
-  });
+  // Fonction pour récupérer les cours et calculer les montants totaux
+  useEffect(() => {
+    const fetchCoursesAndProfessors = async () => {
+      try {
+        // Récupération des cours depuis Firestore
+        const querySnapshot = await getDocs(collection(db, "cours"));
+        const courseList: Course[] = querySnapshot.docs.map((doc) => {
+          const data = doc.data();
+          return {
+            id: doc.id,
+            titre: data.titre,
+            date_heure_debut: data.date_heure_debut.toDate(),
+            id_professeur: data.id_professeur,
+          };
+        });
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    const { name, value } = e.target;
-    setNewTransaction({ ...newTransaction, [name]: value });
-  };
+        // Récupération des professeurs depuis Firestore
+        const profQuerySnapshot = await getDocs(query(collection(db, "users"), where("status", "==", "professeur")));
+        const professeurList: Professeur[] = profQuerySnapshot.docs.map((doc) => {
+          const data = doc.data();
+          return {
+            id: doc.id,
+            name: data.name,
+            firstName: data.firstName,
+          };
+        });
 
-  const handleAddTransaction = () => {
-    if (!newTransaction.title || !newTransaction.date || newTransaction.amount === 0 || isNaN(newTransaction.amount)) {
-      alert("Veuillez remplir tous les champs obligatoires et assurez-vous que le montant est un nombre valide.");
-      return;
-    }
+        // Tri des cours par ordre croissant de date
+        courseList.sort((a, b) => a.date_heure_debut.getTime() - b.date_heure_debut.getTime());
+        setCourses(courseList);
+        setFilteredCourses(courseList);
+        setProfesseurs(professeurList);
 
-    const transactionAmount = parseFloat(newTransaction.amount.toString());
-    const updatedTransactions = [...transactions, { ...newTransaction, id: (transactions.length + 1).toString(), amount: transactionAmount }];
-    setTransactions(updatedTransactions);
-    setNewTransaction({ id: '', title: '', date: '', description: '', amount: 0, professor: '', course: '' });
-  };
+        // Calculer le montant total pour chaque cours
+        const amounts: { [key: string]: number } = {};
+        for (const course of courseList) {
+          const participationsSnapshot = await getDocs(query(collection(db, "participation"), where("id_cours", "==", course.id)));
+          const participations: Participation[] = participationsSnapshot.docs.map(doc => doc.data() as Participation);
 
-  const filteredTransactions = transactions.filter((transaction) => {
-    const transactionDate = new Date(transaction.date).getTime();
-    const start = startDate ? new Date(startDate).getTime() : -Infinity;
-    const end = endDate ? new Date(endDate).getTime() : Infinity;
-    return transactionDate >= start && transactionDate <= end;
-  });
+          let totalAmount = 0;
+          for (const participation of participations) {
+            if (participation.id_carte) {
+              const carteDocRef = doc(db, "cartes", participation.id_carte);
+              const carteDoc = await getDoc(carteDocRef);
+              if (carteDoc.exists()) {
+                const carteData = carteDoc.data() as Carte;
+                totalAmount += carteData.prix / carteData.credit;
+              } else {
+                console.error(`Carte with ID ${participation.id_carte} not found`);
+              }
+            } else {
+              console.error("Participation missing 'id_cartes' field", participation);
+            }
+          }
 
-  const groupedTransactions = groupBy
-    ? filteredTransactions.reduce((acc, transaction) => {
-        const key = transaction[groupBy as keyof Transaction];
-        if (!acc[key]) {
-          acc[key] = [];
+          amounts[course.id] = totalAmount;
         }
-        acc[key].push(transaction);
-        return acc;
-      }, {} as { [key: string]: Transaction[] })
-    : { 'Toutes les transactions': filteredTransactions };
+
+        setAmounts(amounts);
+      } catch (error) {
+        console.error("Erreur lors de la récupération des cours ou des participations :", error);
+      }
+    };
+
+    fetchCoursesAndProfessors();
+  }, []);
+
+  // Fonction pour filtrer les cours en fonction des dates sélectionnées
+  const handleFilter = () => {
+    const filtered = courses.filter((course) => {
+      const courseDate = course.date_heure_debut.getTime();
+      const start = startDate ? new Date(startDate).getTime() : -Infinity;
+      const end = endDate ? new Date(endDate).getTime() : Infinity;
+      return courseDate >= start && courseDate <= end;
+    });
+    setFilteredCourses(filtered);
+  };
 
   return (
-    <div className="container mx-auto p-8">
-      <h1 className="text-3xl font-bold mb-8 text-center">Page de comptabilité</h1>
-      <DateRangeInput
-        startDate={startDate}
-        setStartDate={setStartDate}
-        endDate={endDate}
-        setEndDate={setEndDate}
-      />
-      <div className="my-4">
-        <label htmlFor="groupBy" className="block text-sm font-medium text-gray-700">
-          Grouper par
-        </label>
-        <select
-          id="groupBy"
-          value={groupBy}
-          onChange={(e) => setGroupBy(e.target.value)}
-          className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+    <AdminProtectedRoute> {/* Utilisez le composant de protection */}
+      <div className="container mx-auto p-8">
+        <h1 className="text-3xl font-bold mb-8 text-center">Comptabilité</h1>
+        <div className="mb-4">
+          <label htmlFor="option-select" className="block text-sm font-medium text-gray-700">
+            Afficher par
+          </label>
+          <select
+            id="option-select"
+            value={selectedOption}
+            onChange={(e) => setSelectedOption(e.target.value)}
+            className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+          >
+            <option value="cours">Cours</option>
+            <option value="professeurs">Professeurs</option>
+          </select>
+        </div>
+        <DateRangeInput
+          startDate={startDate}
+          setStartDate={setStartDate}
+          endDate={endDate}
+          setEndDate={setEndDate}
+        />
+        <button
+          onClick={handleFilter}
+          className="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
         >
-          <option value="">Aucun</option>
-          <option value="professor">Professeur</option>
-          <option value="course">Cours</option>
-        </select>
-      </div>
-
-      <button
-        onClick={() => exportToExcel(filteredTransactions, 'transactions.xlsx')}
-        className="mb-4 bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
-      >
-        Exporter en Excel
-      </button>
-      {Object.keys(groupedTransactions).map((group) => (
-        <div key={group} className="mb-8">
-          <h2 className="text-2xl font-semibold mb-4">{group}</h2>
-          <div className="overflow-x-auto">
+          Filtrer
+        </button>
+        {selectedOption === 'cours' && (
+          <div className="overflow-x-auto mt-4">
             <table className="min-w-full bg-white border">
               <thead>
                 <tr>
-                  <th className="py-2 px-4 border-b">Titre</th>
-                  <th className="py-2 px-4 border-b">Date</th>
-                  <th className="py-2 px-4 border-b">Description</th>
-                  <th className="py-2 px-4 border-b">Montant (€)</th>
+                  <th className="py-2 px-4 border-b text-center">Titre</th>
+                  <th className="py-2 px-4 border-b text-center">Date</th>
+                  <th className="py-2 px-4 border-b text-center">Professeur</th>
+                  <th className="py-2 px-4 border-b text-center">Montant Total (€)</th>
                 </tr>
               </thead>
               <tbody>
-                {groupedTransactions[group].map((transaction) => (
-                  <tr key={transaction.id}>
-                    <td className="py-2 px-4 border-b">{transaction.title}</td>
-                    <td className="py-2 px-4 border-b">{formatDate(transaction.date)}</td>
-                    <td className="py-2 px-4 border-b">{transaction.description}</td>
-                    <td className={`py-2 px-4 border-b text-right ${transaction.amount < 0 ? 'text-red-500' : 'text-green-500'}`}>{transaction.amount.toFixed(2)}</td>
+                {filteredCourses.map((course) => (
+                  <tr key={course.id}>
+                    <td className="py-2 px-4 border-b text-center">{course.titre}</td>
+                    <td className="py-2 px-4 border-b text-center">{formatDate(course.date_heure_debut)}</td>
+                    <td className="py-2 px-4 border-b text-center">
+                      {professeurs.find(prof => prof.id === course.id_professeur)
+                        ? `${professeurs.find(prof => prof.id === course.id_professeur)?.firstName} ${professeurs.find(prof => prof.id === course.id_professeur)?.name}`
+                        : "N/A"}
+                    </td>
+                    <td className="py-2 px-4 border-b text-center">{amounts[course.id]?.toFixed(2) || '0.00'}</td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
-        </div>
-      ))}
-
-
-    </div>
+        )}
+        {selectedOption === 'professeurs' && (
+          <div className="overflow-x-auto mt-4">
+            <table className="min-w-full bg-white border">
+              <thead>
+                <tr>
+                  <th className="py-2 px-4 border-b text-center">Professeur</th>
+                  <th className="py-2 px-4 border-b text-center">Cours</th>
+                  <th className="py-2 px-4 border-b text-center">Date</th>
+                  <th className="py-2 px-4 border-b text-center">Montant Total (€)</th>
+                </tr>
+              </thead>
+              <tbody>
+                {professeurs.map((professeur) => (
+                  <React.Fragment key={professeur.id}>
+                    <tr>
+                      <td className="py-2 px-4 border-b text-center" colSpan={4}>
+                        <strong>{`${professeur.firstName} ${professeur.name}`}</strong>
+                      </td>
+                    </tr>
+                    {courses
+                      .filter((course) => course.id_professeur === professeur.id)
+                      .map((course) => (
+                        <tr key={course.id}>
+                          <td className="py-2 px-4 border-b text-center"></td> {/* Cellule vide pour l'affichage en escalier */}
+                          <td className="py-2 px-4 border-b text-center">{course.titre}</td>
+                          <td className="py-2 px-4 border-b text-center">{formatDate(course.date_heure_debut)}</td>
+                          <td className="py-2 px-4 border-b text-center">{amounts[course.id]?.toFixed(2) || '0.00'}</td>
+                        </tr>
+                      ))}
+                  </React.Fragment>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
+    </AdminProtectedRoute>
   );
 };
 

@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import { collection, getDocs, addDoc, doc, setDoc } from "firebase/firestore";
 import { db, auth } from "@/config/firebase-config";
 import { useRouter } from "next/navigation";
+import EleveProtectedRoute from "@/components/EleveProtectedRoute";
 
 interface Tarif {
   id: string;
@@ -66,7 +67,7 @@ const TarifsEleve: React.FC = () => {
           prix: tarif.prix,
           id_users: user.uid,
           places_restantes: tarif.credit,
-          type_carte: tarif.credit, // ou tout autre type que vous souhaitez enregistrer
+          credit: tarif.credit, // ou tout autre type que vous souhaitez enregistrer
         });
 
         setMessage("Carte créée avec succès après le paiement");
@@ -98,43 +99,45 @@ const TarifsEleve: React.FC = () => {
   }
 
   return (
-    <div className="flex flex-col items-center w-full p-3">
-      {message && (
-        <div className="bg-green-100 text-green-800 p-4 rounded-lg mb-4">
-          {message}
-        </div>
-      )}
-      <h1 className="text-2xl m-4 font-bold">Tarifs</h1>
-      {tarifs.length > 0 ? (
-        <ul className="md:grid md:grid-cols-2 md:gap-4 w-full max-w-3xl mx-auto">
-          {tarifs.map((tarif) => (
-            <li
-              key={tarif.id}
-              className="bg-c0 border border-c4 p-4 mb-2 rounded-lg shadow-lg"
-            >
-              <h2 className="text-xl font-bold">{tarif.titre}</h2>
-              <img
-                src={tarif.image}
-                alt={tarif.titre}
-                className="mb-4"
-                style={{ width: "150px", height: "auto" }}
-              />
-              <p>{tarif.description}</p>
-              <p>Prix: {tarif.prix} €</p>
-              <p>Crédit: {tarif.credit}</p>
-              <button
-                onClick={() => handlePay(tarif)}
-                className="bg-green-500 text-white p-2 rounded mt-2"
+    <EleveProtectedRoute>
+      <div className="flex flex-col items-center w-full p-3">
+        {message && (
+          <div className="bg-green-100 text-green-800 p-4 rounded-lg mb-4">
+            {message}
+          </div>
+        )}
+        <h1 className="text-2xl m-4 font-bold">Tarifs</h1>
+        {tarifs.length > 0 ? (
+          <ul className="md:grid md:grid-cols-2 md:gap-4 w-full max-w-3xl mx-auto">
+            {tarifs.map((tarif) => (
+              <li
+                key={tarif.id}
+                className="bg-c0 border border-c4 p-4 mb-2 rounded-lg shadow-lg"
               >
-                Acheter
-              </button>
-            </li>
-          ))}
-        </ul>
-      ) : (
-        <p className="text-center">Aucun tarif trouvé</p>
-      )}
-    </div>
+                <h2 className="text-xl font-bold">{tarif.titre}</h2>
+                <img
+                  src={tarif.image}
+                  alt={tarif.titre}
+                  className="mb-4"
+                  style={{ width: "150px", height: "auto" }}
+                />
+                <p>{tarif.description}</p>
+                <p>Prix: {tarif.prix} €</p>
+                <p>Crédit: {tarif.credit}</p>
+                <button
+                  onClick={() => handlePay(tarif)}
+                  className="bg-green-500 text-white p-2 rounded mt-2"
+                >
+                  Acheter
+                </button>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p className="text-center">Aucun tarif trouvé</p>
+        )}
+      </div>
+    </EleveProtectedRoute>
   );
 };
 

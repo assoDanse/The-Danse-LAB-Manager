@@ -1,5 +1,4 @@
-// DateRangeInput.tsx
-import React from "react";
+import React from 'react';
 
 interface DateRangeInputProps {
   startDate: string;
@@ -8,49 +7,26 @@ interface DateRangeInputProps {
   setEndDate: (date: string) => void;
 }
 
-const DateRangeInput: React.FC<DateRangeInputProps> = ({
-  startDate,
-  setStartDate,
-  endDate,
-  setEndDate,
-}) => {
-  const handleStartDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setStartDate(e.target.value);
-  };
-
-  const handleEndDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setEndDate(e.target.value);
-  };
-
+const DateRangeInput: React.FC<DateRangeInputProps> = ({ startDate, setStartDate, endDate, setEndDate }) => {
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex space-x-4">
       <div>
-        <label
-          htmlFor="start-date"
-          className="block text-sm font-medium text-gray-700"
-        >
-          Date et Heure de Début
-        </label>
+        <label htmlFor="startDate" className="block text-sm font-medium text-gray-700">Date de début</label>
         <input
           type="datetime-local"
-          id="start-date"
+          id="startDate"
           value={startDate}
-          onChange={handleStartDateChange}
+          onChange={(e) => setStartDate(e.target.value)}
           className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
         />
       </div>
       <div>
-        <label
-          htmlFor="end-date"
-          className="block text-sm font-medium text-gray-700"
-        >
-          Date et Heure de Fin
-        </label>
+        <label htmlFor="endDate" className="block text-sm font-medium text-gray-700">Date de fin</label>
         <input
           type="datetime-local"
-          id="end-date"
+          id="endDate"
           value={endDate}
-          onChange={handleEndDateChange}
+          onChange={(e) => setEndDate(e.target.value)}
           className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
         />
       </div>

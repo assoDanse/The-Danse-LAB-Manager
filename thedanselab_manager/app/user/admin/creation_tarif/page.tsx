@@ -5,6 +5,7 @@ import { addDoc, collection } from "firebase/firestore";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { db, auth } from "@/config/firebase-config";
 import CreationTarif from "@/components/CreationTarif";
+import AdminProtectedRoute from "@/components/AdminProtectedRoute";
 
 const storage = getStorage();
 
@@ -56,33 +57,35 @@ const CreateTarifPage: React.FC = () => {
   };
 
   return (
-    <div className="flex justify-center items-center w-full">
-      {message && (
-        <div className="bg-green-100 text-green-800 p-4 rounded-lg mb-4">
-          {message}
-        </div>
-      )}
-      {error && (
-        <div className="bg-red-100 text-red-800 p-4 rounded-lg mb-4">
-          {error}
-        </div>
-      )}
-      <CreationTarif
-        titre={titre}
-        setTitre={setTitre}
-        description={description}
-        setDescription={setDescription}
-        image={image}
-        setImage={setImage}
-        prix={prix}
-        setPrix={setPrix}
-        credit={credit}
-        setCredit={setCredit}
-        lienPaiement={lienPaiement}
-        setLienPaiement={setLienPaiement}
-        handleSubmit={handleSubmit}
-      />
-    </div>
+    <AdminProtectedRoute>
+      <div className="flex justify-center items-center w-full">
+        {message && (
+          <div className="bg-green-100 text-green-800 p-4 rounded-lg mb-4">
+            {message}
+          </div>
+        )}
+        {error && (
+          <div className="bg-red-100 text-red-800 p-4 rounded-lg mb-4">
+            {error}
+          </div>
+        )}
+        <CreationTarif
+          titre={titre}
+          setTitre={setTitre}
+          description={description}
+          setDescription={setDescription}
+          image={image}
+          setImage={setImage}
+          prix={prix}
+          setPrix={setPrix}
+          credit={credit}
+          setCredit={setCredit}
+          lienPaiement={lienPaiement}
+          setLienPaiement={setLienPaiement}
+          handleSubmit={handleSubmit}
+        />
+      </div>
+    </AdminProtectedRoute>
   );
 };
 

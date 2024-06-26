@@ -9,6 +9,7 @@ import DialogueBoxInput from "@/components/DialogueBoxInput";
 import ValidationButton from "@/components/ValidationButton";
 import { auth, db } from "@/config/firebase-config";
 import { collection, getDocs, doc, updateDoc, deleteDoc } from "firebase/firestore";
+import AdminProtectedRoute from "@/components/AdminProtectedRoute";
 
 const ModifierEleve: React.FC = () => {
   const [eleves, setEleves] = useState<any[]>([]);
@@ -103,42 +104,44 @@ const ModifierEleve: React.FC = () => {
   };
 
   return (
-    <div className="flex justify-center items-center w-full">
-      <div className="max-w-md w-full p-8 bg-white rounded-lg shadow-md">
-        <h1 className="text-center text-2xl mb-6">Modifier un compte élève</h1>
-        <form onSubmit={handleSubmit} className="flex flex-col gap-5">
-          <div>
-            <Label htmlFor="eleve-select" value="Sélectionnez un élève" />
-            <Select
-              id="eleve-select"
-              required
-              value={selectedEleveId}
-              onChange={(e) => setSelectedEleveId(e.target.value)}
+    <AdminProtectedRoute>
+      <div className="flex justify-center items-center w-full">
+        <div className="max-w-md w-full p-8 bg-white rounded-lg shadow-md">
+          <h1 className="text-center text-2xl mb-6">Modifier un compte élève</h1>
+          <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+            <div>
+              <Label htmlFor="eleve-select" value="Sélectionnez un élève" />
+              <Select
+                id="eleve-select"
+                required
+                value={selectedEleveId}
+                onChange={(e) => setSelectedEleveId(e.target.value)}
+              >
+                <option value="">Sélectionner un élève</option>
+                {eleves.map((eleve) => (
+                  <option key={eleve.id} value={eleve.id}>
+                    {eleve.firstName} {eleve.name}
+                  </option>
+                ))}
+              </Select>
+            </div>
+            <NameInput name={name} setName={setName} />
+            <FirstNameInput firstName={firstName} setFirstName={setFirstName} />
+            <DialogueBoxInput DialogueBox={bio} setDialogueBox={setBio} />
+            {error && <p className="text-red-500">{error}</p>}
+            {message && <p className="text-green-500">{message}</p>}
+            <ValidationButton text="Mettre à jour" />
+            <button
+              type="button"
+              className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded min-w-full"
+              onClick={handleDelete}
             >
-              <option value="">Sélectionner un élève</option>
-              {eleves.map((eleve) => (
-                <option key={eleve.id} value={eleve.id}>
-                  {eleve.firstName} {eleve.name}
-                </option>
-              ))}
-            </Select>
-          </div>
-          <NameInput name={name} setName={setName} />
-          <FirstNameInput firstName={firstName} setFirstName={setFirstName} />
-          <DialogueBoxInput DialogueBox={bio} setDialogueBox={setBio} />
-          {error && <p className="text-red-500">{error}</p>}
-          {message && <p className="text-green-500">{message}</p>}
-          <ValidationButton text="Mettre à jour" />
-          <button
-            type="button"
-            className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded min-w-full"
-            onClick={handleDelete}
-          >
-            Supprimer élève
-          </button>
-        </form>
+              Supprimer élève
+            </button>
+          </form>
+        </div>
       </div>
-    </div>
+    </AdminProtectedRoute>
   );
 };
 

@@ -1,11 +1,12 @@
 "use client";
 
 import React, { useState } from "react";
-import DateRangeInput from "@/components/DateRangeInput"; 
+import DateRangeInput from "@/components/DateRangeInput";
 import formatDate from "@/components/formatDate";
 import ValidationButton from "@/components/ValidationButton";
 import ProfesseurInput from "@/components/professeurInput";
-import CoursInput from "@/components/CoursInput"; 
+import CoursInput from "@/components/CoursInput";
+import AdminProtectedRoute from "@/components/AdminProtectedRoute";
 
 interface Transaction {
   id: string;
@@ -20,7 +21,6 @@ interface Transaction {
 }
 
 const transactionPage: React.FC = () => {
-
   const [newTransaction, setNewTransaction] = useState<Transaction>({
     id: "",
     title: "",
@@ -89,97 +89,99 @@ const transactionPage: React.FC = () => {
   };
 
   return (
-    <div className="flex justify-center items-center w-full">
-      <div className="max-w-xl w-full p-8 bg-white rounded-lg shadow-md">
-        <h1 className="text-3xl font-bold mb-8 text-center">
-          Page de Transactions
-        </h1>
+    <AdminProtectedRoute>
+      <div className="flex justify-center items-center w-full">
+        <div className="max-w-xl w-full p-8 bg-white rounded-lg shadow-md">
+          <h1 className="text-3xl font-bold mb-8 text-center">
+            Page de Transactions
+          </h1>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <label
-              htmlFor="title"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Titre
-            </label>
-            <input
-              type="text"
-              id="title"
-              name="title"
-              value={newTransaction.title}
-              onChange={handleInputChange}
-              className="block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-            />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label
+                htmlFor="title"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Titre
+              </label>
+              <input
+                type="text"
+                id="title"
+                name="title"
+                value={newTransaction.title}
+                onChange={handleInputChange}
+                className="block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              />
+            </div>
+            <div>
+              <label
+                htmlFor="date"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Date
+              </label>
+              <input
+                type="datetime-local"
+                id="date"
+                name="date"
+                value={newTransaction.date}
+                onChange={handleInputChange}
+                className="block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              />
+            </div>
+            <div>
+              <label
+                htmlFor="description"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Description
+              </label>
+              <input
+                type="text"
+                id="description"
+                name="description"
+                value={newTransaction.description}
+                onChange={handleInputChange}
+                className="block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              />
+            </div>
+            <div>
+              <label
+                htmlFor="amount"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Montant (€)
+              </label>
+              <input
+                type="number"
+                id="amount"
+                name="amount"
+                value={newTransaction.amount}
+                onChange={handleInputChange}
+                className="block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              />
+            </div>
+            <div className="col-span-1 md:col-span-2">
+              <ProfesseurInput
+                professorId={newTransaction.professorId}
+                setProfessorId={setProfessorId}
+                setProfessorName={setProfessorName}
+              />
+            </div>
+            <div className="col-span-1 md:col-span-2">
+              <CoursInput
+                courseId={newTransaction.courseId}
+                setCourseId={setCourseId}
+                setCourseTitle={setCourseTitle}
+              />
+            </div>
           </div>
-          <div>
-            <label
-              htmlFor="date"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Date
-            </label>
-            <input
-              type="datetime-local"
-              id="date"
-              name="date"
-              value={newTransaction.date}
-              onChange={handleInputChange}
-              className="block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-            />
+          <div className="mt-4">
+            <ValidationButton text="Ajouter une transaction" />
           </div>
-          <div>
-            <label
-              htmlFor="description"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Description
-            </label>
-            <input
-              type="text"
-              id="description"
-              name="description"
-              value={newTransaction.description}
-              onChange={handleInputChange}
-              className="block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-            />
-          </div>
-          <div>
-            <label
-              htmlFor="amount"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Montant (€)
-            </label>
-            <input
-              type="number"
-              id="amount"
-              name="amount"
-              value={newTransaction.amount}
-              onChange={handleInputChange}
-              className="block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-            />
-          </div>
-          <div className="col-span-1 md:col-span-2">
-            <ProfesseurInput
-              professorId={newTransaction.professorId}
-              setProfessorId={setProfessorId}
-              setProfessorName={setProfessorName}
-            />
-          </div>
-          <div className="col-span-1 md:col-span-2">
-            <CoursInput
-              courseId={newTransaction.courseId}
-              setCourseId={setCourseId}
-              setCourseTitle={setCourseTitle}
-            />
-          </div>
-        </div>
-        <div className="mt-4">
-          <ValidationButton text="Ajouter une transaction" onClick={handleAddTransaction} />
         </div>
       </div>
-    </div>
+    </AdminProtectedRoute>
   );
 };
 

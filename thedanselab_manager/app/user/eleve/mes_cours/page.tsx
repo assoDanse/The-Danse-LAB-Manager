@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { auth, db } from "@/config/firebase-config";
@@ -13,6 +13,7 @@ import {
   deleteDoc,
 } from "firebase/firestore";
 import BoutonSuppression from "@/components/BoutonSupression";
+import EleveProtectedRoute from "@/components/EleveProtectedRoute";
 
 interface Cours {
   id: string;
@@ -146,78 +147,82 @@ const MesCours: React.FC = () => {
   }
 
   return (
-    <div className="flex flex-col items-center w-full p-3">
-      <h1 className="text-2xl m-4 font-bold">Mes Cours</h1>
-      {myCours.length > 0 ? (
-        <ul className="md:grid md:grid-cols-2 md:gap-4 w-full max-w-3xl mx-auto text-center">
-          {myCours.map((cours) => (
-            <li
-              key={cours.id}
-              className="bg-c0 border border-c4 p-4 mb-2 rounded-lg shadow-lg"
-            >
-              <h2 className="text-xl font-bold">{cours.titre}</h2>
-              <p>Type: {cours.type}</p>
-              <p>Date: {new Date(cours.date_heure_debut).toLocaleString()}</p>
-              <p>
-                Durée: {cours.duree.heures}h {cours.duree.minutes}m
-              </p>
-              <p>Professeur: {cours.nom_professeur}</p>
-              <div className="flex justify-center mt-4">
-                <button
-                  onClick={() => handleViewClick(cours)}
-                  className="bg-blue-500 text-white p-2 rounded mr-2"
-                >
-                  Visualiser
-                </button>
-                <BoutonSuppression onDelete={() => handleDesinscrireClick(cours.id)}>
-                  Se désinscrire
-                </BoutonSuppression>
-              </div>
-            </li>
-          ))}
-        </ul>
-      ) : (
-        <p className="text-center mb-8">Aucun cours trouvé</p>
-      )}
-
-      {viewingCours && (
-        <div className="fixed z-20 top-24 start-0 end-0 bottom-0 bg-gray-600 bg-opacity-50 flex justify-center items-center overflow-auto p-5">
-          <div className="bg-white p-6 rounded-lg shadow-lg max-w-lg w-full max-h-full overflow-y-auto">
-            <h2 className="text-2xl font-bold mb-4">{viewingCours.titre}</h2>
-            {viewingCours.photo && (
-              <img
-                src={viewingCours.photo}
-                alt={viewingCours.titre}
-                className="mb-4 w-full"
-              />
-            )}
-            <p className="mb-4">{viewingCours.description}</p>
-            <p>
-              <strong>Type:</strong> {viewingCours.type}
-            </p>
-            <p>
-              <strong>Date:</strong>{" "}
-              {new Date(viewingCours.date_heure_debut).toLocaleString()}
-            </p>
-            <p>
-              <strong>Durée:</strong> {viewingCours.duree.heures}h{" "}
-              {viewingCours.duree.minutes}m
-            </p>
-            <p>
-              <strong>Professeur:</strong> {viewingCours.nom_professeur}
-            </p>
-            <div className="flex justify-end mt-4">
-              <button
-                onClick={() => setViewingCours(null)}
-                className="bg-blue-500 text-white p-2 rounded"
+    <EleveProtectedRoute>
+      <div className="flex flex-col items-center w-full p-3">
+        <h1 className="text-2xl m-4 font-bold">Mes Cours</h1>
+        {myCours.length > 0 ? (
+          <ul className="md:grid md:grid-cols-2 md:gap-4 w-full max-w-3xl mx-auto text-center">
+            {myCours.map((cours) => (
+              <li
+                key={cours.id}
+                className="bg-c0 border border-c4 p-4 mb-2 rounded-lg shadow-lg"
               >
-                Fermer
-              </button>
+                <h2 className="text-xl font-bold">{cours.titre}</h2>
+                <p>Type: {cours.type}</p>
+                <p>Date: {new Date(cours.date_heure_debut).toLocaleString()}</p>
+                <p>
+                  Durée: {cours.duree.heures}h {cours.duree.minutes}m
+                </p>
+                <p>Professeur: {cours.nom_professeur}</p>
+                <div className="flex justify-center mt-4">
+                  <button
+                    onClick={() => handleViewClick(cours)}
+                    className="bg-blue-500 text-white p-2 rounded mr-2"
+                  >
+                    Visualiser
+                  </button>
+                  <BoutonSuppression
+                    onDelete={() => handleDesinscrireClick(cours.id)}
+                  >
+                    Se désinscrire
+                  </BoutonSuppression>
+                </div>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p className="text-center mb-8">Aucun cours trouvé</p>
+        )}
+
+        {viewingCours && (
+          <div className="fixed z-20 top-24 start-0 end-0 bottom-0 bg-gray-600 bg-opacity-50 flex justify-center items-center overflow-auto p-5">
+            <div className="bg-white p-6 rounded-lg shadow-lg max-w-lg w-full max-h-full overflow-y-auto">
+              <h2 className="text-2xl font-bold mb-4">{viewingCours.titre}</h2>
+              {viewingCours.photo && (
+                <img
+                  src={viewingCours.photo}
+                  alt={viewingCours.titre}
+                  className="mb-4 w-full"
+                />
+              )}
+              <p className="mb-4">{viewingCours.description}</p>
+              <p>
+                <strong>Type:</strong> {viewingCours.type}
+              </p>
+              <p>
+                <strong>Date:</strong>{" "}
+                {new Date(viewingCours.date_heure_debut).toLocaleString()}
+              </p>
+              <p>
+                <strong>Durée:</strong> {viewingCours.duree.heures}h{" "}
+                {viewingCours.duree.minutes}m
+              </p>
+              <p>
+                <strong>Professeur:</strong> {viewingCours.nom_professeur}
+              </p>
+              <div className="flex justify-end mt-4">
+                <button
+                  onClick={() => setViewingCours(null)}
+                  className="bg-blue-500 text-white p-2 rounded"
+                >
+                  Fermer
+                </button>
+              </div>
             </div>
           </div>
-        </div>
-      )}
-    </div>
+        )}
+      </div>
+    </EleveProtectedRoute>
   );
 };
 

@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import Modal from "react-modal";
 import { useRouter } from "next/navigation";
 import NameInput from "@/components/NameInput";
 import EmailInput from "@/components/EmailInput";
@@ -13,14 +14,17 @@ import {
   signInWithEmailAndPassword,
 } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
+import AdminProtectedRoute from "@/components/AdminProtectedRoute";
 
-const Creation_Admin: React.FC = () => {
+const CreateEleve: React.FC = () => {
   const [name, setName] = useState("");
   const [firstName, setFirstName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [adminPassword, setAdminPassword] = useState("");
   const [error, setError] = useState("");
   const [message, setMessage] = useState(""); // Pour afficher les messages de succès
+  const [modalIsOpen, setModalIsOpen] = useState(false);
   const router = useRouter();
 
   const validateEmail = (email: string) => {
@@ -33,7 +37,7 @@ const Creation_Admin: React.FC = () => {
     return re.test(password);
   };
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (!name || !firstName || !email || !password) {
@@ -55,24 +59,23 @@ const Creation_Admin: React.FC = () => {
 
     setError("");
     setMessage("");
+    setModalIsOpen(true); // Ouvrir la modale pour demander le mot de passe administrateur
+  };
 
+  const handleAdminPasswordSubmit = async () => {
     try {
       const admin = auth.currentUser; // Sauvegarder l'utilisateur admin actuel
       let adminEmail = "";
-      let adminPassword = "";
 
       if (admin) {
         adminEmail = admin.email || "";
-        const adminPasswordPrompt = prompt(
-          "Veuillez entrer votre mot de passe pour continuer:"
-        );
-        if (adminPasswordPrompt) {
-          adminPassword = adminPasswordPrompt;
-        } else {
-          setError("Mot de passe requis pour continuer");
-          return;
-        }
+      } else {
+        setError("Aucun utilisateur connecté");
+        return;
       }
+
+      // Valider les informations de l'administrateur actuel
+      await signInWithEmailAndPassword(auth, adminEmail, adminPassword);
 
       const userCredential = await createUserWithEmailAndPassword(
         auth,
@@ -89,16 +92,16 @@ const Creation_Admin: React.FC = () => {
         status: "admin", // Définir le statut par défaut à "admin"
       });
 
-      setMessage(`Utilisateur créé : ${user.email}`);
+      setMessage(`Utilisateur créé : ${email}`);
       setName("");
       setFirstName("");
       setEmail("");
       setPassword("");
+      setAdminPassword("");
+      setModalIsOpen(false); // Fermer la modale
 
       // Reconnecter l'administrateur
-      if (admin && adminEmail && adminPassword) {
-        await signInWithEmailAndPassword(auth, adminEmail, adminPassword);
-      }
+      await signInWithEmailAndPassword(auth, adminEmail, adminPassword);
     } catch (error: any) {
       if (error.code === "auth/email-already-in-use") {
         setError("Cet utilisateur existe déjà");
@@ -110,22 +113,59 @@ const Creation_Admin: React.FC = () => {
     }
   };
 
+  const customStyles = {
+    content: {
+      top: '50%',
+      left: '50%',
+      right: 'auto',
+      bottom: 'auto',
+      marginRight: '-50%',
+      transform: 'translate(-50%, -50%)',
+      width: '300px', // Ajustez la largeur de la modale
+      padding: '20px', // Ajustez le padding pour rendre l'apparence plus compacte
+    },
+  };
+
   return (
-    <div className="flex justify-center items-center w-full">
-      <div className="max-w-sm w-full p-8 bg-white rounded-lg shadow-md">
-        <h1 className="text-center text-2xl mb-6">Créer un compte admin</h1>
-        <form onSubmit={handleSubmit} className="flex flex-col gap-5">
-          <NameInput name={name} setName={setName} />
-          <FirstNameInput firstName={firstName} setFirstName={setFirstName} />
-          <EmailInput email={email} setEmail={setEmail} />
-          <PasswordInput password={password} setPassword={setPassword} />
-          {error && <p className="text-red-500">{error}</p>}
-          {message && <p className="text-green-500">{message}</p>}
-          <ValidationButton text="Création Admin" />
-        </form>
+    <AdminProtectedRoute>
+      <div className="flex justify-center items-center w-full">
+        <div className="max-w-sm w-full p-8 bg-white rounded-lg shadow-md">
+          <h1 className="text-center text-2xl mb-6">Créer un compte élève</h1>
+          <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+            <NameInput name={name} setName={setName} />
+            <FirstNameInput firstName={firstName} setFirstName={setFirstName} />
+            <EmailInput email={email} setEmail={setEmail} />
+            <PasswordInput password={password} setPassword={setPassword} />
+            {error && <p className="text-red-500">{error}</p>}
+            {message && <p className="text-green-500">{message}</p>}
+            <ValidationButton text="Création Admin" />
+          </form>
+        </div>
+        <Modal
+          isOpen={modalIsOpen}
+          onRequestClose={() => setModalIsOpen(false)}
+          style={customStyles}
+          contentLabel="Validation Administrateur"
+          ariaHideApp={false} // Ajoutez ceci pour éviter les avertissements si vous n'avez pas configuré react-modal pour cacher l'application principale
+        >
+          <h2 className="text-xl mb-4">Valider avec mot de passe administrateur</h2>
+          <input
+            type="password"
+            placeholder="Mot de passe administrateur"
+            value={adminPassword}
+            onChange={(e) => setAdminPassword(e.target.value)}
+            className="w-full p-2 border border-gray-300 rounded mb-4"
+          />
+          <button
+            onClick={handleAdminPasswordSubmit}
+            className="w-full bg-blue-500 text-white p-2 rounded"
+          >
+            Valider
+          </button>
+        </Modal>
       </div>
-    </div>
+    </AdminProtectedRoute>
   );
 };
 
-export default Creation_Admin;
+export default CreateEleve;

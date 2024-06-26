@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { auth, db } from "@/config/firebase-config";
 import { onAuthStateChanged } from "firebase/auth";
 import { collection, query, where, getDocs } from "firebase/firestore";
+import EleveProtectedRoute from "@/components/EleveProtectedRoute";
 
 interface Carte {
   id: string;
@@ -77,24 +78,26 @@ const MesCartes: React.FC = () => {
   }
 
   return (
-    <div className="flex flex-col items-center w-full p-3">
-      <h1 className="text-2xl m-4 font-bold">Mes Cartes</h1>
-      {cartes.length > 0 ? (
-        <ul className="md:grid md:grid-cols-2 md:gap-4 w-full max-w-3xl mx-auto">
-          {cartes.map((carte) => (
-            <li
-              key={carte.id}
-              className="bg-c0 border border-c4 p-4 mb-2 rounded-lg shadow-lg"
-            >
-              <h2 className="text-xl font-bold">{carte.titre}</h2>
-              <p>Places restantes: {carte.places_restantes}</p>
-            </li>
-          ))}
-        </ul>
-      ) : (
-        <p className="text-center mb-8">Aucune carte trouvée</p>
-      )}
-    </div>
+    <EleveProtectedRoute>
+      <div className="flex flex-col items-center w-full p-3">
+        <h1 className="text-2xl m-4 font-bold">Mes Cartes</h1>
+        {cartes.length > 0 ? (
+          <ul className="md:grid md:grid-cols-2 md:gap-4 w-full max-w-3xl mx-auto">
+            {cartes.map((carte) => (
+              <li
+                key={carte.id}
+                className="bg-c0 border border-c4 p-4 mb-2 rounded-lg shadow-lg"
+              >
+                <h2 className="text-xl font-bold">{carte.titre}</h2>
+                <p>Places restantes: {carte.places_restantes}</p>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p className="text-center mb-8">Aucune carte trouvée</p>
+        )}
+      </div>
+    </EleveProtectedRoute>
   );
 };
 
