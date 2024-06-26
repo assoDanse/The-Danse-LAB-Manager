@@ -20,7 +20,7 @@ const BoutonSuppression: React.FC<BoutonSuppressionProps> = ({
 
   return (
     <>
-      <Button className="bg-c7" onClick={() => setOpenModal(true)}>
+      <Button className="bg-c7 " onClick={() => setOpenModal(true)}>
         {children || "Supprimer"}{" "}
         {/* Affiche "Supprimer" si children n'est pas fourni */}
       </Button>

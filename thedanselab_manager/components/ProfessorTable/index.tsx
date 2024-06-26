@@ -1,6 +1,13 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { collection, query, where, getDocs, deleteDoc, doc } from "firebase/firestore";
+import {
+  collection,
+  query,
+  where,
+  getDocs,
+  deleteDoc,
+  doc,
+} from "firebase/firestore";
 import { db } from "@/config/firebase-config";
 import TableSkeleton from "../TableSkeleton";
 import BoutonSupression from "@/components/BoutonSupression";
@@ -23,7 +30,10 @@ const ProfessorTable: React.FC = () => {
       setError(null);
 
       try {
-        const q = query(collection(db, "users"), where("status", "==", "professeur"));
+        const q = query(
+          collection(db, "users"),
+          where("status", "==", "professeur")
+        );
         const querySnapshot = await getDocs(q);
         const professorsList: Professor[] = querySnapshot.docs.map((doc) => ({
           id: doc.id,
@@ -58,7 +68,9 @@ const ProfessorTable: React.FC = () => {
   }
 
   if (error) {
-    return <div className="flex justify-center items-center w-full">{error}</div>;
+    return (
+      <div className="flex justify-center items-center w-full">{error}</div>
+    );
   }
 
   return (
@@ -75,10 +87,16 @@ const ProfessorTable: React.FC = () => {
         <tbody>
           {professors.map((professor) => (
             <tr key={professor.id}>
-              <td className="py-2 px-4 border-b text-center">{professor.name}</td>
-              <td className="py-2 px-4 border-b text-center">{professor.firstName}</td>
-              <td className="py-2 px-4 border-b text-center">{professor.email}</td>
               <td className="py-2 px-4 border-b text-center">
+                {professor.name}
+              </td>
+              <td className="py-2 px-4 border-b text-center">
+                {professor.firstName}
+              </td>
+              <td className="py-2 px-4 border-b text-center">
+                {professor.email}
+              </td>
+              <td className="flex py-2 px-4 border-b text-center justify-center">
                 <BoutonSupression onDelete={() => handleDelete(professor.id)} />
               </td>
             </tr>
