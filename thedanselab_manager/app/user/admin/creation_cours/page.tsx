@@ -64,7 +64,7 @@ const CreateCours: React.FC = () => {
     setMessage("");
 
     try {
-      const dateTimestamp = Timestamp.fromDate(new Date(date));
+      const baseDate = new Date(date);
       let photoURL = "";
 
       if (photo) {
@@ -73,22 +73,28 @@ const CreateCours: React.FC = () => {
         photoURL = await getDownloadURL(photoRef);
       }
 
-      await addDoc(collection(db, "cours"), {
-        titre: title,
-        description: description,
-        type: courseType,
-        date_heure_debut: dateTimestamp,
-        duree: {
-          heures: duration.hours,
-          minutes: duration.minutes,
-        },
-        nom_professeur: professorName,
-        id_professeur: professorId,
-        photo: photoURL,
-        periodicite: isRecurrent ? periodicity : 1,
-      });
+      for (let i = 0; i < periodicity; i++) {
+        const currentDate = new Date(baseDate);
+        currentDate.setDate(baseDate.getDate() + i * 7);
+        const dateTimestamp = Timestamp.fromDate(currentDate);
 
-      setMessage("Cours créé avec succès");
+        await addDoc(collection(db, "cours"), {
+          titre: title,
+          description: description,
+          type: courseType,
+          date_heure_debut: dateTimestamp,
+          duree: {
+            heures: duration.hours,
+            minutes: duration.minutes,
+          },
+          nom_professeur: professorName,
+          id_professeur: professorId,
+          photo: photoURL,
+          periodicite: isRecurrent ? periodicity : 1,
+        });
+      }
+
+      setMessage("Cours créés avec succès");
       setTitle("");
       setDescription("");
       setProfessorId("");
