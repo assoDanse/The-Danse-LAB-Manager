@@ -1,44 +1,32 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
 type ContactInfo = {
-  phoneNumber: string;
   email: string;
   facebook: string;
+  facebookLogo: string;
   instagram: string;
+  instagramLogo: string;
 };
 
 const Contact: React.FC = () => {
-  const [contactInfo, setContactInfo] = useState<ContactInfo | null>(null);
-
-  useEffect(() => {
-    const fetchContactInfo = async () => {
-      try {
-        const response = await fetch("/api/contact");
-        const data = await response.json();
-        setContactInfo(data);
-      } catch (error) {
-        console.error(
-          "Erreur lors de la récupération des informations de contact:",
-          error
-        );
-      }
-    };
-
-    fetchContactInfo();
-  }, []);
+  const [contactInfo] = useState<ContactInfo>({
+    email: "thedancelab.contact@gmail.com",
+    facebook: "https://www.facebook.com/profile.php?id=100093814275981",
+    facebookLogo:
+      "https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg",
+    instagram: "https://www.instagram.com/thedancelab_lille/?hl=fr",
+    instagramLogo:
+      "https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png",
+  });
 
   return (
-    <div className="flex flex-col items-center justify-center w-full ">
+    <div className="flex flex-col items-center justify-center w-full p-2">
       <div className="w-full max-w-md p-8 bg-white rounded shadow-md">
         <h2 className="text-3xl font-bold mb-6 text-center">Contactez-nous</h2>
         {contactInfo ? (
           <>
-            <div className="mb-4">
-              <h3 className="text-xl font-semibold">Numéro de téléphone</h3>
-              <p className="text-gray-700">{contactInfo.phoneNumber}</p>
-            </div>
             <div className="mb-4">
               <h3 className="text-xl font-semibold">Adresse e-mail</h3>
               <p className="text-gray-700">{contactInfo.email}</p>
@@ -51,7 +39,11 @@ const Contact: React.FC = () => {
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                {contactInfo.facebook}
+                <img
+                  src={contactInfo.facebookLogo}
+                  alt="Facebook"
+                  className="w-6 h-6 inline-block"
+                />
               </a>
             </div>
             <div className="mb-4">
@@ -62,7 +54,11 @@ const Contact: React.FC = () => {
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                {contactInfo.instagram}
+                <img
+                  src={contactInfo.instagramLogo}
+                  alt="Instagram"
+                  className="w-6 h-6 inline-block"
+                />
               </a>
             </div>
           </>
