@@ -9,7 +9,10 @@ interface Course {
   id: string;
   titre: string;
   description: string;
-  date_heure_debut: string;
+  date_heure_debut: {
+    seconds: number;
+    nanoseconds: number;
+  };
   duree: {
     heures: number;
     minutes: number;
@@ -34,7 +37,10 @@ const CourseTable: React.FC = () => {
             id: doc.id,
             ...doc.data(),
           }))
-          .filter((course) => new Date(course.date_heure_debut) >= new Date()) as Course[];
+          .filter((course) => {
+            const courseDate = new Date(course.date_heure_debut.seconds * 1000);
+            return courseDate >= new Date();
+          }) as Course[];
         setCourses(courseList);
       } catch (err) {
         setError("Erreur lors de la récupération des cours");
@@ -80,40 +86,41 @@ const CourseTable: React.FC = () => {
       <table className="min-w-full bg-white rounded-lg shadow-md">
         <thead>
           <tr>
-            <th className="py-2 px-4 border-b">Titre</th>
-            <th className="py-2 px-4 border-b">Description</th>
-            <th className="py-2 px-4 border-b">Date et Heure</th>
-            <th className="py-2 px-4 border-b">Durée</th>
-            <th className="py-2 px-4 border-b">Actions</th>
+            <th className="py-2 px-4 border-b text-center">Titre</th>
+            <th className="py-2 px-4 border-b text-center">Date et Heure</th>
+            <th className="py-2 px-4 border-b text-center">Durée</th>
+            <th className="py-2 px-4 border-b text-center">Actions</th>
           </tr>
         </thead>
         <tbody>
-          {courses.map((course) => (
-            <tr key={course.id}>
-              <td className="py-2 px-4 border-b">{course.titre}</td>
-              <td className="py-2 px-4 border-b">{course.description}</td>
-              <td className="py-2 px-4 border-b">
-                {new Date(course.date_heure_debut).toLocaleString()}
-              </td>
-              <td className="py-2 px-4 border-b">
-                {course.duree.heures} heures {course.duree.minutes} minutes
-              </td>
-              <td className="py-2 px-4 border-b">
-                <button
-                  onClick={() => handleEdit(course.id)}
-                  className="bg-blue-500 text-white py-1 px-3 rounded mr-2"
-                >
-                  Modifier
-                </button>
-                <button
-                  onClick={() => handleDelete(course.id)}
-                  className="bg-red-500 text-white py-1 px-3 rounded"
-                >
-                  Supprimer
-                </button>
-              </td>
-            </tr>
-          ))}
+          {courses && courses.map((course) => {
+            const courseDate = new Date(course.date_heure_debut.seconds * 1000);
+            return (
+              <tr key={course.id}>
+                <td className="py-2 px-4 border-b text-center">{course.titre}</td>
+                <td className="py-2 px-4 border-b text-center">
+                  {courseDate.toLocaleString()}
+                </td>
+                <td className="py-2 px-4 border-b text-center">
+                  {course.duree.heures} heures {course.duree.minutes} minutes
+                </td>
+                <td className="py-2 px-4 border-b text-center">
+                  <button
+                    onClick={() => handleEdit(course.id)}
+                    className="bg-blue-500 text-white py-1 px-3 rounded mr-2"
+                  >
+                    Modifier
+                  </button>
+                  <button
+                    onClick={() => handleDelete(course.id)}
+                    className="bg-red-500 text-white py-1 px-3 rounded"
+                  >
+                    Supprimer
+                  </button>
+                </td>
+              </tr>
+            );
+          })}
         </tbody>
       </table>
     </div>
