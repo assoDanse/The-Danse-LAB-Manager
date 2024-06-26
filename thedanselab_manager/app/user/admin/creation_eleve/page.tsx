@@ -14,6 +14,7 @@ import {
   signInWithEmailAndPassword,
 } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
+import AdminProtectedRoute from "@/components/AdminProtectedRoute";
 
 const CreateEleve: React.FC = () => {
   const [name, setName] = useState("");
@@ -126,42 +127,44 @@ const CreateEleve: React.FC = () => {
   };
 
   return (
-    <div className="flex justify-center items-center w-full">
-      <div className="max-w-sm w-full p-8 bg-white rounded-lg shadow-md">
-        <h1 className="text-center text-2xl mb-6">Créer un compte élève</h1>
-        <form onSubmit={handleSubmit} className="flex flex-col gap-5">
-          <NameInput name={name} setName={setName} />
-          <FirstNameInput firstName={firstName} setFirstName={setFirstName} />
-          <EmailInput email={email} setEmail={setEmail} />
-          <PasswordInput password={password} setPassword={setPassword} />
-          {error && <p className="text-red-500">{error}</p>}
-          {message && <p className="text-green-500">{message}</p>}
-          <ValidationButton text="Inscription élève" />
-        </form>
-      </div>
-      <Modal
-        isOpen={modalIsOpen}
-        onRequestClose={() => setModalIsOpen(false)}
-        style={customStyles}
-        contentLabel="Validation Administrateur"
-        ariaHideApp={false} // Ajoutez ceci pour éviter les avertissements si vous n'avez pas configuré react-modal pour cacher l'application principale
-      >
-        <h2 className="text-xl mb-4">Valider avec mot de passe administrateur</h2>
-        <input
-          type="password"
-          placeholder="Mot de passe administrateur"
-          value={adminPassword}
-          onChange={(e) => setAdminPassword(e.target.value)}
-          className="w-full p-2 border border-gray-300 rounded mb-4"
-        />
-        <button
-          onClick={handleAdminPasswordSubmit}
-          className="w-full bg-blue-500 text-white p-2 rounded"
+    <AdminProtectedRoute>
+      <div className="flex justify-center items-center w-full">
+        <div className="max-w-sm w-full p-8 bg-white rounded-lg shadow-md">
+          <h1 className="text-center text-2xl mb-6">Créer un compte élève</h1>
+          <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+            <NameInput name={name} setName={setName} />
+            <FirstNameInput firstName={firstName} setFirstName={setFirstName} />
+            <EmailInput email={email} setEmail={setEmail} />
+            <PasswordInput password={password} setPassword={setPassword} />
+            {error && <p className="text-red-500">{error}</p>}
+            {message && <p className="text-green-500">{message}</p>}
+            <ValidationButton text="Inscription élève" />
+          </form>
+        </div>
+        <Modal
+          isOpen={modalIsOpen}
+          onRequestClose={() => setModalIsOpen(false)}
+          style={customStyles}
+          contentLabel="Validation Administrateur"
+          ariaHideApp={false} // Ajoutez ceci pour éviter les avertissements si vous n'avez pas configuré react-modal pour cacher l'application principale
         >
-          Valider
-        </button>
-      </Modal>
-    </div>
+          <h2 className="text-xl mb-4">Valider avec mot de passe administrateur</h2>
+          <input
+            type="password"
+            placeholder="Mot de passe administrateur"
+            value={adminPassword}
+            onChange={(e) => setAdminPassword(e.target.value)}
+            className="w-full p-2 border border-gray-300 rounded mb-4"
+          />
+          <button
+            onClick={handleAdminPasswordSubmit}
+            className="w-full bg-blue-500 text-white p-2 rounded"
+          >
+            Valider
+          </button>
+        </Modal>
+      </div>
+    </AdminProtectedRoute>
   );
 };
 

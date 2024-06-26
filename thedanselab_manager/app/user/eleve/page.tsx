@@ -13,6 +13,7 @@ import {
   getDoc,
   Timestamp,
 } from "firebase/firestore";
+import EleveProtectedRoute from "@/components/EleveProtectedRoute";
 
 interface Cours {
   id: string;
@@ -123,33 +124,31 @@ const PanelEleve: React.FC = () => {
   }
 
   return (
-    <div className="flex flex-col items-center w-full p-3">
-      <p className="text-gray-600 mb-4">
-        Crédits disponibles :{" "}
-        {placeRestante !== null ? placeRestante : "Chargement..."}
-      </p>
-      <h1 className="text-2xl m-4 font-bold">Mes Cours</h1>
-      {myCours.length > 0 ? (
-        <ul className="md:grid md:grid-cols-2 md:gap-4 w-full max-w-3xl mx-auto text-center">
-          {myCours.map((cours) => (
-            <li
-              key={cours.id}
-              className="bg-c0 border border-c4 p-4 mb-2 rounded-lg shadow-lg"
-            >
-              <h2 className="text-xl font-bold">{cours.titre}</h2>
-              <p>Type: {cours.type}</p>
-              <p>Date: {cours.date_heure_debut}</p>
-              <p>
-                Durée: {cours.duree.heures}h {cours.duree.minutes}m
-              </p>
-              <p>Professeur: {cours.nom_professeur}</p>
-            </li>
-          ))}
-        </ul>
-      ) : (
-        <p className="text-center">Aucun cours trouvé</p>
-      )}
-    </div>
+    <EleveProtectedRoute>
+      <div className="flex flex-col items-center w-full p-3">
+        <h1 className="text-2xl m-4 font-bold">Mes Cours</h1>
+        {myCours.length > 0 ? (
+          <ul className="md:grid md:grid-cols-2 md:gap-4 w-full max-w-3xl mx-auto text-center">
+            {myCours.map((cours) => (
+              <li
+                key={cours.id}
+                className="bg-c0 border border-c4 p-4 mb-2 rounded-lg shadow-lg"
+              >
+                <h2 className="text-xl font-bold">{cours.titre}</h2>
+                <p>Type: {cours.type}</p>
+                <p>Date: {cours.date_heure_debut}</p>
+                <p>
+                  Durée: {cours.duree.heures}h {cours.duree.minutes}m
+                </p>
+                <p>Professeur: {cours.nom_professeur}</p>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p className="text-center">Aucun cours trouvé</p>
+        )}
+      </div>
+    </EleveProtectedRoute>
   );
 };
 

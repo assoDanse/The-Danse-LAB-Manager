@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "@/config/firebase-config";
+import AdminProtectedRoute from "@/components/AdminProtectedRoute";
 
 interface Tarif {
   id: string;
@@ -61,38 +62,40 @@ const TarifsAdmin: React.FC = () => {
   }
 
   return (
-    <div className="flex flex-col items-center w-full p-3">
-      <h1 className="text-2xl m-4 font-bold">Tarifs</h1>
-      {tarifs.length > 0 ? (
-        <ul className="md:grid md:grid-cols-2 md:gap-4 w-full max-w-3xl mx-auto">
-          {tarifs.map((tarif) => (
-            <li
-              key={tarif.id}
-              className="bg-c0 border border-c4 p-4 mb-2 rounded-lg shadow-lg"
-            >
-              <h2 className="text-xl font-bold">{tarif.titre}</h2>
-              <img
-                src={tarif.image}
-                alt={tarif.titre}
-                className="mb-4"
-                style={{ width: "150px", height: "auto" }}
-              />
-              <p>{tarif.description}</p>
-              <p>Prix: {tarif.prix} €</p>
-              <p>Crédit: {tarif.credit}</p>
-              <button
-                onClick={() => handleRemove(tarif.id)}
-                className="bg-red-500 text-white p-2 rounded mt-2"
+    <AdminProtectedRoute>
+      <div className="flex flex-col items-center w-full p-3">
+        <h1 className="text-2xl m-4 font-bold">Tarifs</h1>
+        {tarifs.length > 0 ? (
+          <ul className="md:grid md:grid-cols-2 md:gap-4 w-full max-w-3xl mx-auto">
+            {tarifs.map((tarif) => (
+              <li
+                key={tarif.id}
+                className="bg-c0 border border-c4 p-4 mb-2 rounded-lg shadow-lg"
               >
-                Supprimer
-              </button>
-            </li>
-          ))}
-        </ul>
-      ) : (
-        <p className="text-center">Aucun tarif trouvé</p>
-      )}
-    </div>
+                <h2 className="text-xl font-bold">{tarif.titre}</h2>
+                <img
+                  src={tarif.image}
+                  alt={tarif.titre}
+                  className="mb-4"
+                  style={{ width: "150px", height: "auto" }}
+                />
+                <p>{tarif.description}</p>
+                <p>Prix: {tarif.prix} €</p>
+                <p>Crédit: {tarif.credit}</p>
+                <button
+                  onClick={() => handleRemove(tarif.id)}
+                  className="bg-red-500 text-white p-2 rounded mt-2"
+                >
+                  Supprimer
+                </button>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p className="text-center">Aucun tarif trouvé</p>
+        )}
+      </div>
+    </AdminProtectedRoute>
   );
 };
 

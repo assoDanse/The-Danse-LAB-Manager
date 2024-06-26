@@ -1,3 +1,4 @@
+// app/user/admin/comptabilite/page.tsx
 "use client";
 
 import React, { useEffect, useState } from "react";
@@ -5,6 +6,7 @@ import { collection, getDocs, query, where, doc, getDoc } from "firebase/firesto
 import { db } from "@/config/firebase-config";
 import DateRangeInput from '@/components/DateRangeInput';
 import formatDate from '@/components/formatDate';
+import AdminProtectedRoute from "@/components/AdminProtectedRoute"; // Importez le composant de protection
 
 interface Course {
   id: string;
@@ -118,98 +120,100 @@ const ComptabilitePage: React.FC = () => {
   };
 
   return (
-    <div className="container mx-auto p-8">
-      <h1 className="text-3xl font-bold mb-8 text-center">Comptabilité</h1>
-      <div className="mb-4">
-        <label htmlFor="option-select" className="block text-sm font-medium text-gray-700">
-          Afficher par
-        </label>
-        <select
-          id="option-select"
-          value={selectedOption}
-          onChange={(e) => setSelectedOption(e.target.value)}
-          className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+    <AdminProtectedRoute> {/* Utilisez le composant de protection */}
+      <div className="container mx-auto p-8">
+        <h1 className="text-3xl font-bold mb-8 text-center">Comptabilité</h1>
+        <div className="mb-4">
+          <label htmlFor="option-select" className="block text-sm font-medium text-gray-700">
+            Afficher par
+          </label>
+          <select
+            id="option-select"
+            value={selectedOption}
+            onChange={(e) => setSelectedOption(e.target.value)}
+            className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+          >
+            <option value="cours">Cours</option>
+            <option value="professeurs">Professeurs</option>
+          </select>
+        </div>
+        <DateRangeInput
+          startDate={startDate}
+          setStartDate={setStartDate}
+          endDate={endDate}
+          setEndDate={setEndDate}
+        />
+        <button
+          onClick={handleFilter}
+          className="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
         >
-          <option value="cours">Cours</option>
-          <option value="professeurs">Professeurs</option>
-        </select>
-      </div>
-      <DateRangeInput
-        startDate={startDate}
-        setStartDate={setStartDate}
-        endDate={endDate}
-        setEndDate={setEndDate}
-      />
-      <button
-        onClick={handleFilter}
-        className="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-      >
-        Filtrer
-      </button>
-      {selectedOption === 'cours' && (
-        <div className="overflow-x-auto mt-4">
-          <table className="min-w-full bg-white border">
-            <thead>
-              <tr>
-                <th className="py-2 px-4 border-b text-center">Titre</th>
-                <th className="py-2 px-4 border-b text-center">Date</th>
-                <th className="py-2 px-4 border-b text-center">Professeur</th>
-                <th className="py-2 px-4 border-b text-center">Montant Total (€)</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredCourses.map((course) => (
-                <tr key={course.id}>
-                  <td className="py-2 px-4 border-b text-center">{course.titre}</td>
-                  <td className="py-2 px-4 border-b text-center">{formatDate(course.date_heure_debut)}</td>
-                  <td className="py-2 px-4 border-b text-center">
-                    {professeurs.find(prof => prof.id === course.id_professeur)
-                      ? `${professeurs.find(prof => prof.id === course.id_professeur)?.firstName} ${professeurs.find(prof => prof.id === course.id_professeur)?.name}`
-                      : "N/A"}
-                  </td>
-                  <td className="py-2 px-4 border-b text-center">{amounts[course.id]?.toFixed(2) || '0.00'}</td>
+          Filtrer
+        </button>
+        {selectedOption === 'cours' && (
+          <div className="overflow-x-auto mt-4">
+            <table className="min-w-full bg-white border">
+              <thead>
+                <tr>
+                  <th className="py-2 px-4 border-b text-center">Titre</th>
+                  <th className="py-2 px-4 border-b text-center">Date</th>
+                  <th className="py-2 px-4 border-b text-center">Professeur</th>
+                  <th className="py-2 px-4 border-b text-center">Montant Total (€)</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
-      {selectedOption === 'professeurs' && (
-        <div className="overflow-x-auto mt-4">
-          <table className="min-w-full bg-white border">
-            <thead>
-              <tr>
-                <th className="py-2 px-4 border-b text-center">Professeur</th>
-                <th className="py-2 px-4 border-b text-center">Cours</th>
-                <th className="py-2 px-4 border-b text-center">Date</th>
-                <th className="py-2 px-4 border-b text-center">Montant Total (€)</th>
-              </tr>
-            </thead>
-            <tbody>
-              {professeurs.map((professeur) => (
-                <React.Fragment key={professeur.id}>
-                  <tr>
-                    <td className="py-2 px-4 border-b " colSpan={4}>
-                      <strong>{`${professeur.firstName} ${professeur.name}`}</strong>
+              </thead>
+              <tbody>
+                {filteredCourses.map((course) => (
+                  <tr key={course.id}>
+                    <td className="py-2 px-4 border-b text-center">{course.titre}</td>
+                    <td className="py-2 px-4 border-b text-center">{formatDate(course.date_heure_debut)}</td>
+                    <td className="py-2 px-4 border-b text-center">
+                      {professeurs.find(prof => prof.id === course.id_professeur)
+                        ? `${professeurs.find(prof => prof.id === course.id_professeur)?.firstName} ${professeurs.find(prof => prof.id === course.id_professeur)?.name}`
+                        : "N/A"}
                     </td>
+                    <td className="py-2 px-4 border-b text-center">{amounts[course.id]?.toFixed(2) || '0.00'}</td>
                   </tr>
-                  {courses
-                    .filter((course) => course.id_professeur === professeur.id)
-                    .map((course) => (
-                      <tr key={course.id}>
-                        <td className="py-2 px-4 border-b text-center"></td> {/* Cellule vide pour l'affichage en escalier */}
-                        <td className="py-2 px-4 border-b text-center">{course.titre}</td>
-                        <td className="py-2 px-4 border-b text-center">{formatDate(course.date_heure_debut)}</td>
-                        <td className="py-2 px-4 border-b text-center">{amounts[course.id]?.toFixed(2) || '0.00'}</td>
-                      </tr>
-                    ))}
-                </React.Fragment>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
-    </div>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+        {selectedOption === 'professeurs' && (
+          <div className="overflow-x-auto mt-4">
+            <table className="min-w-full bg-white border">
+              <thead>
+                <tr>
+                  <th className="py-2 px-4 border-b text-center">Professeur</th>
+                  <th className="py-2 px-4 border-b text-center">Cours</th>
+                  <th className="py-2 px-4 border-b text-center">Date</th>
+                  <th className="py-2 px-4 border-b text-center">Montant Total (€)</th>
+                </tr>
+              </thead>
+              <tbody>
+                {professeurs.map((professeur) => (
+                  <React.Fragment key={professeur.id}>
+                    <tr>
+                      <td className="py-2 px-4 border-b text-center" colSpan={4}>
+                        <strong>{`${professeur.firstName} ${professeur.name}`}</strong>
+                      </td>
+                    </tr>
+                    {courses
+                      .filter((course) => course.id_professeur === professeur.id)
+                      .map((course) => (
+                        <tr key={course.id}>
+                          <td className="py-2 px-4 border-b text-center"></td> {/* Cellule vide pour l'affichage en escalier */}
+                          <td className="py-2 px-4 border-b text-center">{course.titre}</td>
+                          <td className="py-2 px-4 border-b text-center">{formatDate(course.date_heure_debut)}</td>
+                          <td className="py-2 px-4 border-b text-center">{amounts[course.id]?.toFixed(2) || '0.00'}</td>
+                        </tr>
+                      ))}
+                  </React.Fragment>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
+    </AdminProtectedRoute>
   );
 };
 

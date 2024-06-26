@@ -16,6 +16,7 @@ import {
   collection,
 } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import AdminProtectedRoute from "@/components/AdminProtectedRoute";
 
 const ModifierProf: React.FC = () => {
   const [professors, setProfessors] = useState<any[]>([]);
@@ -134,56 +135,58 @@ const ModifierProf: React.FC = () => {
   };
 
   return (
-    <div className="flex justify-center items-center w-full">
-      <div className="max-w-md w-full p-8 bg-white rounded-lg shadow-md">
-        <h1 className="text-center text-2xl mb-6">Modifier un Professeur</h1>
-        <form onSubmit={handleSubmit} className="flex flex-col gap-5">
-          <div>
+    <AdminProtectedRoute>
+      <div className="flex justify-center items-center w-full">
+        <div className="max-w-md w-full p-8 bg-white rounded-lg shadow-md">
+          <h1 className="text-center text-2xl mb-6">Modifier un Professeur</h1>
+          <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+            <div>
+              <Label
+                htmlFor="professor-select"
+                value="Sélectionnez un professeur"
+              />
+              <Select
+                id="professor-select"
+                required
+                value={selectedProfessorId}
+                onChange={(e) => setSelectedProfessorId(e.target.value)}
+              >
+                <option value="">Sélectionner un professeur</option>
+                {professors.map((prof) => (
+                  <option key={prof.id} value={prof.id}>
+                    {prof.firstName} {prof.name}
+                  </option>
+                ))}
+              </Select>
+            </div>
+            <NameInput name={name} setName={setName} />
+            <FirstNameInput firstName={firstName} setFirstName={setFirstName} />
             <Label
-              htmlFor="professor-select"
-              value="Sélectionnez un professeur"
+              htmlFor="file-upload-helper-text"
+              value="Photo"
+              className="text-center"
             />
-            <Select
-              id="professor-select"
-              required
-              value={selectedProfessorId}
-              onChange={(e) => setSelectedProfessorId(e.target.value)}
+            <input
+              type="file"
+              id="file-upload-helper-text"
+              accept="image/*"
+              onChange={handlePhotoChange}
+            />
+            <DialogueBoxInput DialogueBox={bio} setDialogueBox={setBio} />
+            {error && <p className="text-red-500">{error}</p>}
+            {message && <p className="text-green-500">{message}</p>}
+            <ValidationButton text="Mettre à jour" />
+            <button
+              type="button"
+              className=" bg-c6 hover:bg-c7 text-white font-bold py-2 px-4 rounded min-w-full"
+              onClick={handleDelete}
             >
-              <option value="">Sélectionner un professeur</option>
-              {professors.map((prof) => (
-                <option key={prof.id} value={prof.id}>
-                  {prof.firstName} {prof.name}
-                </option>
-              ))}
-            </Select>
-          </div>
-          <NameInput name={name} setName={setName} />
-          <FirstNameInput firstName={firstName} setFirstName={setFirstName} />
-          <Label
-            htmlFor="file-upload-helper-text"
-            value="Photo"
-            className="text-center"
-          />
-          <input
-            type="file"
-            id="file-upload-helper-text"
-            accept="image/*"
-            onChange={handlePhotoChange}
-          />
-          <DialogueBoxInput DialogueBox={bio} setDialogueBox={setBio} />
-          {error && <p className="text-red-500">{error}</p>}
-          {message && <p className="text-green-500">{message}</p>}
-          <ValidationButton text="Mettre à jour" />
-          <button
-            type="button"
-            className=" bg-c6 hover:bg-c7 text-white font-bold py-2 px-4 rounded min-w-full"
-            onClick={handleDelete}
-          >
-            Supprimer professeur
-          </button>
-        </form>
+              Supprimer professeur
+            </button>
+          </form>
+        </div>
       </div>
-    </div>
+    </AdminProtectedRoute>
   );
 };
 

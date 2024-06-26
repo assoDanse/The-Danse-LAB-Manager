@@ -5,6 +5,7 @@ import { collection, getDocs, deleteDoc, doc } from "firebase/firestore";
 import { db } from "@/config/firebase-config";
 import SidebarAdmin from "@/components/SidebarAdmin";
 import { useRouter } from "next/navigation";
+import ProfessorProtectedRoute from "@/components/ProfessorProtectedRoute";
 
 interface Tarif {
   id: string;
@@ -60,32 +61,34 @@ const TarifsAdmin: React.FC = () => {
   }
 
   return (
-    <div className="flex flex-col items-center w-full">
-      <h1 className="text-2xl mb-4">Gestion des Tarifs</h1>
-      {tarifs.length > 0 ? (
-        <ul className="md:grid md:grid-cols-2 md:gap-4 w-full max-w-3xl mx-auto">
-          {tarifs.map((tarif) => (
-            <li
-              key={tarif.id}
-              className="bg-c0 border border-c4 p-4 mb-2 rounded-lg shadow-lg"
-            >
-              <h2 className="text-xl font-bold">{tarif.titre}</h2>
-              <img
-                src={tarif.image}
-                alt={tarif.titre}
-                className="mb-4 w-full"
-                style={{ width: "150px", height: "auto" }}
-              />
-              <p>{tarif.description}</p>
-              <p>Prix: {tarif.prix} €</p>
-              <p>Crédit: {tarif.credit}</p>
-            </li>
-          ))}
-        </ul>
-      ) : (
-        <p className="text-center">Aucun tarif trouvé</p>
-      )}
-    </div>
+    <ProfessorProtectedRoute>
+      <div className="flex flex-col items-center w-full">
+        <h1 className="text-2xl mb-4">Gestion des Tarifs</h1>
+        {tarifs.length > 0 ? (
+          <ul className="md:grid md:grid-cols-2 md:gap-4 w-full max-w-3xl mx-auto">
+            {tarifs.map((tarif) => (
+              <li
+                key={tarif.id}
+                className="bg-c0 border border-c4 p-4 mb-2 rounded-lg shadow-lg"
+              >
+                <h2 className="text-xl font-bold">{tarif.titre}</h2>
+                <img
+                  src={tarif.image}
+                  alt={tarif.titre}
+                  className="mb-4 w-full"
+                  style={{ width: "150px", height: "auto" }}
+                />
+                <p>{tarif.description}</p>
+                <p>Prix: {tarif.prix} €</p>
+                <p>Crédit: {tarif.credit}</p>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p className="text-center">Aucun tarif trouvé</p>
+        )}
+      </div>
+    </ProfessorProtectedRoute>
   );
 };
 
