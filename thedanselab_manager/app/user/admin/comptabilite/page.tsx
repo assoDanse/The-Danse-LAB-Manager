@@ -48,6 +48,7 @@ const ComptabilitePage: React.FC = () => {
   const [endDate, setEndDate] = useState<string>("");
   const [amounts, setAmounts] = useState<{ [key: string]: number }>({});
   const [professeurs, setProfesseurs] = useState<Professeur[]>([]);
+  const [filteredprofesseurs, setFilteredprofesseurs] = useState<Course[]>([]);
   const [selectedOption, setSelectedOption] = useState<string>("cours"); // Ajout de l'option de sélection
 
   // Fonction pour récupérer les cours et calculer les montants totaux
@@ -233,10 +234,10 @@ const ComptabilitePage: React.FC = () => {
           </div>
         )}
         {selectedOption === "professeurs" && (
-          <div className="overflow-x-auto mt-4">
-            <table className="min-w-full bg-white border">
+          <div className=" overflow-x-auto max-h-screen  max-lg:md:max-w-md max-md:sm:max-w-xs mt-4">
+            <table className="min-w-full bg-white rounded-lg shadow-md overflow-auto">
               <thead>
-                <tr>
+                <tr className=" bg-gray-100">
                   <th className="py-2 px-4 border-b text-center">Professeur</th>
                   <th className="py-2 px-4 border-b text-center">Cours</th>
                   <th className="py-2 px-4 border-b text-center">Date</th>

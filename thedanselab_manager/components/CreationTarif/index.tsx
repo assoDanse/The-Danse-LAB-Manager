@@ -99,6 +99,8 @@ const CreationTarif: React.FC<CreationTarifProps> = ({
             onChange={(e) => setPrix(Number(e.target.value))}
             className="w-full px-3 py-2 border rounded"
             placeholder="Prix"
+            min={0}
+            max={1999}
           />
         </div>
         <div>
@@ -112,6 +114,8 @@ const CreationTarif: React.FC<CreationTarifProps> = ({
             onChange={(e) => setCredit(Number(e.target.value))}
             className="w-full px-3 py-2 border rounded"
             placeholder="Crédit"
+            min={1}
+            max={99}
           />
         </div>
         <div>
