@@ -301,7 +301,7 @@ const CoursEleve: React.FC = () => {
               {viewingCours.photo && (
                 <img
                   src={viewingCours.photo}
-                  alt={viewingCours.titre}
+                  // alt={viewingCours.titre}
                   className="mb-4 w-full"
                 />
               )}

@@ -1,19 +1,13 @@
 "use client";
-
 import React, { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 import { auth, db } from "@/config/firebase-config";
 import { onAuthStateChanged } from "firebase/auth";
 import {
   collection,
   query,
   where,
-  getDocs,
-  doc,
-  getDoc,
   Timestamp,
-  addDoc,
-  updateDoc,
+  getDocs,
 } from "firebase/firestore";
 import ProfessorProtectedRoute from "@/components/ProfessorProtectedRoute";
 
@@ -29,24 +23,13 @@ interface Cours {
     minutes: number;
   };
   photo: string;
-  places_restantes: number; // Add this field
 }
 
-interface Carte {
-  id: string;
-  titre: string;
-  places_restantes: number;
-}
-
-const CoursEleve: React.FC = () => {
-  const [myCours, setMyCours] = useState<Cours[]>([]);
-  const [availableCours, setAvailableCours] = useState<Cours[]>([]);
-  const [viewingCours, setViewingCours] = useState<Cours | null>(null);
+const CoursProfesseur: React.FC = () => {
+  const [cours, setCours] = useState<Cours[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  const [message, setMessage] = useState<string | null>(null);
-  const [availableCartes, setAvailableCartes] = useState<Carte[]>([]);
-  const router = useRouter();
+  const [viewingCours, setViewingCours] = useState<Cours | null>(null);
 
   useEffect(() => {
     const fetchCours = async () => {
@@ -56,16 +39,11 @@ const CoursEleve: React.FC = () => {
       try {
         const user = auth.currentUser;
         if (user) {
-          const participationQuery = query(
-            collection(db, "participation"),
-            where("id_users", "==", user.uid)
+          const coursQuery = query(
+            collection(db, "cours"),
+            where("id_professeur", "==", user.uid)
           );
-          const participationSnapshot = await getDocs(participationQuery);
-          const myCoursIds = participationSnapshot.docs.map(
-            (doc) => doc.data().id_cours
-          );
-
-          const coursSnapshot = await getDocs(collection(db, "cours"));
+          const coursSnapshot = await getDocs(coursQuery);
           const allCours = coursSnapshot.docs.map((doc) => ({
             id: doc.id,
             ...doc.data(),
@@ -84,18 +62,9 @@ const CoursEleve: React.FC = () => {
                 new Date(b.date_heure_debut).getTime()
             );
 
-          const myCoursList = sortedCours.filter((cours) =>
-            myCoursIds.includes(cours.id)
-          );
-          const availableCoursList = sortedCours.filter(
-            (cours) => !myCoursIds.includes(cours.id)
-          );
-
-          setMyCours(myCoursList);
-          setAvailableCours(availableCoursList);
+          setCours(sortedCours);
         } else {
-          setError("User not logged in");
-          router.push("/auth/login");
+          setError("Utilisateur non connecté");
         }
       } catch (err) {
         setError("Erreur lors de la récupération des cours");
@@ -109,13 +78,12 @@ const CoursEleve: React.FC = () => {
       if (user) {
         fetchCours();
       } else {
-        setError("User not logged in");
-        router.push("/auth/login");
+        setError("Utilisateur non connecté");
       }
     });
 
     return () => unsubscribe();
-  }, [router]);
+  }, []);
 
   const handleViewClick = (cours: Cours) => {
     setViewingCours(cours);
@@ -138,16 +106,10 @@ const CoursEleve: React.FC = () => {
   return (
     <ProfessorProtectedRoute>
       <div className="flex flex-col items-center w-full p-3">
-        {message && (
-          <div className="bg-green-100 text-green-800 p-4 rounded-lg mb-4">
-            {message}
-          </div>
-        )}
-
-        <h1 className="text-2xl m-4 font-bold">Cours Disponibles</h1>
-        {availableCours.length > 0 ? (
+        <h1 className="text-2xl m-4 font-bold">Tous les Cours</h1>
+        {cours.length > 0 ? (
           <ul className="md:grid md:grid-cols-2 md:gap-4 w-full max-w-3xl mx-auto text-center">
-            {availableCours.map((cours) => (
+            {cours.map((cours) => (
               <li
                 key={cours.id}
                 className="bg-c0 border border-c4 p-4 mb-2 rounded-lg shadow-lg"
@@ -161,7 +123,7 @@ const CoursEleve: React.FC = () => {
                 <p>Professeur: {cours.nom_professeur}</p>
                 <button
                   onClick={() => handleViewClick(cours)}
-                  className="bg-blue-500 text-white p-2 rounded mt-2"
+                  className="bg-c8 text-white p-2 rounded mt-2 mr-2"
                 >
                   Visualiser
                 </button>
@@ -179,7 +141,7 @@ const CoursEleve: React.FC = () => {
               {viewingCours.photo && (
                 <img
                   src={viewingCours.photo}
-                  //   alt={viewingCours.titre}
+                  // alt={viewingCours.titre}
                   className="mb-4 w-full"
                 />
               )}
@@ -201,7 +163,7 @@ const CoursEleve: React.FC = () => {
               <div className="flex justify-end mt-4">
                 <button
                   onClick={() => setViewingCours(null)}
-                  className="bg-blue-500 text-white p-2 rounded"
+                  className="bg-c8 text-white p-2 rounded"
                 >
                   Fermer
                 </button>
@@ -214,4 +176,4 @@ const CoursEleve: React.FC = () => {
   );
 };
 
-export default CoursEleve;
+export default CoursProfesseur;

@@ -26,7 +26,7 @@ export function SidebarProfesseur() {
               <Sidebar.Item href="/user/professeur" icon={HiHome}>
                 Accueil
               </Sidebar.Item>
-              <Sidebar.Item href="/user/professeur/cours" icon={HiBookOpen}>
+              <Sidebar.Item href="/user/professeur/mes_cours" icon={HiBookOpen}>
                 Mes cours
               </Sidebar.Item>
               <Sidebar.Item href="/user/professeur/creation_eleve" icon={FaCog}>
