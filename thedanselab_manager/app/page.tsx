@@ -4,10 +4,9 @@ import React from "react";
 const Home: React.FC = () => {
   return (
     <div
-      className="flex justify-center items-center w-full bg-cover bg-center bg-no-repeat"
+      className="flex justify-center items-center w-full bg-cover bg-right bg-no-repeat"
       style={{
         backgroundImage: `url('https://thedancelab.fr/wp-content/uploads/2024/03/dz.png')`,
-        backgroundPosition: "center center",
       }}
     >
       <div className="max-w-3xl p-8 rounded-lg shadow-lg text-center text-white">
