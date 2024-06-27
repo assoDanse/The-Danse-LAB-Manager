@@ -154,8 +154,10 @@ const ComptabilitePage: React.FC = () => {
     <AdminProtectedRoute>
       {" "}
       {/* Utilisez le composant de protection */}
-      <div className="container mx-auto p-8">
-        <h1 className="text-3xl font-bold mb-8 text-center">Comptabilité</h1>
+      <div className="container mx-auto p-8 ">
+        <h1 className="text-3xl  font-semibold  mb-8 text-center">
+          Comptabilité
+        </h1>
         <div className="mb-4">
           <Label htmlFor="option-select">Afficher par</Label>
           <Select
@@ -171,7 +173,7 @@ const ComptabilitePage: React.FC = () => {
           <DateInput date={startDate} setDate={setStartDate} />
           <DateInput date={endDate} setDate={setEndDate} />
         </div>
-        
+
         {/* <DateRangeInput
           startDate={startDate}
           setStartDate={setStartDate}
@@ -185,10 +187,10 @@ const ComptabilitePage: React.FC = () => {
           Filtrer
         </button>
         {selectedOption === "cours" && (
-          <div className="overflow-x-auto mt-4">
-            <table className="min-w-full bg-white border">
+          <div className=" overflow-x-auto max-h-screen  max-lg:md:max-w-md max-md:sm:max-w-xs mt-4">
+            <table className="min-w-full bg-white rounded-lg shadow-md overflow-auto">
               <thead>
-                <tr>
+                <tr className=" bg-gray-100">
                   <th className="py-2 px-4 border-b text-center">Titre</th>
                   <th className="py-2 px-4 border-b text-center">Date</th>
                   <th className="py-2 px-4 border-b text-center">Professeur</th>

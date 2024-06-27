@@ -20,10 +20,10 @@ const CoursInput: React.FC<CoursInputProps> = ({
   useEffect(() => {
     const fetchCourses = async () => {
       try {
-        const querySnapshot = await getDocs(collection(db, "courses"));
+        const querySnapshot = await getDocs(collection(db, "cours"));
         const courseList = querySnapshot.docs.map((doc) => ({
           id: doc.id,
-          title: doc.data().title,
+          title: doc.data().titre,
         }));
         setCourses(courseList);
       } catch (error) {

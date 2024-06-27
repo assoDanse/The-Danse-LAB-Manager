@@ -1,6 +1,13 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { collection, query, where, getDocs, deleteDoc, doc } from "firebase/firestore";
+import {
+  collection,
+  query,
+  where,
+  getDocs,
+  deleteDoc,
+  doc,
+} from "firebase/firestore";
 import { db } from "@/config/firebase-config";
 import TableSkeleton from "../TableSkeleton";
 import BoutonSupression from "@/components/BoutonSupression";
@@ -24,7 +31,10 @@ const StudentTable: React.FC = () => {
       setError(null);
 
       try {
-        const q = query(collection(db, "users"), where("status", "==", "eleve"));
+        const q = query(
+          collection(db, "users"),
+          where("status", "==", "eleve")
+        );
         const querySnapshot = await getDocs(q);
         const studentsList: Student[] = querySnapshot.docs.map((doc) => ({
           id: doc.id,
@@ -60,14 +70,16 @@ const StudentTable: React.FC = () => {
   }
 
   if (error) {
-    return <div className="flex justify-center items-center w-full">{error}</div>;
+    return (
+      <div className="flex justify-center items-center w-full">{error}</div>
+    );
   }
 
   return (
-    <div className="max-h-screen overflow-y-auto">
-      <table className="min-w-full bg-white border border-gray-200">
+    <div className=" overflow-x-auto max-h-screen  max-lg:sm:max-w-md max-md:sm:max-w-xs ">
+      <table className="min-w-full bg-white rounded-lg shadow-md overflow-auto">
         <thead>
-          <tr>
+          <tr className=" bg-gray-100">
             <th className="py-2 px-4 border-b text-center">Nom</th>
             <th className="py-2 px-4 border-b text-center">Prénom</th>
             <th className="py-2 px-4 border-b text-center">Email</th>
@@ -79,9 +91,15 @@ const StudentTable: React.FC = () => {
           {students.map((student) => (
             <tr key={student.id}>
               <td className="py-2 px-4 border-b text-center">{student.name}</td>
-              <td className="py-2 px-4 border-b text-center">{student.firstName}</td>
-              <td className="py-2 px-4 border-b text-center">{student.email}</td>
-              <td className="py-2 px-4 border-b text-center">{student.credits}</td>
+              <td className="py-2 px-4 border-b text-center">
+                {student.firstName}
+              </td>
+              <td className="py-2 px-4 border-b text-center">
+                {student.email}
+              </td>
+              <td className="py-2 px-4 border-b text-center">
+                {student.credits}
+              </td>
               <td className="py-2 px-4 border-b text-center">
                 <BoutonSupression onDelete={() => handleDelete(student.id)} />
               </td>

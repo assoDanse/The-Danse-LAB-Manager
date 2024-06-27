@@ -39,8 +39,10 @@ const CreationTarif: React.FC<CreationTarifProps> = ({
   };
 
   return (
-    <div className="max-w-sm w-full p-8 bg-white rounded-lg shadow-md ">
-      <h1 className="text-center text-2xl mb-6">Créer un tarif</h1>
+    <div className="max-w-lg w-full p-8 bg-white rounded-lg shadow-md ">
+      <h1 className="text-center  font-semibold text-2xl mb-6">
+        Créer un tarif
+      </h1>
       <form
         className="flex flex-col gap-5"
         onSubmit={(e) => {

@@ -115,8 +115,10 @@ const CreateCours: React.FC = () => {
   return (
     <AdminProtectedRoute>
       <div className="flex justify-center items-center w-full p-2">
-        <div className="max-w-fit w-full p-8 bg-white rounded-lg shadow-md ">
-          <h1 className="text-center text-2xl mb-6">Créer un cours</h1>
+        <div className="max-w-lg w-full p-8 bg-white rounded-lg shadow-md ">
+          <h1 className="text-center font-semibold text-2xl mb-6">
+            Créer un cours
+          </h1>
           <form onSubmit={handleSubmit} className="flex flex-col gap-5">
             <TitleInput title={title} setTitle={setTitle} />
             {errors.title && <p className="text-red-500">{errors.title}</p>}

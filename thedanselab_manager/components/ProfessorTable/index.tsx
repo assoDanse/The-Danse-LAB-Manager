@@ -74,10 +74,10 @@ const ProfessorTable: React.FC = () => {
   }
 
   return (
-    <div className="max-h-screen overflow-y-auto">
-      <table className="min-w-full bg-white border border-gray-200">
+    <div className=" overflow-x-auto max-h-screen  max-lg:md:max-w-md max-md:sm:max-w-xs ">
+      <table className="min-w-full bg-white rounded-lg shadow-md overflow-auto">
         <thead>
-          <tr>
+          <tr className=" bg-gray-100">
             <th className="py-2 px-4 border-b text-center">Nom</th>
             <th className="py-2 px-4 border-b text-center">Prénom</th>
             <th className="py-2 px-4 border-b text-center">Email</th>

@@ -197,7 +197,7 @@ const PannelAdmin: React.FC = () => {
                   Durée: {cours.duree.heures}h {cours.duree.minutes}m
                 </p>
                 <p>Professeur: {cours.nom_professeur}</p>
-                <div className="flex justify-center mt-4 space-x-2">
+                <div className="flex flex-wrap justify-center mt-4 space-x-2 gap-1">
                   <button
                     onClick={() => handleViewClick(cours)}
                     className="bg-c8 text-white p-2 rounded-lg"

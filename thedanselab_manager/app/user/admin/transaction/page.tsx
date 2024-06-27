@@ -9,10 +9,7 @@ import DateInput from "@/components/DateInput";
 import DescriptionInput from "@/components/DescriptionInput";
 import ValidationButton from "@/components/ValidationButton";
 import AdminProtectedRoute from "@/components/AdminProtectedRoute";
-import {
-  Label,
-  TextInput,
-} from "flowbite-react";
+import { Label, TextInput } from "flowbite-react";
 
 interface Transaction {
   id: string;
@@ -113,71 +110,66 @@ const TransactionPage: React.FC = () => {
   return (
     <AdminProtectedRoute>
       <div className="flex justify-center items-center w-full p-2">
-        <div className="max-w-xl w-full p-8 bg-white rounded-lg shadow-md">
-          <h1 className="text-3xl font-bold mb-8 text-center">
+        <div className="max-w-lg w-full p-8 bg-white rounded-lg shadow-md">
+          <h1 className="text-3xl font-semibold mb-8 text-center">
             Page de Transactions
           </h1>
           <form className="flex flex-col gap-5" onSubmit={handleAddTransaction}>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <Label htmlFor="title">Titre</Label>
-                <input
-                  type="text"
-                  id="title"
-                  name="title"
-                  value={newTransaction.title}
-                  onChange={handleInputChange}
-                  className="block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                />
-                {errors.title && <p className="text-red-500">{errors.title}</p>}
-              </div>
-              <DateInput
-                date={newTransaction.date}
-                setDate={(date) =>
-                  setNewTransaction({ ...newTransaction, date })
-                }
+            <div>
+              <Label htmlFor="title">Titre</Label>
+              <input
+                type="text"
+                id="title"
+                name="title"
+                value={newTransaction.title}
+                onChange={handleInputChange}
+                className="block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
               />
-              {errors.date && <p className="text-red-500">{errors.date}</p>}
-              <DescriptionInput
-                description={description}
-                setDescription={setDescription}
+              {errors.title && <p className="text-red-500">{errors.title}</p>}
+            </div>
+            <DateInput
+              date={newTransaction.date}
+              setDate={(date) => setNewTransaction({ ...newTransaction, date })}
+            />
+            {errors.date && <p className="text-red-500">{errors.date}</p>}
+            <DescriptionInput
+              description={description}
+              setDescription={setDescription}
+            />
+            <div>
+              <Label htmlFor="amount">Montant (€)</Label>
+              <TextInput
+                type="number"
+                id="amount"
+                name="amount"
+                value={newTransaction.amount}
+                onChange={handleInputChange}
+                min={0}
+                max={2000}
+                required
               />
-              <div>
-                <Label htmlFor="amount">Montant (€)</Label>
-                <TextInput
-                  type="number"
-                  id="amount"
-                  name="amount"
-                  value={newTransaction.amount}
-                  onChange={handleInputChange}
-                  min={0}
-                  max={2000}
-                  required
-                />
-                {errors.amount && <p className="text-red-500">{errors.amount}</p>}
-              </div>
-              <div className="col-span-1 md:col-span-2">
-                <ProfesseurInput
-                  professorId={newTransaction.professorId}
-                  setProfessorId={setProfessorId}
-                  setProfessorName={setProfessorName}
-                />
-                {errors.professor && (
-                  <p className="text-red-500">{errors.professor}</p>
-                )}
-              </div>
-              <div className="col-span-1 md:col-span-2">
-                <CoursInput
-                  courseId={newTransaction.courseId}
-                  setCourseId={setCourseId}
-                  setCourseTitle={setCourseTitle}
-                />
-                {errors.course && <p className="text-red-500">{errors.course}</p>}
-              </div>
+              {errors.amount && <p className="text-red-500">{errors.amount}</p>}
             </div>
-            <div className="mt-4">
-              <ValidationButton text="Ajouter une transaction" />
+            <div className="col-span-1 md:col-span-2">
+              <ProfesseurInput
+                professorId={newTransaction.professorId}
+                setProfessorId={setProfessorId}
+                setProfessorName={setProfessorName}
+              />
+              {errors.professor && (
+                <p className="text-red-500">{errors.professor}</p>
+              )}
             </div>
+            <div className="col-span-1 md:col-span-2">
+              <CoursInput
+                courseId={newTransaction.courseId}
+                setCourseId={setCourseId}
+                setCourseTitle={setCourseTitle}
+              />
+              {errors.course && <p className="text-red-500">{errors.course}</p>}
+            </div>
+
+            <ValidationButton text="Ajouter une transaction" />
           </form>
           {errors.general && <p className="text-red-500">{errors.general}</p>}
           {message && <p className="text-green-500">{message}</p>}

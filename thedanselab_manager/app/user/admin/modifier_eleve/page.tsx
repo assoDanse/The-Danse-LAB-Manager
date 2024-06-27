@@ -114,8 +114,8 @@ const ModifierEleve: React.FC = () => {
   return (
     <AdminProtectedRoute>
       <div className="flex justify-center items-center w-full p-2">
-        <div className="max-w-md w-full p-8 bg-white rounded-lg shadow-md">
-          <h1 className="text-center text-2xl mb-6">
+        <div className="max-w-lg w-full p-8 bg-white rounded-lg shadow-md">
+          <h1 className="text-center font-semibold  text-2xl mb-6">
             Modifier un compte élève
           </h1>
           <form onSubmit={handleSubmit} className="flex flex-col gap-5">
@@ -143,7 +143,7 @@ const ModifierEleve: React.FC = () => {
             <ValidationButton text="Mettre à jour" />
             <button
               type="button"
-              className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded min-w-full"
+              className="bg-c6 hover:bg-c7 text-white font-bold py-2 px-4 rounded min-w-full"
               onClick={handleDelete}
             >
               Supprimer élève

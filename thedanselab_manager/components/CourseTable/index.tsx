@@ -82,10 +82,10 @@ const CourseTable: React.FC = () => {
   }
 
   return (
-    <div id="TableProf" className="overflow-x-auto">
-      <table className="min-w-full bg-white rounded-lg shadow-md">
+    <div className=" overflow-x-auto max-h-screen  max-lg:md:max-w-md max-md:sm:max-w-xs ">
+      <table className="min-w-full bg-white rounded-lg shadow-md overflow-auto">
         <thead>
-          <tr>
+          <tr className=" bg-gray-100">
             <th className="py-2 px-4 border-b text-center">Titre</th>
             <th className="py-2 px-4 border-b text-center">Date et Heure</th>
             <th className="py-2 px-4 border-b text-center">Durée</th>

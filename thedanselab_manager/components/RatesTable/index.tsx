@@ -52,7 +52,7 @@ const RatesTable: React.FC = () => {
   const handleDeleteRate = async (rateId: string) => {
     try {
       await deleteDoc(doc(db, "tarifs", rateId));
-      setRates(rates.filter(rate => rate.id !== rateId));
+      setRates(rates.filter((rate) => rate.id !== rateId));
       // Vous pouvez ajouter un message de succès si nécessaire
     } catch (error) {
       setError("Erreur lors de la suppression du tarif");
@@ -65,29 +65,38 @@ const RatesTable: React.FC = () => {
   }
 
   if (error) {
-    return <div className="flex justify-center items-center w-full">{error}</div>;
+    return (
+      <div className="flex justify-center items-center w-full">{error}</div>
+    );
   }
 
   return (
-    <div className="overflow-x-auto">
-      <table className="min-w-full bg-white border border-gray-200">
+    <div className=" overflow-x-auto max-h-screen  max-lg:md:max-w-md max-md:sm:max-w-xs ">
+      <table className="min-w-full bg-white rounded-lg shadow-md overflow-auto">
         <thead>
-          <tr>
+          <tr className=" bg-gray-100">
             <th className="py-2 px-4 border-b text-center">Titre</th>
             <th className="py-2 px-4 border-b text-center">Description</th>
             <th className="py-2 px-4 border-b text-center">Prix</th>
             <th className="py-2 px-4 border-b text-center">Lien de Paiement</th>
-            <th className="py-2 px-4 border-b text-center">Actions</th> {/* Nouvelle colonne pour les actions */}
+            <th className="py-2 px-4 border-b text-center">Actions</th>{" "}
+            {/* Nouvelle colonne pour les actions */}
           </tr>
         </thead>
         <tbody>
           {rates.map((rate) => (
             <tr key={rate.id}>
               <td className="py-2 px-4 border-b text-center">{rate.titre}</td>
-              <td className="py-2 px-4 border-b text-center">{rate.description}</td>
+              <td className="py-2 px-4 border-b text-center">
+                {rate.description}
+              </td>
               <td className="py-2 px-4 border-b text-center">{rate.prix} €</td>
               <td className="py-2 px-4 border-b text-center">
-                <a href={rate.lienPaiement} target="_blank" rel="noopener noreferrer">
+                <a
+                  href={rate.lienPaiement}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
                   Payer
                 </a>
               </td>
