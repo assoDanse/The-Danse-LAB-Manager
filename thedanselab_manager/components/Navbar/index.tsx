@@ -109,7 +109,7 @@ function Navbar_() {
 
   return (
     <Navbar className="sticky top-0 p-4 w-full bg-c2 text-c3 z-50" fluid>
-      <Navbar.Brand href="https://thedancelab.fr/">
+      <Navbar.Brand href={getHomeLink()}>
         <Image src={Logo} width={75} height={75} alt="Logo" />
         <span className="self-center whitespace-nowrap text-xl font-semibold dark:text-c3 ml-4">
           The Dance Lab
