@@ -50,33 +50,7 @@ const TarifsEleve: React.FC = () => {
       `Êtes-vous sûr de vouloir payer pour ce tarif : ${tarif.titre} ?`
     );
     if (confirmed) {
-      try {
-        const user = auth.currentUser;
-        if (!user) {
-          setError("User not logged in");
-          return;
-        }
-        await addDoc(collection(db, "cartes"), {
-          titre: tarif.titre,
-          prix: tarif.prix,
-          id_users: user.uid,
-          places_restantes: tarif.credit,
-          credit: tarif.credit,
-        });
-        setMessage("Paiement réussi et carte créée avec succès");
-        setTimeout(() => {
-          setMessage(null);
-        }, 3000);
-      } catch (err) {
-        console.error(
-          "Erreur lors du paiement et de la création de la carte",
-          err
-        );
-        setError("Erreur lors du paiement et de la création de la carte");
-        setTimeout(() => {
-          setError(null);
-        }, 3000);
-      }
+      router.push("/auth/login");
     }
   };
 

@@ -29,6 +29,7 @@ const BoutonSuppression: React.FC<BoutonSuppressionProps> = ({
         size="md"
         onClose={() => setOpenModal(false)}
         popup
+        position="center"
       >
         <Modal.Header />
         <Modal.Body>

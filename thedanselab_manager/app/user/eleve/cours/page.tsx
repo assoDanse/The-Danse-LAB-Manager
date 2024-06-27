@@ -80,7 +80,11 @@ const CoursEleve: React.FC = () => {
 
           const sortedCours = allCours
             .filter((cours) => cours.date_heure_debut > currentDateTime)
-            .sort((a, b) => new Date(a.date_heure_debut).getTime() - new Date(b.date_heure_debut).getTime());
+            .sort(
+              (a, b) =>
+                new Date(a.date_heure_debut).getTime() -
+                new Date(b.date_heure_debut).getTime()
+            );
 
           const myCoursList = sortedCours.filter((cours) =>
             myCoursIds.includes(cours.id)
@@ -247,7 +251,7 @@ const CoursEleve: React.FC = () => {
         )}
 
         {selectedCours && (
-          <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center">
+          <div className="fixed z-20  inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center">
             <div className="bg-white p-6 rounded-lg shadow-lg">
               <h2 className="text-xl mb-4">Sélectionnez une carte</h2>
               {availableCartes.length > 0 ? (
@@ -262,7 +266,8 @@ const CoursEleve: React.FC = () => {
                             : "bg-gray-200"
                         }`}
                       >
-                        {carte.titre} - Places restantes: {carte.places_restantes}
+                        {carte.titre} - Places restantes:{" "}
+                        {carte.places_restantes}
                       </button>
                     </li>
                   ))}
@@ -305,7 +310,8 @@ const CoursEleve: React.FC = () => {
                 <strong>Type:</strong> {viewingCours.type}
               </p>
               <p>
-                <strong>Date:</strong> {new Date(viewingCours.date_heure_debut).toLocaleString()}
+                <strong>Date:</strong>{" "}
+                {new Date(viewingCours.date_heure_debut).toLocaleString()}
               </p>
               <p>
                 <strong>Durée:</strong> {viewingCours.duree.heures}h{" "}

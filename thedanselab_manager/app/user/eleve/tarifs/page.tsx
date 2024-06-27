@@ -117,7 +117,7 @@ const TarifsEleve: React.FC = () => {
                 <h2 className="text-xl font-bold">{tarif.titre}</h2>
                 <img
                   src={tarif.image}
-                  alt={tarif.titre}
+                  // alt={tarif.titre}
                   className="mb-4"
                   style={{ width: "150px", height: "auto" }}
                 />
